@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Databases - Beam Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Databases";
+    var mkdocs_page_input_path = "user-guide/databases.md";
+    var mkdocs_page_url = "/user-guide/databases/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Beam Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../about/faq/">Frequently Asked Questions</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">User Guide</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../getting-started/">Getting Started</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../models/">Models</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Databases</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#a-simple-database-type">A simple database type</a></li>
+    
+
+    <li class="toctree-l3"><a href="#other-database-entities">Other database entities</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#views">Views</a></li>
+        
+            <li><a class="toctree-l4" href="#unique-constraints">Unique constraints</a></li>
+        
+            <li><a class="toctree-l4" href="#domain-types">Domain types</a></li>
+        
+            <li><a class="toctree-l4" href="#triggers">Triggers</a></li>
+        
+            <li><a class="toctree-l4" href="#character-sets">Character sets</a></li>
+        
+            <li><a class="toctree-l4" href="#collations">Collations</a></li>
+        
+            <li><a class="toctree-l4" href="#translations">Translations</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#database-descriptors">Database descriptors</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/basic/">Basic Queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/relationships/">Relationships</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/aggregates/">Aggregates</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/combining-queries/">Combining queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/data-types/">Common data types</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/window-functions/">Window functions</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Schema management</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/migrations/">The Migrations Framework</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/tool/">The beam-migrate tool</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/supported/">Supported migrations</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Backends</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../backends/beam-postgres/">beam-postgres</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../backends/beam-sqlite/">beam-sqlite</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../custom-backends/">Writing a Custom Backend</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">About</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../about/compatibility/">Compatibility Matrix</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../about/license/">License</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../about/release-notes/">Release Notes</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Beam Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>User Guide &raquo;</li>
+        
+      
+    
+    <li>Databases</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>In addition to defining types for each of your tables, beam also
+requires you to declare your database as a type with fields for
+holding all entities in your database. This includes more than just
+tables. For example, user-defined types that you would like to work
+with must also be included in your database type.</p>
+<h2 id="a-simple-database-type">A simple database type</h2>
+<p>Like tables, a database type takes a functor and applies it to each
+entity in the database. For example, a database type for the two
+tables defined above has the form.</p>
+<pre><code class="haskell">data ExampleDb f
+    = ExampleDb
+    { persons :: f (TableEntity PersonT)
+    , posts   :: f (TableEntity PersonT)
+    } deriving Generic
+instance Database ExampleDb
+
+exampleDb :: DatabaseSettings be ExampleDb
+exampleDb = autoDbSettings
+</code></pre>
+
+<h2 id="other-database-entities">Other database entities</h2>
+<h3 id="views">Views</h3>
+<p>Some databases also offer the concept of 'views' -- pseudo-tables that
+are built from a pre-defined query. Suppose we wanted to create a view
+that returned the latest comments and their respective posters.</p>
+<pre><code class="haskell">data PostAndPosterView f
+    = PostAndPosterView
+    { post   :: PostT f
+    , poster :: PersonT f
+    } deriving Generic
+instance Beamable PostAndPosterView
+</code></pre>
+
+<p>We can include this in our database:</p>
+<pre><code class="haskell">data ExampleDb f
+    = ExampleDb
+    { persons        :: f (TableEntity PersonT)
+    , posts          :: f (TableEntity PersonT)
+    , postAndPosters :: f (ViewEntity PostAndPosterView)
+    } deriving Generic
+</code></pre>
+
+<h3 id="unique-constraints">Unique constraints</h3>
+<p>The <code>TableEntityWithUnique</code> database entity allows you to declare
+tables with additional uniqueness constraints (the primary key is
+considered to be unique by default).</p>
+<p>For example, suppose you wanted to re-define the <code>PersonT</code> table with
+an additional unique e-mail and another unique phone column.</p>
+<pre><code class="haskell">data PersonT f
+    = Person
+    { personFirstName :: Columnar f Text
+    , personLastName  :: Columnar f Text
+    , personAge       :: Columnar f Int
+    , personEmail     :: Columnar f Text
+    , personPhone     :: Columnar f Text
+    } deriving Generic
+
+data PersonByEmail f = PersonByEmail (Columnar f Text)
+data PersonByPhone f = PersonByPhone (Columnar f Text)
+</code></pre>
+
+<p>Now, use <code>TableEntityWithUnique</code> to declare the table.</p>
+<pre><code class="haskell">data ExampleDb f
+    = ExampleDb
+    { persons        :: f (TableEntityWithUnique PersonT '[PersonByEmail, PersonByPhone])
+    , posts          :: f (TableEntity PersonT)
+    , postAndPosters :: f (ViewEntity PostAndPosterView)
+    } deriving Generic
+</code></pre>
+
+<p>Beam will not complain about this definition, but you will need to
+declare additional instances in order to actually use the unique
+constraints.</p>
+<pre><code class="haskell">instance Unique PersonT PersonByEmail where
+  mkUnique = PersonByEmail . personEmail
+
+instance Unique PersonT PersonByPhone where
+  mkUnique = PersonByPhone . personPhone
+</code></pre>
+
+<p><em>TODO</em>: Should the unique constraints be declared at the database or table level?</p>
+<h3 id="domain-types">Domain types</h3>
+<p>Domain types are a way of creating new database types with additional
+constraints. Beam supports declaring these types as part of your
+database, so they can be used anywhere a data type can. In order to
+use your domain type, you need to supply beam a Haskell newtype that
+is used to represent values of this type in Haskell.</p>
+<h3 id="triggers">Triggers</h3>
+<p><em>TODO</em></p>
+<h3 id="character-sets">Character sets</h3>
+<p><em>TODO</em></p>
+<h3 id="collations">Collations</h3>
+<p><em>TODO</em></p>
+<h3 id="translations">Translations</h3>
+<p><em>TODO</em></p>
+<h2 id="database-descriptors">Database descriptors</h2>
+<p>In order to interact with the database, beam needs to know more about
+the data structure, it also needs to know how to refer to each entity
+in your database. For the most part, beam can figure out the names for
+you using its Generics-based defaulting mechanims. Once you have a
+database type defined, you can create a database descriptor using the
+<code>defaultDbSettings</code> function.</p>
+<p>For example, to create a backend-agnostic database descriptor for the
+<code>ExampleDb</code> type:</p>
+<pre><code class="haskell">exampleDb :: DatabaseSettings be ExampleDb
+exampleDb = defaultDbSettings
+</code></pre>
+
+<p>Now, we can use the entities in <code>exampleDb</code> to write queries. The
+rules for name defaulting for database entities are the same as those
+for <a href="../models/#defaults">table fields</a></p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../queries/basic/" class="btn btn-neutral float-right" title="Basic Queries">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../models/" class="btn btn-neutral" title="Models"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../models/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../queries/basic/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+
+</body>
+</html>

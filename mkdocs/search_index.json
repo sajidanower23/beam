@@ -1,0 +1,254 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Beam is a highly-general library for accessing any kind of database with\nHaskell. Currently, it supports two SQL backends, Postgres and SQLite. Work is\nunderway for a MySQL backend. For information on creating additional SQL\nbackends, see the \nmanual section\n for more.\n\n\nBeam features\n\n\n\n\nEasy schema generation\n from existing databases\n\n\nA basic migration infrastructure\n for working with multiple versions of your\n  database schema.\n\n\nSupport for most SQL92, SQL99, and SQL2003 features\n across backends that\n  support them, including aggregations, subqueries, and window functions.\n\n\nA straightforward Haskell-friendly query syntax\n. You can use Beam's \nQ\n\n  monad much like you would interact with the \n[]\n monad.\n\n\nNo Template Haskell\n Beam uses the GHC Haskell type system and nothing else.\n  The types have been designed to be easily-inferrable by the compiler, and\n  appropriate functions to refine types have been provided for the where the\n  compiler may need more help.\n\n\n\n\nHow to install\n\n\nBeam is available via both \nHackage\n\nand \nStack\n. For most Haskell\ninstallations, one of the two commands should work.\n\n\ncabal install beam-core beam-migrate \nbackend\n\n\n\n\n\nor\n\n\nstack install beam-core beam-migrate \nbackend\n\n\n\n\n\nYou will also need to install an appropriate backend. Available backends are\n\n\n\n\n\n\nbeam-postgres\n -- A feature-complete backend for the Postgres RDBMS.\n  See \nthe beam-postgres documentation\n\n  for more information.\n\n\n\n\n\n\nbeam-sqlite\n -- An almost feature-complete backend for the Sqlite library.\n  Note that SQLite does not support all SQL92 features, so some of the examples\n  may not work. Refer\n  to \nthe beam-sqlite documentation\n for\n  more information on compatibility.\n\n\n\n\n\n\nQuick Start Guide\n\n\nIf you already have a database schema, you can use the \nbeam-migrate\n command to\nautomatically generate appropriate Beam data definitions.\n\n\nbeam-migrate --backend \nbackend-module\n \nbackend-options\n new \noutput-module-name\n\n\n\n\n\nFor example, to generate a schema for the Postgres database \nemployees\n at\n\nlocalhost:5000\n with the user \nbeam\n, run the following command.\n\n\nbeam-migrate --backend Database.Beam.Postgres.Migrate --pgconnect postgres://beam@localhost:5000/employees new BeamTutorial.Schema\n\n\n\n\nThis will generate a\n\n\nHow to Contribute\n\n\nWe always welcome contributions, especially to cover more database features or\nto add support for a new backend. Help is available on the \nbeam-users\n Google\nGroup. The following is a quick step-by-step guide of contributing a new feature:\n\n\n\n\nFork the github repository at \nhttps://github.com/tathougies/beam\n\n   and clone the fork to a local directory.\n\n\nWork on your feature on your own branch, or pick\n   an \nissue\n.\n\n\nWhen you feel ready to contribute the feature back to \nbeam-core\n, send a\n   Pull Request on Github, with an explanation of what your patch does and\n   whether it breaks the API.\n\n\nRespond to community comments and rework your patch.\n\n\nWhen the maintainer feels comfortable with your patch, he will commit it to\n   the \nmaster\n branch and it will be included in the next minor version.\n   API-breaking changes will not be included until the next major version.\n\n\n\n\nQuestions, Feedback, Discussion\n\n\n\n\nFor frequently asked questions, see the \nFAQ\n.\n\n\nFor general questions, feedback on patches, support, or other concerns, please\n  write to the mailing list\n\n\nFor bugs or feature requests,\n  please \nopen an issue\n\n\n\n\nWhy Beam?\n\n\nBeam is the most feature-complete, turnkey Haskell database solution out there.\nIt supports the entire breadth of the SQL92, SQL99, SQL2003, SQL2006, SQL2008,\nSQL2011, and SQL2016 specifications, as well as the entire breadth of features\nof each of its backends. See\nthe \ncompatibility matrix\n. You will rarely be forced to\nwrite a SQL query 'by hand' when using Beam.\n\n\nAdditionally, Beam plays nice with the rest of the Haskell ecosystem, the\nstandard Beam backends are all implemented in terms of the underlying\n\ndb\n-simple\n packages. Beam provides only minimum support for querying data\nacross multiple databases. It is assumed that you have chosen you RDBMS with\nmuch care, and we want to support you in that. Beam's main purpose is to marshal\ndata back and forth, to serve as the source of truth for the DB schema, and to\ngenerate properly formed SQL from Haskell expressions.", 
+            "title": "Home"
+        }, 
+        {
+            "location": "/#how-to-install", 
+            "text": "Beam is available via both  Hackage \nand  Stack . For most Haskell\ninstallations, one of the two commands should work.  cabal install beam-core beam-migrate  backend   or  stack install beam-core beam-migrate  backend   You will also need to install an appropriate backend. Available backends are    beam-postgres  -- A feature-complete backend for the Postgres RDBMS.\n  See  the beam-postgres documentation \n  for more information.    beam-sqlite  -- An almost feature-complete backend for the Sqlite library.\n  Note that SQLite does not support all SQL92 features, so some of the examples\n  may not work. Refer\n  to  the beam-sqlite documentation  for\n  more information on compatibility.", 
+            "title": "How to install"
+        }, 
+        {
+            "location": "/#quick-start-guide", 
+            "text": "If you already have a database schema, you can use the  beam-migrate  command to\nautomatically generate appropriate Beam data definitions.  beam-migrate --backend  backend-module   backend-options  new  output-module-name   For example, to generate a schema for the Postgres database  employees  at localhost:5000  with the user  beam , run the following command.  beam-migrate --backend Database.Beam.Postgres.Migrate --pgconnect postgres://beam@localhost:5000/employees new BeamTutorial.Schema  This will generate a", 
+            "title": "Quick Start Guide"
+        }, 
+        {
+            "location": "/#how-to-contribute", 
+            "text": "We always welcome contributions, especially to cover more database features or\nto add support for a new backend. Help is available on the  beam-users  Google\nGroup. The following is a quick step-by-step guide of contributing a new feature:   Fork the github repository at  https://github.com/tathougies/beam \n   and clone the fork to a local directory.  Work on your feature on your own branch, or pick\n   an  issue .  When you feel ready to contribute the feature back to  beam-core , send a\n   Pull Request on Github, with an explanation of what your patch does and\n   whether it breaks the API.  Respond to community comments and rework your patch.  When the maintainer feels comfortable with your patch, he will commit it to\n   the  master  branch and it will be included in the next minor version.\n   API-breaking changes will not be included until the next major version.", 
+            "title": "How to Contribute"
+        }, 
+        {
+            "location": "/#questions-feedback-discussion", 
+            "text": "For frequently asked questions, see the  FAQ .  For general questions, feedback on patches, support, or other concerns, please\n  write to the mailing list  For bugs or feature requests,\n  please  open an issue", 
+            "title": "Questions, Feedback, Discussion"
+        }, 
+        {
+            "location": "/#why-beam", 
+            "text": "Beam is the most feature-complete, turnkey Haskell database solution out there.\nIt supports the entire breadth of the SQL92, SQL99, SQL2003, SQL2006, SQL2008,\nSQL2011, and SQL2016 specifications, as well as the entire breadth of features\nof each of its backends. See\nthe  compatibility matrix . You will rarely be forced to\nwrite a SQL query 'by hand' when using Beam.  Additionally, Beam plays nice with the rest of the Haskell ecosystem, the\nstandard Beam backends are all implemented in terms of the underlying db -simple  packages. Beam provides only minimum support for querying data\nacross multiple databases. It is assumed that you have chosen you RDBMS with\nmuch care, and we want to support you in that. Beam's main purpose is to marshal\ndata back and forth, to serve as the source of truth for the DB schema, and to\ngenerate properly formed SQL from Haskell expressions.", 
+            "title": "Why Beam?"
+        }, 
+        {
+            "location": "/about/faq/", 
+            "text": "How does \nbeam\n compare with \nx\n?", 
+            "title": "Frequently Asked Questions"
+        }, 
+        {
+            "location": "/about/faq/#how-does-beam-compare-with-x", 
+            "text": "", 
+            "title": "How does beam compare with &lt;x&gt;?"
+        }, 
+        {
+            "location": "/user-guide/getting-started/", 
+            "text": "Getting Started", 
+            "title": "Getting Started"
+        }, 
+        {
+            "location": "/user-guide/getting-started/#getting-started", 
+            "text": "", 
+            "title": "Getting Started"
+        }, 
+        {
+            "location": "/user-guide/models/", 
+            "text": "Beam allows you to define models for your data that can be used across multiple\nbackends. Beam models are standard Haskell data structures, but with some extra\nfeatures that allow Beam to introspect them at run-time.\n\n\nA Simple Model\n\n\nLet's define a simple model to represent a person. Open up a file named\n\nSchema.hs\n and add the following.\n\n\n{-# LANGUAGE GADTs #-}\n{-# LANGUAGE DeriveGeneric #-}\nmodule Schema where\n\nimport Database.Beam\nimport Database.Beam.SQLite\nimport Database.SQLite.Simple\n\nimport Data.Text (Text)\n\ndata PersonT f\n    = Person\n    { personFirstName :: Columnar f Text\n    , personLastName  :: Columnar f Text\n    , personAge       :: Columnar f Int\n    } deriving Generic\ninstance Beamable PersonT\n\n\n\n\nBeam also requires that your tables have a primary key that can be used to\nuniquely identify each tuple in your relation. We tell beam about the primary\nkey by implementing the \nTable\n type class for your table.\n\n\ninstance Table PersonT where\n  data PrimaryKey PersonT f\n      = PersonKey\n      { personKeyFirstName :: Columnar f Text\n      , personKeyLastName  :: Columnar f Text\n      } deriving Generic\n  primaryKey person = PersonKey (personFirstName person) (personLastName person)\n\n\n\n\nNote\n: Using the first and last name as a primary key is a bad idea, we use it\nhere to illustrate using multiple fields as the primary key.\n\n\nFor ease-of-use purposes we define some type synonyms for \nPersonT\n and\n\nPrimaryKey PersonT\n and some convenient instances. These are not strictly\nrequired but make working with these tables much easier.\n\n\ntype Person = PersonT Identity\ntype PersonKey = PrimaryKey PersonT Identity\nderiving instance Show Person; deriving instance Eq Person\nderiving instance Show PersonKey; deriving instance Eq PersonKey\n\n\n\n\nDue to the magic of the \nColumnar\n type family, the \nPerson\n type can\nbe thought of as having the following definition.\n\n\ndata Person\n    = Person\n    { personFirstName :: Text\n    , personLastName  :: Text\n    , personAge       :: Int\n    } deriving (Show, Eq)\n\n\n\n\nThis allows us to use your type definitions for Beam as regular\nHaskell data structures without wrapping/unwrapping.\n\n\nForeign references\n\n\nForeign references are also easily supported in models by simply\nembedding the \nPrimaryKey\n of the referred to table directly in the\nparent. For example, suppose we want to create a new model\nrepresenting a post by a user.\n\n\ndata PostT f\n    = Post\n    { postId       :: Columnar f (Auto Int)\n    , postPostedAt :: Columnar f LocalTime\n    , postContent  :: Columnar f Text\n    , postPoster   :: PrimaryKey PersonT f\n    } deriving Generic\ninstance Beamable PostT\n\ninstance Table PostT where\n  data PrimaryKey PostT f\n      = PostId (Columnar f (Auto Int)) deriving Generic\n  primaryKey = PostId . postId\n\ntype Post = PostT Identity\ntype PostId = PrimaryKey PostT Identity\nderiving instance Show Post; deriving instance Eq Post\nderiving instance Show PostId; deriving instance Eq PostId\n\n\n\n\nThe \nAuto\n type constructor is provided by \nbeam-core\n for fields that\nare automatically assigned by the database. Internally, \nAuto x\n is\nsimply a newtype over \nMaybe x\n. The guarantee is that all values of\ntype \nAuto x\n returned by beam in the result set will have a value,\nalthough this guarantee is not enforced at the type level (yet).\n\n\nEmbedding\n\n\nSometimes, we want to declare multiple models with fields in\ncommon. Beam allows you to simple embed such fields in common types\nand embed those directly into models. For example,\n\n\n\n\n\nDefaults\n\n\nBased on your data type declarations, beam can already guess a lot\nabout your tables. For example, it already assumes that the\n\npersonFirstName\n field is accessible in SQL as \nfirst_name\n. This\ndefaulting behavior makes it very easy to interact with typical\ndatabases.\n\n\nFor the easiest user experience, it's best to follow beam's\nconventions for declaring models. In particular, the defaulting\nmechanisms rely on each table type declaring only one constructor\nwhich has fields named in the camelCase style.\n\n\nWhen defaulting the name of a table field or column, beam\nun-camelCases the field name (after dropping leading underscores) and\ndrops the first word. The remaining words are joined with\nunderscores. If there is only one component, it is not\ndropped. Trailing and internal underscores are preserved in the name\nand if the name consists solely of underscores, beam makes no\nchanges. A summary of these rules is given in the table below.\n\n\n\n\n\n\n\n\nHaskell field name\n\n\nBeam defaulted column name\n\n\n\n\n\n\n\n\n\n\npersonFirstName\n\n\nfirst_name\n\n\n\n\n\n\n_personLastName\n\n\nlast_name\n\n\n\n\n\n\nname\n\n\nname\n\n\n\n\n\n\nfirst_name\n\n\nfirst_name\n\n\n\n\n\n\n_first_name\n\n\nfirst_name\n\n\n\n\n\n\n___\n(three underscores)\n\n\n___\n(no changes)\n\n\n\n\n\n\n\n\nNote that beam only uses lower case in field names. While typically\ncase does not matter for SQL queries, beam always quotes\nidentifiers. Many DBMS's are case-sensitive for quoted\nidentifiers. Thus, queries can sometimes fail if your tables use\nmixtures of lower- and upper-case to distinguish between fields.\n\n\nAll of these defaults can be overriden using the modifications system,\ndescribed in the next section.\n\n\nWhat about tables without primary keys?\n\n\nTables without primary keys are considered bad style. However,\nsometimes you need to use beam with a schema that you have no control\nover. To declare a table without a primary key, simply instantiate the\n\nTable\n class without overriding the defaults.\n\n\nMore complicated relationships\n\n\nThis is the extent of b1eam's support for defining models. Although\nsimilar packages in other languages provide support for declaring\none-to-many, many-to-one, and many-to-many relationships, beam's\nfocused is providing a direct mapping of relational database concepts\nto Haskell, not on abstracting away the complexities of database\nquerying. Thus, beam does not use 'lazy-loading' or other tricks that\nobfuscate performance. Because of this, the bulk of the functionality\ndealing with different types of relations is found in the querying\nsupport, rather than in the model declarations.\n\n\nPutting a Database Together\n\n\nBeam also requires you to give a type for your database. The database type\ncontains all the entities (tables or otherwise) that would be present in your\ndatabase. Our database only has one table right now, so it only contains one\nfield.\n\n\ndata ExampleDb f\n    = ExampleDb\n    { persons :: f (TableEntity PersonT)\n    } deriving Generic\ninstance Database ExampleDb\n\nexampleDb :: DatabaseSettings be ExampleDb\nexampleDb = autoDbSettings\n\n\n\n\nUsing your database\n\n\nLet's open up a SQLite database. Open up \nghci\n and import your module.\n\n\nPrelude\n :load Schema.hs\nPrelude Schema\n conn \n- open \nbeam-manual.db\n\n\n\n\n\nA quick note on backends\n\n\nBeam is backend-agnostic and doesn't provide any means to connect to a\ndatabase. Beam backend libraries usually use well-used Haskell\nlibraries to provide database connectivity. For example, the\n\nbeam-sqlite\n backend uses the \nsqlite-simple\n backend.\n\n\nBeam distinguishes each backend via type indexes. Each backend defines\na type that is used to enable backend-specific behavior. For example,\nthe \nbeam-sqlite\n backend ships with the \nSqlite\n type that is used to\ndistinguish sqlite specific constructs with generic or other\nbackend-specific ones.\n\n\nEach backend can have one or more 'syntaxes', which are particular\nways to query the database. While the \nbeam-core\n library ships with a\nstandard ANSI SQL builder, few real-world database implementations\nfully follow the standard. Most backends use their own custom syntax\ntype. Internally, beam uses a finally-tagless representation for\nsyntax trees that allow straightforward construction against any\nbackend.\n\n\nBeam offers backend-generic functions for the most common operations\nagainst databases. These functions are meant to fit the lowest common\ndenominator. For example, no control is offered over streaming results\nfrom SELECT statements. While these backend-generic functions are\nuseful for ad-hoc querying and development, it is wisest to use\nbackend-specific functions in production for maximum control. Refer to\nbackend-specific documentation for more information.\n\n\nFor our examples, we will use the \nbeam-sqlite\n backend and demonstrate\nusage of the beam standard query functions.\n\n\nInserting data\n\n\nFirst, let's connect to a sqlite database, and create our schema. The\n\nbeam-core\n does not offer any support for the SQL DDL language. There\nis a separate core library \nbeam-migrate\n that offers complete support\nfor ANSI-standard SQL DDL operations, as well as tools to manipulate\ndatabase schemas. See the section on migrations for more information.\n\n\nFor our example, we will simply issue a \nCREATE TABLE\n command\ndirectly against the database using \nsqlite-simple\n functionality:\n\n\nPrelude Schema\n execute_ conn \nCREATE TABLE persons ( first_name TEXT NOT NULL, last_name TEXT NOT NULL, age INT NOT NULL, PRIMARY KEY(first_name, last_name) )\n\n\n\n\n\nNow we can insert some data into our database. Beam ships with a\nfunction \nwithDatabase\n, with the following signature:\n\n\nwithDatabase :: MonadBeam syntax be m =\n DbHandle be -\n m a -\n IO a\n\n\n\n\nDbHandle be\n is a type family that refers to a backend-specific type\nfor referring to a particular database connection. For the\n\nbeam-sqlite\n backend \nDbHandle Sqlite ~\nDatabase.Sqlite.Simple.Connection\n. \n\n\nMonadBeam\n is a type class relating a particular syntax and backend\nto a monad we can use to execute data query and manipulation commands.\n\n\nLet's insert some data into our database. We are going to use the\n\nrunInsert\n function from \nMonadBeam\n.\n\n\nPrelude Schema\n :{\nPrelude Schema| withDatabase conn $ do\nPrelude Schema|   runInsert $ insert (persons exampleDb) $\nPrelude Schema|               insertValues [ Person \nBob\n \nSmith\n 50\nPrelude Schema|                            , Person \nAlice\n \nWong\n 55\nPrelude Schema|                            , Person \nJohn\n \nQuincy\n 30 ]\nPrelude Schema| :}\n\n\n\n\nThe \nrunInsert\n function has the type signature\n\n\nrunInsert :: MonadBeam syntax be m =\n SqlInsert syntax -\n m ()\n\n\n\n\nSqlInsert syntax\n represents a SQL \nINSERT\n command in the given\n\nsyntax\n. We construct this value using the \ninsert\n function from\n\nDatabase.Beam.Query\n.\n\n\ninsert :: IsSql92InsertSyntax syntax =\n\n          DatabaseEntity be db (TableEntity table)\n       -\n Sql92InsertValuesSyntax syntax\n       -\n SqlInsert syntax\n\n\n\n\nIntuitively, \ninsert\n takes a database table descriptor and some\nvalues (particular to the given syntax) and returns a statement to\ninsert these values. \nSql92InsertValuesSyntax syntax\n always\nimplements the \nIsSql92InsertValuesSyntax\n typeclass, which is where\nwe get the \ninsertValues\n function from. \nIsSql92InsertValuesSyntax\n\nalso defines the \ninsertSelect\n function for inserting values from the\nresult of a \nSELECT\n statement. Other backends may provide other ways\nof specifying the source of values. This brings us to another point\n\n\nPrelude Schema\n runSelect (select (all_ (persons exampleDb)))\n[ Person { personFirstName = \nBob\n, personLastName=\nSmith\n, personAge=50 }, ... ]", 
+            "title": "Models"
+        }, 
+        {
+            "location": "/user-guide/models/#a-simple-model", 
+            "text": "Let's define a simple model to represent a person. Open up a file named Schema.hs  and add the following.  {-# LANGUAGE GADTs #-}\n{-# LANGUAGE DeriveGeneric #-}\nmodule Schema where\n\nimport Database.Beam\nimport Database.Beam.SQLite\nimport Database.SQLite.Simple\n\nimport Data.Text (Text)\n\ndata PersonT f\n    = Person\n    { personFirstName :: Columnar f Text\n    , personLastName  :: Columnar f Text\n    , personAge       :: Columnar f Int\n    } deriving Generic\ninstance Beamable PersonT  Beam also requires that your tables have a primary key that can be used to\nuniquely identify each tuple in your relation. We tell beam about the primary\nkey by implementing the  Table  type class for your table.  instance Table PersonT where\n  data PrimaryKey PersonT f\n      = PersonKey\n      { personKeyFirstName :: Columnar f Text\n      , personKeyLastName  :: Columnar f Text\n      } deriving Generic\n  primaryKey person = PersonKey (personFirstName person) (personLastName person)  Note : Using the first and last name as a primary key is a bad idea, we use it\nhere to illustrate using multiple fields as the primary key.  For ease-of-use purposes we define some type synonyms for  PersonT  and PrimaryKey PersonT  and some convenient instances. These are not strictly\nrequired but make working with these tables much easier.  type Person = PersonT Identity\ntype PersonKey = PrimaryKey PersonT Identity\nderiving instance Show Person; deriving instance Eq Person\nderiving instance Show PersonKey; deriving instance Eq PersonKey  Due to the magic of the  Columnar  type family, the  Person  type can\nbe thought of as having the following definition.  data Person\n    = Person\n    { personFirstName :: Text\n    , personLastName  :: Text\n    , personAge       :: Int\n    } deriving (Show, Eq)  This allows us to use your type definitions for Beam as regular\nHaskell data structures without wrapping/unwrapping.", 
+            "title": "A Simple Model"
+        }, 
+        {
+            "location": "/user-guide/models/#foreign-references", 
+            "text": "Foreign references are also easily supported in models by simply\nembedding the  PrimaryKey  of the referred to table directly in the\nparent. For example, suppose we want to create a new model\nrepresenting a post by a user.  data PostT f\n    = Post\n    { postId       :: Columnar f (Auto Int)\n    , postPostedAt :: Columnar f LocalTime\n    , postContent  :: Columnar f Text\n    , postPoster   :: PrimaryKey PersonT f\n    } deriving Generic\ninstance Beamable PostT\n\ninstance Table PostT where\n  data PrimaryKey PostT f\n      = PostId (Columnar f (Auto Int)) deriving Generic\n  primaryKey = PostId . postId\n\ntype Post = PostT Identity\ntype PostId = PrimaryKey PostT Identity\nderiving instance Show Post; deriving instance Eq Post\nderiving instance Show PostId; deriving instance Eq PostId  The  Auto  type constructor is provided by  beam-core  for fields that\nare automatically assigned by the database. Internally,  Auto x  is\nsimply a newtype over  Maybe x . The guarantee is that all values of\ntype  Auto x  returned by beam in the result set will have a value,\nalthough this guarantee is not enforced at the type level (yet).", 
+            "title": "Foreign references"
+        }, 
+        {
+            "location": "/user-guide/models/#embedding", 
+            "text": "Sometimes, we want to declare multiple models with fields in\ncommon. Beam allows you to simple embed such fields in common types\nand embed those directly into models. For example,", 
+            "title": "Embedding"
+        }, 
+        {
+            "location": "/user-guide/models/#defaults", 
+            "text": "Based on your data type declarations, beam can already guess a lot\nabout your tables. For example, it already assumes that the personFirstName  field is accessible in SQL as  first_name . This\ndefaulting behavior makes it very easy to interact with typical\ndatabases.  For the easiest user experience, it's best to follow beam's\nconventions for declaring models. In particular, the defaulting\nmechanisms rely on each table type declaring only one constructor\nwhich has fields named in the camelCase style.  When defaulting the name of a table field or column, beam\nun-camelCases the field name (after dropping leading underscores) and\ndrops the first word. The remaining words are joined with\nunderscores. If there is only one component, it is not\ndropped. Trailing and internal underscores are preserved in the name\nand if the name consists solely of underscores, beam makes no\nchanges. A summary of these rules is given in the table below.     Haskell field name  Beam defaulted column name      personFirstName  first_name    _personLastName  last_name    name  name    first_name  first_name    _first_name  first_name    ___ (three underscores)  ___ (no changes)     Note that beam only uses lower case in field names. While typically\ncase does not matter for SQL queries, beam always quotes\nidentifiers. Many DBMS's are case-sensitive for quoted\nidentifiers. Thus, queries can sometimes fail if your tables use\nmixtures of lower- and upper-case to distinguish between fields.  All of these defaults can be overriden using the modifications system,\ndescribed in the next section.", 
+            "title": "Defaults"
+        }, 
+        {
+            "location": "/user-guide/models/#what-about-tables-without-primary-keys", 
+            "text": "Tables without primary keys are considered bad style. However,\nsometimes you need to use beam with a schema that you have no control\nover. To declare a table without a primary key, simply instantiate the Table  class without overriding the defaults.", 
+            "title": "What about tables without primary keys?"
+        }, 
+        {
+            "location": "/user-guide/models/#more-complicated-relationships", 
+            "text": "This is the extent of b1eam's support for defining models. Although\nsimilar packages in other languages provide support for declaring\none-to-many, many-to-one, and many-to-many relationships, beam's\nfocused is providing a direct mapping of relational database concepts\nto Haskell, not on abstracting away the complexities of database\nquerying. Thus, beam does not use 'lazy-loading' or other tricks that\nobfuscate performance. Because of this, the bulk of the functionality\ndealing with different types of relations is found in the querying\nsupport, rather than in the model declarations.", 
+            "title": "More complicated relationships"
+        }, 
+        {
+            "location": "/user-guide/models/#putting-a-database-together", 
+            "text": "Beam also requires you to give a type for your database. The database type\ncontains all the entities (tables or otherwise) that would be present in your\ndatabase. Our database only has one table right now, so it only contains one\nfield.  data ExampleDb f\n    = ExampleDb\n    { persons :: f (TableEntity PersonT)\n    } deriving Generic\ninstance Database ExampleDb\n\nexampleDb :: DatabaseSettings be ExampleDb\nexampleDb = autoDbSettings", 
+            "title": "Putting a Database Together"
+        }, 
+        {
+            "location": "/user-guide/models/#using-your-database", 
+            "text": "Let's open up a SQLite database. Open up  ghci  and import your module.  Prelude  :load Schema.hs\nPrelude Schema  conn  - open  beam-manual.db", 
+            "title": "Using your database"
+        }, 
+        {
+            "location": "/user-guide/models/#a-quick-note-on-backends", 
+            "text": "Beam is backend-agnostic and doesn't provide any means to connect to a\ndatabase. Beam backend libraries usually use well-used Haskell\nlibraries to provide database connectivity. For example, the beam-sqlite  backend uses the  sqlite-simple  backend.  Beam distinguishes each backend via type indexes. Each backend defines\na type that is used to enable backend-specific behavior. For example,\nthe  beam-sqlite  backend ships with the  Sqlite  type that is used to\ndistinguish sqlite specific constructs with generic or other\nbackend-specific ones.  Each backend can have one or more 'syntaxes', which are particular\nways to query the database. While the  beam-core  library ships with a\nstandard ANSI SQL builder, few real-world database implementations\nfully follow the standard. Most backends use their own custom syntax\ntype. Internally, beam uses a finally-tagless representation for\nsyntax trees that allow straightforward construction against any\nbackend.  Beam offers backend-generic functions for the most common operations\nagainst databases. These functions are meant to fit the lowest common\ndenominator. For example, no control is offered over streaming results\nfrom SELECT statements. While these backend-generic functions are\nuseful for ad-hoc querying and development, it is wisest to use\nbackend-specific functions in production for maximum control. Refer to\nbackend-specific documentation for more information.  For our examples, we will use the  beam-sqlite  backend and demonstrate\nusage of the beam standard query functions.", 
+            "title": "A quick note on backends"
+        }, 
+        {
+            "location": "/user-guide/models/#inserting-data", 
+            "text": "First, let's connect to a sqlite database, and create our schema. The beam-core  does not offer any support for the SQL DDL language. There\nis a separate core library  beam-migrate  that offers complete support\nfor ANSI-standard SQL DDL operations, as well as tools to manipulate\ndatabase schemas. See the section on migrations for more information.  For our example, we will simply issue a  CREATE TABLE  command\ndirectly against the database using  sqlite-simple  functionality:  Prelude Schema  execute_ conn  CREATE TABLE persons ( first_name TEXT NOT NULL, last_name TEXT NOT NULL, age INT NOT NULL, PRIMARY KEY(first_name, last_name) )   Now we can insert some data into our database. Beam ships with a\nfunction  withDatabase , with the following signature:  withDatabase :: MonadBeam syntax be m =  DbHandle be -  m a -  IO a  DbHandle be  is a type family that refers to a backend-specific type\nfor referring to a particular database connection. For the beam-sqlite  backend  DbHandle Sqlite ~\nDatabase.Sqlite.Simple.Connection .   MonadBeam  is a type class relating a particular syntax and backend\nto a monad we can use to execute data query and manipulation commands.  Let's insert some data into our database. We are going to use the runInsert  function from  MonadBeam .  Prelude Schema  :{\nPrelude Schema| withDatabase conn $ do\nPrelude Schema|   runInsert $ insert (persons exampleDb) $\nPrelude Schema|               insertValues [ Person  Bob   Smith  50\nPrelude Schema|                            , Person  Alice   Wong  55\nPrelude Schema|                            , Person  John   Quincy  30 ]\nPrelude Schema| :}  The  runInsert  function has the type signature  runInsert :: MonadBeam syntax be m =  SqlInsert syntax -  m ()  SqlInsert syntax  represents a SQL  INSERT  command in the given syntax . We construct this value using the  insert  function from Database.Beam.Query .  insert :: IsSql92InsertSyntax syntax = \n          DatabaseEntity be db (TableEntity table)\n       -  Sql92InsertValuesSyntax syntax\n       -  SqlInsert syntax  Intuitively,  insert  takes a database table descriptor and some\nvalues (particular to the given syntax) and returns a statement to\ninsert these values.  Sql92InsertValuesSyntax syntax  always\nimplements the  IsSql92InsertValuesSyntax  typeclass, which is where\nwe get the  insertValues  function from.  IsSql92InsertValuesSyntax \nalso defines the  insertSelect  function for inserting values from the\nresult of a  SELECT  statement. Other backends may provide other ways\nof specifying the source of values. This brings us to another point  Prelude Schema  runSelect (select (all_ (persons exampleDb)))\n[ Person { personFirstName =  Bob , personLastName= Smith , personAge=50 }, ... ]", 
+            "title": "Inserting data"
+        }, 
+        {
+            "location": "/user-guide/databases/", 
+            "text": "In addition to defining types for each of your tables, beam also\nrequires you to declare your database as a type with fields for\nholding all entities in your database. This includes more than just\ntables. For example, user-defined types that you would like to work\nwith must also be included in your database type.\n\n\nA simple database type\n\n\nLike tables, a database type takes a functor and applies it to each\nentity in the database. For example, a database type for the two\ntables defined above has the form.\n\n\ndata ExampleDb f\n    = ExampleDb\n    { persons :: f (TableEntity PersonT)\n    , posts   :: f (TableEntity PersonT)\n    } deriving Generic\ninstance Database ExampleDb\n\nexampleDb :: DatabaseSettings be ExampleDb\nexampleDb = autoDbSettings\n\n\n\n\nOther database entities\n\n\nViews\n\n\nSome databases also offer the concept of 'views' -- pseudo-tables that\nare built from a pre-defined query. Suppose we wanted to create a view\nthat returned the latest comments and their respective posters.\n\n\ndata PostAndPosterView f\n    = PostAndPosterView\n    { post   :: PostT f\n    , poster :: PersonT f\n    } deriving Generic\ninstance Beamable PostAndPosterView\n\n\n\n\nWe can include this in our database:\n\n\ndata ExampleDb f\n    = ExampleDb\n    { persons        :: f (TableEntity PersonT)\n    , posts          :: f (TableEntity PersonT)\n    , postAndPosters :: f (ViewEntity PostAndPosterView)\n    } deriving Generic\n\n\n\n\nUnique constraints\n\n\nThe \nTableEntityWithUnique\n database entity allows you to declare\ntables with additional uniqueness constraints (the primary key is\nconsidered to be unique by default).\n\n\nFor example, suppose you wanted to re-define the \nPersonT\n table with\nan additional unique e-mail and another unique phone column.\n\n\ndata PersonT f\n    = Person\n    { personFirstName :: Columnar f Text\n    , personLastName  :: Columnar f Text\n    , personAge       :: Columnar f Int\n    , personEmail     :: Columnar f Text\n    , personPhone     :: Columnar f Text\n    } deriving Generic\n\ndata PersonByEmail f = PersonByEmail (Columnar f Text)\ndata PersonByPhone f = PersonByPhone (Columnar f Text)\n\n\n\n\nNow, use \nTableEntityWithUnique\n to declare the table.\n\n\ndata ExampleDb f\n    = ExampleDb\n    { persons        :: f (TableEntityWithUnique PersonT '[PersonByEmail, PersonByPhone])\n    , posts          :: f (TableEntity PersonT)\n    , postAndPosters :: f (ViewEntity PostAndPosterView)\n    } deriving Generic\n\n\n\n\nBeam will not complain about this definition, but you will need to\ndeclare additional instances in order to actually use the unique\nconstraints.\n\n\ninstance Unique PersonT PersonByEmail where\n  mkUnique = PersonByEmail . personEmail\n\ninstance Unique PersonT PersonByPhone where\n  mkUnique = PersonByPhone . personPhone\n\n\n\n\nTODO\n: Should the unique constraints be declared at the database or table level?\n\n\nDomain types\n\n\nDomain types are a way of creating new database types with additional\nconstraints. Beam supports declaring these types as part of your\ndatabase, so they can be used anywhere a data type can. In order to\nuse your domain type, you need to supply beam a Haskell newtype that\nis used to represent values of this type in Haskell.\n\n\nTriggers\n\n\nTODO\n\n\nCharacter sets\n\n\nTODO\n\n\nCollations\n\n\nTODO\n\n\nTranslations\n\n\nTODO\n\n\nDatabase descriptors\n\n\nIn order to interact with the database, beam needs to know more about\nthe data structure, it also needs to know how to refer to each entity\nin your database. For the most part, beam can figure out the names for\nyou using its Generics-based defaulting mechanims. Once you have a\ndatabase type defined, you can create a database descriptor using the\n\ndefaultDbSettings\n function.\n\n\nFor example, to create a backend-agnostic database descriptor for the\n\nExampleDb\n type:\n\n\nexampleDb :: DatabaseSettings be ExampleDb\nexampleDb = defaultDbSettings\n\n\n\n\nNow, we can use the entities in \nexampleDb\n to write queries. The\nrules for name defaulting for database entities are the same as those\nfor \ntable fields", 
+            "title": "Databases"
+        }, 
+        {
+            "location": "/user-guide/databases/#a-simple-database-type", 
+            "text": "Like tables, a database type takes a functor and applies it to each\nentity in the database. For example, a database type for the two\ntables defined above has the form.  data ExampleDb f\n    = ExampleDb\n    { persons :: f (TableEntity PersonT)\n    , posts   :: f (TableEntity PersonT)\n    } deriving Generic\ninstance Database ExampleDb\n\nexampleDb :: DatabaseSettings be ExampleDb\nexampleDb = autoDbSettings", 
+            "title": "A simple database type"
+        }, 
+        {
+            "location": "/user-guide/databases/#other-database-entities", 
+            "text": "", 
+            "title": "Other database entities"
+        }, 
+        {
+            "location": "/user-guide/databases/#views", 
+            "text": "Some databases also offer the concept of 'views' -- pseudo-tables that\nare built from a pre-defined query. Suppose we wanted to create a view\nthat returned the latest comments and their respective posters.  data PostAndPosterView f\n    = PostAndPosterView\n    { post   :: PostT f\n    , poster :: PersonT f\n    } deriving Generic\ninstance Beamable PostAndPosterView  We can include this in our database:  data ExampleDb f\n    = ExampleDb\n    { persons        :: f (TableEntity PersonT)\n    , posts          :: f (TableEntity PersonT)\n    , postAndPosters :: f (ViewEntity PostAndPosterView)\n    } deriving Generic", 
+            "title": "Views"
+        }, 
+        {
+            "location": "/user-guide/databases/#unique-constraints", 
+            "text": "The  TableEntityWithUnique  database entity allows you to declare\ntables with additional uniqueness constraints (the primary key is\nconsidered to be unique by default).  For example, suppose you wanted to re-define the  PersonT  table with\nan additional unique e-mail and another unique phone column.  data PersonT f\n    = Person\n    { personFirstName :: Columnar f Text\n    , personLastName  :: Columnar f Text\n    , personAge       :: Columnar f Int\n    , personEmail     :: Columnar f Text\n    , personPhone     :: Columnar f Text\n    } deriving Generic\n\ndata PersonByEmail f = PersonByEmail (Columnar f Text)\ndata PersonByPhone f = PersonByPhone (Columnar f Text)  Now, use  TableEntityWithUnique  to declare the table.  data ExampleDb f\n    = ExampleDb\n    { persons        :: f (TableEntityWithUnique PersonT '[PersonByEmail, PersonByPhone])\n    , posts          :: f (TableEntity PersonT)\n    , postAndPosters :: f (ViewEntity PostAndPosterView)\n    } deriving Generic  Beam will not complain about this definition, but you will need to\ndeclare additional instances in order to actually use the unique\nconstraints.  instance Unique PersonT PersonByEmail where\n  mkUnique = PersonByEmail . personEmail\n\ninstance Unique PersonT PersonByPhone where\n  mkUnique = PersonByPhone . personPhone  TODO : Should the unique constraints be declared at the database or table level?", 
+            "title": "Unique constraints"
+        }, 
+        {
+            "location": "/user-guide/databases/#domain-types", 
+            "text": "Domain types are a way of creating new database types with additional\nconstraints. Beam supports declaring these types as part of your\ndatabase, so they can be used anywhere a data type can. In order to\nuse your domain type, you need to supply beam a Haskell newtype that\nis used to represent values of this type in Haskell.", 
+            "title": "Domain types"
+        }, 
+        {
+            "location": "/user-guide/databases/#triggers", 
+            "text": "TODO", 
+            "title": "Triggers"
+        }, 
+        {
+            "location": "/user-guide/databases/#character-sets", 
+            "text": "TODO", 
+            "title": "Character sets"
+        }, 
+        {
+            "location": "/user-guide/databases/#collations", 
+            "text": "TODO", 
+            "title": "Collations"
+        }, 
+        {
+            "location": "/user-guide/databases/#translations", 
+            "text": "TODO", 
+            "title": "Translations"
+        }, 
+        {
+            "location": "/user-guide/databases/#database-descriptors", 
+            "text": "In order to interact with the database, beam needs to know more about\nthe data structure, it also needs to know how to refer to each entity\nin your database. For the most part, beam can figure out the names for\nyou using its Generics-based defaulting mechanims. Once you have a\ndatabase type defined, you can create a database descriptor using the defaultDbSettings  function.  For example, to create a backend-agnostic database descriptor for the ExampleDb  type:  exampleDb :: DatabaseSettings be ExampleDb\nexampleDb = defaultDbSettings  Now, we can use the entities in  exampleDb  to write queries. The\nrules for name defaulting for database entities are the same as those\nfor  table fields", 
+            "title": "Database descriptors"
+        }, 
+        {
+            "location": "/user-guide/queries/basic/", 
+            "text": "basic queries", 
+            "title": "Basic Queries"
+        }, 
+        {
+            "location": "/user-guide/queries/relationships/", 
+            "text": "Relationships", 
+            "title": "Relationships"
+        }, 
+        {
+            "location": "/user-guide/queries/aggregates/", 
+            "text": "Aggregates", 
+            "title": "Aggregates"
+        }, 
+        {
+            "location": "/user-guide/queries/combining-queries/", 
+            "text": "Combining queries", 
+            "title": "Combining queries"
+        }, 
+        {
+            "location": "/user-guide/queries/data-types/", 
+            "text": "data types", 
+            "title": "Common data types"
+        }, 
+        {
+            "location": "/user-guide/queries/window-functions/", 
+            "text": "window functions", 
+            "title": "Window functions"
+        }, 
+        {
+            "location": "/schema-guide/migrations/", 
+            "text": "Migrations", 
+            "title": "The Migrations Framework"
+        }, 
+        {
+            "location": "/schema-guide/tool/", 
+            "text": "Tool", 
+            "title": "The beam-migrate tool"
+        }, 
+        {
+            "location": "/schema-guide/supported/", 
+            "text": "supported", 
+            "title": "Supported migrations"
+        }, 
+        {
+            "location": "/user-guide/backends/beam-postgres/", 
+            "text": "The \nbeam-postgres\n backend is the most feature complete SQL backend for beam.\nThe Postgres RDBMS supports most of the standards beam follows, so you can\nusually expect most queries to simply work. Additionally, \nbeam-postgres\n is\npart of the standard Beam distribution, and so upgrades are applied\nperiodically, and new functions are added to achieve feature-parity with the\nlatest Postgres stable", 
+            "title": "beam-postgres"
+        }, 
+        {
+            "location": "/user-guide/backends/beam-sqlite/", 
+            "text": "SQLite is a lightweight RDBMS meant for embedding in larger applications.\nBecause it is not designed to be full-featured, not all Beam queries will work\nwith SQLite. The module \nDatabase.Beam.SQLite.Checked\n provides many symbols\nusually imported from the \nDatabase.Beam\n module that enforce extra checks on\nqueries to assure compliance with SQLite. Use this module in code that is SQLite\nspecific for maximal compile-time safety. Note that this module should be\nimported instead of \nDatabase.Beam\n to avoid name clashes.", 
+            "title": "beam-sqlite"
+        }, 
+        {
+            "location": "/user-guide/custom-backends/", 
+            "text": "Writing a custom backend", 
+            "title": "Writing a Custom Backend"
+        }, 
+        {
+            "location": "/about/compatibility/", 
+            "text": "Beam strives to cover the full breadth of the relevant SQL\nstandards. In general, if there is something in a SQL standard that is\nnot implemented in a generic manner in \nbeam-core\n, feel free to file\nan issue requesting support. There are some features that beam\npurposefully omits because no major RDBMS implements them. For\nexample, database-level assertions are not supported in any of the\ndefault beam backends, and thus are not supported by \nbeam-core\n. If\nyou have a need for these features, feel free to file an issue. Be\nsure to motivate your use case with examples and a testing strategy.\n\n\nThe relevant SQL standards are SQL-92, SQL:1999, SQL:2003, SQL:2008,\nand SQL:2011. Because not all the standards are not publicly\naccessible, I've done my best to piece together features from various\ndocuments available online. I believe I've covered most of the common\ncases, but there may be pieces of functionality that are missing. File\nan issue if this is the case.\n\n\nThe table below summarizes the features defined in each SQL standard\nand beam's support for them.\n\n\n\n\n\n\n\n\nFeature\n\n\nStandard\n\n\nStatus\n\n\nNotes\n\n\n\n\n\n\n\n\n\n\nTODO\n\n\nTODO\n\n\nTODO\n\n\nTODO", 
+            "title": "Compatibility Matrix"
+        }, 
+        {
+            "location": "/about/license/", 
+            "text": "The MIT License (MIT)\n\n\nCopyright \u00a9 2017 Travis Athougies\n\n\nPermission is hereby granted, free of charge, to any person\nobtaining a copy of this software and associated documentation\nfiles (the \u201cSoftware\u201d), to deal in the Software without\nrestriction, including without limitation the rights to use,\ncopy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the\nSoftware is furnished to do so, subject to the following\nconditions:\n\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\n\nTHE SOFTWARE IS PROVIDED \u201cAS IS\u201d, WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nWHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.", 
+            "title": "License"
+        }, 
+        {
+            "location": "/about/license/#the-mit-license-mit", 
+            "text": "Copyright \u00a9 2017 Travis Athougies  Permission is hereby granted, free of charge, to any person\nobtaining a copy of this software and associated documentation\nfiles (the \u201cSoftware\u201d), to deal in the Software without\nrestriction, including without limitation the rights to use,\ncopy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the\nSoftware is furnished to do so, subject to the following\nconditions:  The above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.  THE SOFTWARE IS PROVIDED \u201cAS IS\u201d, WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES\nOF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT\nHOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,\nWHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING\nFROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR\nOTHER DEALINGS IN THE SOFTWARE.", 
+            "title": "The MIT License (MIT)"
+        }, 
+        {
+            "location": "/about/release-notes/", 
+            "text": "Beam Release Notes\n\n\n0.5.0.0\n\n\n\n\nMove to using finally tagless style for SQL generation\n\n\nSplit out backends from \nbeam-core\n\n\nAllow non-table entities to be stored in databases\n\n\nBasic migrations support", 
+            "title": "Release Notes"
+        }, 
+        {
+            "location": "/about/release-notes/#beam-release-notes", 
+            "text": "", 
+            "title": "Beam Release Notes"
+        }, 
+        {
+            "location": "/about/release-notes/#0500", 
+            "text": "Move to using finally tagless style for SQL generation  Split out backends from  beam-core  Allow non-table entities to be stored in databases  Basic migrations support", 
+            "title": "0.5.0.0"
+        }
+    ]
+}

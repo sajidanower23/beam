@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Models - Beam Documentation</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Models";
+    var mkdocs_page_input_path = "user-guide/models.md";
+    var mkdocs_page_url = "/user-guide/models/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Beam Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../about/faq/">Frequently Asked Questions</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">User Guide</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../getting-started/">Getting Started</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Models</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#a-simple-model">A Simple Model</a></li>
+    
+
+    <li class="toctree-l3"><a href="#foreign-references">Foreign references</a></li>
+    
+
+    <li class="toctree-l3"><a href="#embedding">Embedding</a></li>
+    
+
+    <li class="toctree-l3"><a href="#defaults">Defaults</a></li>
+    
+
+    <li class="toctree-l3"><a href="#what-about-tables-without-primary-keys">What about tables without primary keys?</a></li>
+    
+
+    <li class="toctree-l3"><a href="#more-complicated-relationships">More complicated relationships</a></li>
+    
+
+    <li class="toctree-l3"><a href="#putting-a-database-together">Putting a Database Together</a></li>
+    
+
+    <li class="toctree-l3"><a href="#using-your-database">Using your database</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#a-quick-note-on-backends">A quick note on backends</a></li>
+        
+            <li><a class="toctree-l4" href="#inserting-data">Inserting data</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../databases/">Databases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/basic/">Basic Queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/relationships/">Relationships</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/aggregates/">Aggregates</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/combining-queries/">Combining queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/data-types/">Common data types</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/window-functions/">Window functions</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Schema management</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/migrations/">The Migrations Framework</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/tool/">The beam-migrate tool</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/supported/">Supported migrations</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Backends</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../backends/beam-postgres/">beam-postgres</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../backends/beam-sqlite/">beam-sqlite</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../custom-backends/">Writing a Custom Backend</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">About</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../about/compatibility/">Compatibility Matrix</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../about/license/">License</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../about/release-notes/">Release Notes</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Beam Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>User Guide &raquo;</li>
+        
+      
+    
+    <li>Models</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>Beam allows you to define models for your data that can be used across multiple
+backends. Beam models are standard Haskell data structures, but with some extra
+features that allow Beam to introspect them at run-time.</p>
+<h2 id="a-simple-model">A Simple Model</h2>
+<p>Let's define a simple model to represent a person. Open up a file named
+<code>Schema.hs</code> and add the following.</p>
+<pre><code class="haskell">{-# LANGUAGE GADTs #-}
+{-# LANGUAGE DeriveGeneric #-}
+module Schema where
+
+import Database.Beam
+import Database.Beam.SQLite
+import Database.SQLite.Simple
+
+import Data.Text (Text)
+
+data PersonT f
+    = Person
+    { personFirstName :: Columnar f Text
+    , personLastName  :: Columnar f Text
+    , personAge       :: Columnar f Int
+    } deriving Generic
+instance Beamable PersonT
+</code></pre>
+
+<p>Beam also requires that your tables have a primary key that can be used to
+uniquely identify each tuple in your relation. We tell beam about the primary
+key by implementing the <code>Table</code> type class for your table.</p>
+<pre><code class="haskell">instance Table PersonT where
+  data PrimaryKey PersonT f
+      = PersonKey
+      { personKeyFirstName :: Columnar f Text
+      , personKeyLastName  :: Columnar f Text
+      } deriving Generic
+  primaryKey person = PersonKey (personFirstName person) (personLastName person)
+</code></pre>
+
+<p><em>Note</em>: Using the first and last name as a primary key is a bad idea, we use it
+here to illustrate using multiple fields as the primary key.</p>
+<p>For ease-of-use purposes we define some type synonyms for <code>PersonT</code> and
+<code>PrimaryKey PersonT</code> and some convenient instances. These are not strictly
+required but make working with these tables much easier.</p>
+<pre><code class="haskell">type Person = PersonT Identity
+type PersonKey = PrimaryKey PersonT Identity
+deriving instance Show Person; deriving instance Eq Person
+deriving instance Show PersonKey; deriving instance Eq PersonKey
+</code></pre>
+
+<p>Due to the magic of the <code>Columnar</code> type family, the <code>Person</code> type can
+be thought of as having the following definition.</p>
+<pre><code class="haskell">data Person
+    = Person
+    { personFirstName :: Text
+    , personLastName  :: Text
+    , personAge       :: Int
+    } deriving (Show, Eq)
+</code></pre>
+
+<p>This allows us to use your type definitions for Beam as regular
+Haskell data structures without wrapping/unwrapping.</p>
+<h2 id="foreign-references">Foreign references</h2>
+<p>Foreign references are also easily supported in models by simply
+embedding the <code>PrimaryKey</code> of the referred to table directly in the
+parent. For example, suppose we want to create a new model
+representing a post by a user.</p>
+<pre><code class="haskell">data PostT f
+    = Post
+    { postId       :: Columnar f (Auto Int)
+    , postPostedAt :: Columnar f LocalTime
+    , postContent  :: Columnar f Text
+    , postPoster   :: PrimaryKey PersonT f
+    } deriving Generic
+instance Beamable PostT
+
+instance Table PostT where
+  data PrimaryKey PostT f
+      = PostId (Columnar f (Auto Int)) deriving Generic
+  primaryKey = PostId . postId
+
+type Post = PostT Identity
+type PostId = PrimaryKey PostT Identity
+deriving instance Show Post; deriving instance Eq Post
+deriving instance Show PostId; deriving instance Eq PostId
+</code></pre>
+
+<p>The <code>Auto</code> type constructor is provided by <code>beam-core</code> for fields that
+are automatically assigned by the database. Internally, <code>Auto x</code> is
+simply a newtype over <code>Maybe x</code>. The guarantee is that all values of
+type <code>Auto x</code> returned by beam in the result set will have a value,
+although this guarantee is not enforced at the type level (yet).</p>
+<h2 id="embedding">Embedding</h2>
+<p>Sometimes, we want to declare multiple models with fields in
+common. Beam allows you to simple embed such fields in common types
+and embed those directly into models. For example,</p>
+<!-- TODO(travis) -->
+
+<h2 id="defaults">Defaults</h2>
+<p>Based on your data type declarations, beam can already guess a lot
+about your tables. For example, it already assumes that the
+<code>personFirstName</code> field is accessible in SQL as <code>first_name</code>. This
+defaulting behavior makes it very easy to interact with typical
+databases.</p>
+<p>For the easiest user experience, it's best to follow beam's
+conventions for declaring models. In particular, the defaulting
+mechanisms rely on each table type declaring only one constructor
+which has fields named in the camelCase style.</p>
+<p>When defaulting the name of a table field or column, beam
+un-camelCases the field name (after dropping leading underscores) and
+drops the first word. The remaining words are joined with
+underscores. If there is only one component, it is not
+dropped. Trailing and internal underscores are preserved in the name
+and if the name consists solely of underscores, beam makes no
+changes. A summary of these rules is given in the table below.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Haskell field name</th>
+<th align="left">Beam defaulted column name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>personFirstName</code></td>
+<td align="left"><code>first_name</code></td>
+</tr>
+<tr>
+<td align="left"><code>_personLastName</code></td>
+<td align="left"><code>last_name</code></td>
+</tr>
+<tr>
+<td align="left"><code>name</code></td>
+<td align="left"><code>name</code></td>
+</tr>
+<tr>
+<td align="left"><code>first_name</code></td>
+<td align="left"><code>first_name</code></td>
+</tr>
+<tr>
+<td align="left"><code>_first_name</code></td>
+<td align="left"><code>first_name</code></td>
+</tr>
+<tr>
+<td align="left"><code>___</code>(three underscores)</td>
+<td align="left"><code>___</code>(no changes)</td>
+</tr>
+</tbody>
+</table>
+<p>Note that beam only uses lower case in field names. While typically
+case does not matter for SQL queries, beam always quotes
+identifiers. Many DBMS's are case-sensitive for quoted
+identifiers. Thus, queries can sometimes fail if your tables use
+mixtures of lower- and upper-case to distinguish between fields.</p>
+<p>All of these defaults can be overriden using the modifications system,
+described in the next section.</p>
+<h2 id="what-about-tables-without-primary-keys">What about tables without primary keys?</h2>
+<p>Tables without primary keys are considered bad style. However,
+sometimes you need to use beam with a schema that you have no control
+over. To declare a table without a primary key, simply instantiate the
+<code>Table</code> class without overriding the defaults.</p>
+<h2 id="more-complicated-relationships">More complicated relationships</h2>
+<p>This is the extent of b1eam's support for defining models. Although
+similar packages in other languages provide support for declaring
+one-to-many, many-to-one, and many-to-many relationships, beam's
+focused is providing a direct mapping of relational database concepts
+to Haskell, not on abstracting away the complexities of database
+querying. Thus, beam does not use 'lazy-loading' or other tricks that
+obfuscate performance. Because of this, the bulk of the functionality
+dealing with different types of relations is found in the querying
+support, rather than in the model declarations.</p>
+<h2 id="putting-a-database-together">Putting a Database Together</h2>
+<p>Beam also requires you to give a type for your database. The database type
+contains all the entities (tables or otherwise) that would be present in your
+database. Our database only has one table right now, so it only contains one
+field.</p>
+<pre><code class="haskell">data ExampleDb f
+    = ExampleDb
+    { persons :: f (TableEntity PersonT)
+    } deriving Generic
+instance Database ExampleDb
+
+exampleDb :: DatabaseSettings be ExampleDb
+exampleDb = autoDbSettings
+</code></pre>
+
+<h2 id="using-your-database">Using your database</h2>
+<p>Let's open up a SQLite database. Open up <code>ghci</code> and import your module.</p>
+<pre><code>Prelude&gt; :load Schema.hs
+Prelude Schema&gt; conn &lt;- open &quot;beam-manual.db&quot;
+</code></pre>
+
+<h3 id="a-quick-note-on-backends">A quick note on backends</h3>
+<p>Beam is backend-agnostic and doesn't provide any means to connect to a
+database. Beam backend libraries usually use well-used Haskell
+libraries to provide database connectivity. For example, the
+<code>beam-sqlite</code> backend uses the <code>sqlite-simple</code> backend.</p>
+<p>Beam distinguishes each backend via type indexes. Each backend defines
+a type that is used to enable backend-specific behavior. For example,
+the <code>beam-sqlite</code> backend ships with the <code>Sqlite</code> type that is used to
+distinguish sqlite specific constructs with generic or other
+backend-specific ones.</p>
+<p>Each backend can have one or more 'syntaxes', which are particular
+ways to query the database. While the <code>beam-core</code> library ships with a
+standard ANSI SQL builder, few real-world database implementations
+fully follow the standard. Most backends use their own custom syntax
+type. Internally, beam uses a finally-tagless representation for
+syntax trees that allow straightforward construction against any
+backend.</p>
+<p>Beam offers backend-generic functions for the most common operations
+against databases. These functions are meant to fit the lowest common
+denominator. For example, no control is offered over streaming results
+from SELECT statements. While these backend-generic functions are
+useful for ad-hoc querying and development, it is wisest to use
+backend-specific functions in production for maximum control. Refer to
+backend-specific documentation for more information.</p>
+<p>For our examples, we will use the <code>beam-sqlite</code> backend and demonstrate
+usage of the beam standard query functions.</p>
+<h3 id="inserting-data">Inserting data</h3>
+<p>First, let's connect to a sqlite database, and create our schema. The
+<code>beam-core</code> does not offer any support for the SQL DDL language. There
+is a separate core library <code>beam-migrate</code> that offers complete support
+for ANSI-standard SQL DDL operations, as well as tools to manipulate
+database schemas. See the section on migrations for more information.</p>
+<p>For our example, we will simply issue a <code>CREATE TABLE</code> command
+directly against the database using <code>sqlite-simple</code> functionality:</p>
+<pre><code class="text">Prelude Schema&gt; execute_ conn &quot;CREATE TABLE persons ( first_name TEXT NOT NULL, last_name TEXT NOT NULL, age INT NOT NULL, PRIMARY KEY(first_name, last_name) )&quot;
+</code></pre>
+
+<p>Now we can insert some data into our database. Beam ships with a
+function <code>withDatabase</code>, with the following signature:</p>
+<pre><code class="haskell">withDatabase :: MonadBeam syntax be m =&gt; DbHandle be -&gt; m a -&gt; IO a
+</code></pre>
+
+<p><code>DbHandle be</code> is a type family that refers to a backend-specific type
+for referring to a particular database connection. For the
+<code>beam-sqlite</code> backend <code>DbHandle Sqlite ~
+Database.Sqlite.Simple.Connection</code>. </p>
+<p><code>MonadBeam</code> is a type class relating a particular syntax and backend
+to a monad we can use to execute data query and manipulation commands.</p>
+<p>Let's insert some data into our database. We are going to use the
+<code>runInsert</code> function from <code>MonadBeam</code>.</p>
+<pre><code class="text">Prelude Schema&gt; :{
+Prelude Schema| withDatabase conn $ do
+Prelude Schema|   runInsert $ insert (persons exampleDb) $
+Prelude Schema|               insertValues [ Person &quot;Bob&quot; &quot;Smith&quot; 50
+Prelude Schema|                            , Person &quot;Alice&quot; &quot;Wong&quot; 55
+Prelude Schema|                            , Person &quot;John&quot; &quot;Quincy&quot; 30 ]
+Prelude Schema| :}
+</code></pre>
+
+<p>The <code>runInsert</code> function has the type signature</p>
+<pre><code class="haskell">runInsert :: MonadBeam syntax be m =&gt; SqlInsert syntax -&gt; m ()
+</code></pre>
+
+<p><code>SqlInsert syntax</code> represents a SQL <code>INSERT</code> command in the given
+<code>syntax</code>. We construct this value using the <code>insert</code> function from
+<code>Database.Beam.Query</code>.</p>
+<pre><code class="haskell">insert :: IsSql92InsertSyntax syntax =&gt;
+          DatabaseEntity be db (TableEntity table)
+       -&gt; Sql92InsertValuesSyntax syntax
+       -&gt; SqlInsert syntax
+</code></pre>
+
+<p>Intuitively, <code>insert</code> takes a database table descriptor and some
+values (particular to the given syntax) and returns a statement to
+insert these values. <code>Sql92InsertValuesSyntax syntax</code> always
+implements the <code>IsSql92InsertValuesSyntax</code> typeclass, which is where
+we get the <code>insertValues</code> function from. <code>IsSql92InsertValuesSyntax</code>
+also defines the <code>insertSelect</code> function for inserting values from the
+result of a <code>SELECT</code> statement. Other backends may provide other ways
+of specifying the source of values. This brings us to another point</p>
+<pre><code class="text">Prelude Schema&gt; runSelect (select (all_ (persons exampleDb)))
+[ Person { personFirstName = &quot;Bob&quot;, personLastName=&quot;Smith&quot;, personAge=50 }, ... ]
+</code></pre>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../databases/" class="btn btn-neutral float-right" title="Databases">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../getting-started/" class="btn btn-neutral" title="Getting Started"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../getting-started/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../databases/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+    <script src="../../js/theme.js"></script>
+
+</body>
+</html>
