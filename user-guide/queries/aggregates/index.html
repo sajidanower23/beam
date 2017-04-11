@@ -86,6 +86,18 @@
     <a class="current" href="./">Aggregates</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#simple-aggregate-usage">Simple aggregate usage</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#adding-a-group-by-clause">Adding a GROUP BY clause</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#sql-compatibility">SQL compatibility</a></li>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -137,6 +149,21 @@
                 <li class="">
                     
     <a class="" href="../../custom-backends/">Writing a Custom Backend</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Reference</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../reference/expression/">Expressions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../reference/queries/">Queries</a>
                 </li>
     </ul>
 	    </li>
@@ -196,7 +223,119 @@
           <div role="main">
             <div class="section">
               
-                <p>Aggregates</p>
+                <p>You can use the <code>aggregate_</code> function to group your result set and compute
+aggregates within the group. You can think of <code>aggregate_</code> as a souped up
+version of Haskell's <code>groupBy</code>.</p>
+<p>You use <code>aggregate_</code> by specifying an underlying query to run and a function
+that produces an aggregation projection. An aggregation projection is either a
+value of type <code>QAgg syntax s a</code>, a value of type <code>QGroupExpr syntax s a</code> or a
+tuple of such values. Any <code>QGenExpr</code> that uses an aggregate function is
+automatically assigned the <code>QAgg syntax s a</code> type. Any <code>QGenExpr</code> that contains
+the <code>group_</code> combinator is given the type <code>QGroupExpr</code>.</p>
+<p>During query generation, the expressions of type <code>QGroupExpr</code> are added to the
+<code>GROUP BY</code> clause, and expressions of type <code>QAgg</code> are treated as aggregation to
+be computed.</p>
+<p>The result of the <code>aggregate_</code> lifts all the <code>QAgg</code>s and <code>QGroupExpr</code>s to
+'regular' value-level <code>QExpr</code>s, so the result of <code>aggregate_</code> can be used in
+expressions as usual.</p>
+<h2 id="simple-aggregate-usage">Simple aggregate usage</h2>
+<p>Suppose we wanted to count the number of genres in our database.</p>
+<pre><code class="haskell">aggregate_ (\_ -&gt; countAll_) (all_ (genre chinookDb))
+-- Translates to (sqlite syntax):
+--
+-- SELECT COUNT(*) AS [res0] FROM [Genre] AS [t0]
+</code></pre>
+
+<h3 id="adding-a-group-by-clause">Adding a GROUP BY clause</h3>
+<p>Above, SQL used the default grouping, which puts all rows in one group. We can
+also specify columns and expressions to group by. For example, if we wanted to
+count the number of tracks for each genre.</p>
+<pre><code class="haskell">aggregate_ (\(genre, track) -&gt; (group_ genre, count_ (trackId track)))
+           ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb))
+</code></pre>
+
+<p>withConnectionTutorial $
+runSelectReturningList $ select $
+aggregate_ ((genre, track) -&gt; (group_ (genreId genre), group_ (genreName genre), as_ @Int $ count_ (trackId track)))
+           ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb))</p>
+<h2 id="sql-compatibility">SQL compatibility</h2>
+<p>Above, we demonstrated the use of <code>count_</code> and <code>countAll_</code> which map to the
+appropriate SQL aggregates. Beam supports all of the other standard SQL92
+aggregates.</p>
+<p>In general, SQL aggregates are named similarly in beam and SQL. As usual, the
+aggregate function in beam is suffixed by an underscore. For example, <code>sum_</code>
+corresponds to the SQL aggregate <code>SUM</code>.</p>
+<p>SQL also allows you to specify set quantifiers for each aggregate. Beam supports
+these as well. By convention, versions of aggregates that take in an optional
+set quantifier are suffixed by <code>Over</code>. For example <code>SUM(DISTINCT x)</code> can be
+written <code>sumOver_ distinctInGroup_ x</code>. The universally quantified version of
+each aggregate is obtained by using the <code>allInGroup_</code> quantifier. Thus, <code>sum_ ==
+sumOver_ allInGroup_</code>. Because <code>ALL</code> is the default set quantifier, beam does
+not typically generate it in queries. If, for some reason, you would like beam
+to be explicit about it, you can use the <code>allInGroupExplicitly_</code> quantifier.</p>
+<p>The <code>beam-core</code> library supports the standard SQL aggregation functions.
+Individual backends are likely to support the full range of aggregates available
+on that backend (if not, please send a bug report).</p>
+<table>
+<thead>
+<tr>
+<th align="left">SQL Aggregate</th>
+<th align="center">Relevant standard</th>
+<th align="left">Unquantified beam function</th>
+<th align="left">Quantified beam function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">SUM</td>
+<td align="center">SQL92</td>
+<td align="left"><code>sum_</code></td>
+<td align="left"><code>sumOver_</code></td>
+</tr>
+<tr>
+<td align="left">MIN</td>
+<td align="center">SQL92</td>
+<td align="left"><code>min_</code></td>
+<td align="left"><code>minOver_</code></td>
+</tr>
+<tr>
+<td align="left">MAX</td>
+<td align="center">SQL92</td>
+<td align="left"><code>max_</code></td>
+<td align="left"><code>maxOver_</code></td>
+</tr>
+<tr>
+<td align="left">AVG</td>
+<td align="center">SQL92</td>
+<td align="left"><code>avg_</code></td>
+<td align="left"><code>avgOver_</code></td>
+</tr>
+<tr>
+<td align="left">COUNT(x)</td>
+<td align="center">SQL92</td>
+<td align="left"><code>count_</code></td>
+<td align="left"><code>countOver_</code></td>
+</tr>
+<tr>
+<td align="left">COUNT(*)</td>
+<td align="center">SQL92</td>
+<td align="left"><code>countAll_</code></td>
+<td align="left">N/A</td>
+</tr>
+<tr>
+<td align="left">EVERY(x)</td>
+<td align="center">SQL99</td>
+<td align="left"><code>every_</code></td>
+<td align="left"><code>everyOver_</code></td>
+</tr>
+<tr>
+<td align="left">ANY(x)/SOME(x)</td>
+<td align="center">SQL99</td>
+<td align="left"><code>any_</code>, <code>some_</code></td>
+<td align="left"><code>anyOver_</code>, <code>someOver_</code></td>
+</tr>
+</tbody>
+</table>
               
             </div>
           </div>

@@ -82,6 +82,41 @@
     <a class="current" href="./">Relationships</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#one-to-many">One-to-many</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#one-to-one">One-to-one</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#many-to-many">Many-to-many</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#many-to-many-with-arbitrary-data">Many-to-many with arbitrary data</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#arbitrary-joins">Arbitrary Joins</a></li>
+    
+
+    <li class="toctree-l3"><a href="#outer-joins">Outer joins</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#left-and-right-joins">Left and right joins</a></li>
+        
+            <li><a class="toctree-l4" href="#outer-joins_1">Outer joins</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#subqueries">Subqueries</a></li>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -143,6 +178,21 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Reference</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../reference/expression/">Expressions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../reference/queries/">Queries</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">About</span>
     <ul class="subnav">
                 <li class="">
@@ -196,7 +246,135 @@
           <div role="main">
             <div class="section">
               
-                <p>Relationships</p>
+                <p>Relational databases are so-named because they're good at expressing relations
+among data and providing related data in queries. Beam exposes these features in
+its DSL.</p>
+<p>For these examples, we're going to use the <code>beam-sqlite</code> backend with the
+provided sample Chinook database.</p>
+<p>First, create a SQLite database from the included example.</p>
+<pre><code>&gt; sqlite3 chinook.db &lt; beam-sqlite/examples/chinook.sql
+</code></pre>
+
+<p>Now, load the chinook database schema in GHCi.</p>
+<pre><code class="haskell">Prelude Database.Beam.Sqlite&gt; :load beam-sqlite/examples/Chinook/Schema.hs
+Prelude Chinook.Schema&gt; chinook &lt;- open &quot;chinook.db&quot;
+</code></pre>
+
+<p>One more thing, before we explore how beam handles relationships. Before we do, let's define a quick utility function.</p>
+<pre><code class="haskell">Prelude Chinook.Schema&gt; let withConnectionTutorial = withDatabaseDebug putStrLn chinook
+</code></pre>
+
+<p>This function prints each of our queries to standard output before running them.
+Using this function will let us see what SQL is executing.</p>
+<h2 id="one-to-many">One-to-many</h2>
+<p>Beam supports querying for one-to-many joins. For example, to get every
+<code>InvoiceLine</code> for each <code>Invoice</code>, use the <code>oneToMany_</code> combinator.</p>
+<pre><code class="haskell">do i &lt;- all_ (invoice chinookDb)
+   ln &lt;- oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice i
+   pure (i, ln)
+</code></pre>
+
+<p>Or, if you have an actual <code>Invoice</code> (called <code>oneInvoice</code>) and you want all the
+associated <code>InvoiceLine</code>s, you can use <code>val_</code> to convert <code>oneInvoice</code> to the SQL
+expression level.</p>
+<pre><code class="haskell">oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice (val_ i)
+</code></pre>
+
+<p>If you find yourself repeating yourself constantly, you can define a helper.</p>
+<pre><code class="haskell">invoiceLines_ :: OneToMany InvoiceT InvoiceLineT
+invoiceLines_ = oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice
+</code></pre>
+
+<p>Then the above queries become</p>
+<pre><code class="haskell">do i &lt;- all_ (invoice chinookDb)
+   ln &lt;- invoiceLines_ i
+</code></pre>
+
+<p>and</p>
+<pre><code class="haskell">invoiceLines (val_ i)
+</code></pre>
+
+<h3 id="one-to-one">One-to-one</h3>
+<p>One to one relationships are a special case of one to many relationships, save
+for a unique constraint on one column. Thus, there are no special constructs for
+one-to-one relationships.</p>
+<p>For convenience, <code>oneToOne_</code> and <code>OneToOne</code> are equivalent to <code>oneToMany_</code> and
+<code>OneToMany</code>.</p>
+<h2 id="many-to-many">Many-to-many</h2>
+<p>Many to many relationships require a linking table, with foreign keys to each
+table part of the relationship.</p>
+<p>The <code>manyToMany_</code> construct can be used to fetch both, one, or no sides of a
+many-to-many relationship.</p>
+<pre><code class="haskell">manyToMany_ :: ( Database db, Table joinThrough
+               , Table left, Table right
+               , Sql92SelectSanityCheck syntax
+               , IsSql92SelectSyntax syntax
+
+               , SqlOrd (QExpr (Sql92SelectExpressionSyntax syntax) s) (PrimaryKey left g)
+               , SqlOrd (QExpr (Sql92SelectExpressionSyntax syntax) s) (PrimaryKey right h) )
+            =&gt; DatabaseEntity be db (TableEntity joinThrough)
+            -&gt; (joinThrough (QExpr (Sql92SelectExpressionSyntax syntax) s) -&gt; PrimaryKey left g)
+            -&gt; (joinThrough (QExpr (Sql92SelectExpressionSyntax syntax) s) -&gt; PrimaryKey right h)
+            -&gt; Q syntax db s (left g) -&gt; Q syntax db s (right h)
+            -&gt; Q syntax db s (left g, right h)
+</code></pre>
+
+<p>This reads: for any database <code>db</code>; tables <code>joinThrough</code>, <code>left</code>, and <code>right</code>;
+and sane select syntax <code>syntax</code>, where the primary keys of <code>left</code> and <code>right</code>
+are comparable as value expressions and we have some way of extracting a primary
+key of <code>left</code> and <code>right</code> from <code>joinThrough</code>, associate all entries of <code>left</code>
+with those of <code>right</code> through <code>joinThrough</code> and return the results of <code>left</code> and
+<code>right</code>.</p>
+<p>For example, </p>
+<h3 id="many-to-many-with-arbitrary-data">Many-to-many with arbitrary data</h3>
+<p>Sometimes you want to have additional data for each relationship. For this, use
+<code>manyToManyPassthrough_</code>.</p>
+<pre><code class="haskell">manyToManyPassthrough_ 
+    :: ( Database db, Table joinThrough
+       , Table left, Table right
+       , Sql92SelectSanityCheck syntax
+       , IsSql92SelectSyntax syntax
+
+       , SqlOrd (QExpr (Sql92SelectExpressionSyntax syntax) s) (PrimaryKey left g)
+       , SqlOrd (QExpr (Sql92SelectExpressionSyntax syntax) s) (PrimaryKey right h) )
+    =&gt; DatabaseEntity be db (TableEntity joinThrough)
+    -&gt; (joinThrough (QExpr (Sql92SelectExpressionSyntax syntax) s) -&gt; PrimaryKey left g)
+    -&gt; (joinThrough (QExpr (Sql92SelectExpressionSyntax syntax) s) -&gt; PrimaryKey right h)
+    -&gt; Q syntax db s (left g) -&gt; Q syntax db s (right h)
+    -&gt; Q syntax db s (joinThrough (QExpr (Sql92SelectExpressionSyntax syntax) s), left g, right h)
+</code></pre>
+
+<p>Under the hood <code>manyToMany_</code> is defined simply as </p>
+<pre><code class="haskell">manyToMany_ = fmap (\(_, left, right) -&gt; (left, right)) manyToManyPassthrough_
+</code></pre>
+
+<h2 id="arbitrary-joins">Arbitrary Joins</h2>
+<p>Joins with arbitrary conditions can be specified using the <code>join_</code> construct.</p>
+<h2 id="outer-joins">Outer joins</h2>
+<h3 id="left-and-right-joins">Left and right joins</h3>
+<p>Left joins with arbitrary conditions can be specified with the <code>leftJoin_</code> construct.</p>
+<p>Right joins are supported (albeit awkwardly) with the <code>rightJoin_</code> construct.</p>
+<h3 id="outer-joins_1">Outer joins</h3>
+<p>Full outer joins are supported via the <code>outerJoin_</code> construct.</p>
+<h2 id="subqueries">Subqueries</h2>
+<p>Sometimes you want to join against a <em>subquery</em> rather than a table. For the
+most part, beam will automatically figure out when certain queries need to be
+written using subqueries. For example, to join two result sets cointaining a SQL
+LIMIT, you would normally have to write both queries as subqueries. In beam, you
+can write such queries as you'd expect. The library takes care of creating
+subqueries as expected.</p>
+<p>For example,</p>
+<pre><code class="haskell">do i &lt;- limit_ 10 $ all_ (invoice chinookDb)
+   line &lt;- limit_ 10 $ invoiceLInes_ i
+   pure (i, line)
+</code></pre>
+
+<p>generates</p>
+<pre><code class="sql">-- TODO 
+</code></pre>
+
+<p>If you need to (for efficiency for example), you can also generate subqueries
+explicitly, using <code>subselect_</code>.</p>
               
             </div>
           </div>

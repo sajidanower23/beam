@@ -170,6 +170,21 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Reference</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../reference/expression/">Expressions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../reference/queries/">Queries</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">About</span>
     <ul class="subnav">
                 <li class="">
@@ -265,6 +280,10 @@ instance Beamable PostAndPosterView
     } deriving Generic
 </code></pre>
 
+<p>Now we can use <code>postAndPosters</code> wherever we'd use a table. Note that you do not
+need to specify the definition of the view. The definition is not important to
+access the view, so beam does not need to know about it at the type-level. If
+you want to manipulate view definitions, use the migrations packgae.</p>
 <h3 id="unique-constraints">Unique constraints</h3>
 <p>The <code>TableEntityWithUnique</code> database entity allows you to declare
 tables with additional uniqueness constraints (the primary key is

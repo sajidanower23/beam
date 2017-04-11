@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../../img/favicon.ico">
-  <title>The Migrations Framework - Beam Documentation</title>
+  <title>Expressions - Beam Documentation</title>
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
@@ -17,9 +17,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "The Migrations Framework";
-    var mkdocs_page_input_path = "schema-guide/migrations.md";
-    var mkdocs_page_url = "/schema-guide/migrations/";
+    var mkdocs_page_name = "Expressions";
+    var mkdocs_page_input_path = "reference/expression.md";
+    var mkdocs_page_url = "/reference/expression/";
   </script>
   
   <script src="../../js/jquery-2.1.1.min.js"></script>
@@ -104,23 +104,17 @@
 		
     <span class="caption-text">Schema management</span>
     <ul class="subnav">
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">The Migrations Framework</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#the-opinions">The Opinions</a></li>
-    
-
-    </ul>
+    <a class="" href="../../schema-guide/migrations/">The Migrations Framework</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../tool/">The beam-migrate tool</a>
+    <a class="" href="../../schema-guide/tool/">The beam-migrate tool</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../supported/">Supported migrations</a>
+    <a class="" href="../../schema-guide/supported/">Supported migrations</a>
                 </li>
     </ul>
 	    </li>
@@ -148,13 +142,22 @@
 		
     <span class="caption-text">Reference</span>
     <ul class="subnav">
-                <li class="">
+                <li class=" current">
                     
-    <a class="" href="../../reference/expression/">Expressions</a>
+    <a class="current" href="./">Expressions</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#typing">Typing</a></li>
+    
+
+    <li class="toctree-l3"><a href="#literals">Literals</a></li>
+    
+
+    </ul>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../reference/queries/">Queries</a>
+    <a class="" href="../queries/">Queries</a>
                 </li>
     </ul>
 	    </li>
@@ -200,11 +203,11 @@
     
       
         
-          <li>Schema management &raquo;</li>
+          <li>Reference &raquo;</li>
         
       
     
-    <li>The Migrations Framework</li>
+    <li>Expressions</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -214,50 +217,37 @@
           <div role="main">
             <div class="section">
               
-                <p>In the User Guide we saw how to declare a schema for an already created database
-and use it to perform queries. Beam can also manage a database schema based on
-Haskell datatypes you feed it.</p>
-<p>The Beam Migrations Framework is meant to be a robust, modular, and opinionated
-way of managing schema changes. It is an optional part of beam provided in the
-<code>beam-migrate</code> package.</p>
-<p>Install the migrations framework and tool by running</p>
-<pre><code>$ cabal install beam-migrate
-# or
-$ stack install beam-migrate
+                <h2 id="typing">Typing</h2>
+<p>The type of all SQL-level expressions is <code>QGenExpr</code>. See the <a href="../../user-guide/queries/basic/">query tutorial</a> for more information.</p>
+<p>In many cases, you'd like to type the SQL-level result of an expression without
+having to give explicit types for the other <code>QGenExpr</code> parameters. You can do
+this with the <code>as_</code> combinator and <code>-XTypeApplications</code>.</p>
+<p>The following code types the literal 1 as a <code>Double</code>.</p>
+<pre><code class="haskell">as_ @Double 1
 </code></pre>
 
-<p>If you use <code>stack</code> make sure you always use <code>stack exec -- beam-migrate</code> instead
-of the typical <code>beam-migrate</code> command in order to have the package path
-automatically and correctly set for you.</p>
-<h2 id="the-opinions">The Opinions</h2>
-<p>As stated above, <code>beam-migrate</code> is an <em>opinionated</em> migrations framework. It
-specifies a precise way to lay out your schema definitions.</p>
-<p>You can use the <code>beam-migrate new &lt;module-name&gt; &lt;db-type&gt;</code> command to create a new
-migration schema module. This will create the following directory structure</p>
-<pre><code>&lt;module-name&gt;.hs
-&lt;module-name&gt;/V0001.hs
+<p>This is rarely needed, but there are a few cases where the beam types are too
+general for the compiler to meaningfully infer types.</p>
+<h2 id="literals">Literals</h2>
+<ul>
+<li><strong>Integer literals</strong> can be constructed using <code>fromIntegral</code> in the <code>Num</code>
+  typeclass. This means you can also just use a Haskell integer literal as a
+  <code>QGenExpr</code> in any context.</li>
+<li><strong>Rational literals</strong> can be constructed via <code>fromRational</code> in <code>Rational</code>.
+  Regular Haskell rational literals will be automatically converted to
+  <code>QGenExprs</code>.</li>
+<li><strong>Text literals</strong> can be constructed via <code>fromString</code> in <code>IsString</code>. Again,
+  Haskell string constants will automaticall be converted to <code>QGenExprs</code>,
+  although you may have to provide an explicit type, as different backends
+  support different text types natively.</li>
+<li><strong>All other literals</strong> can be constructed using the <code>val_</code> function in
+  <code>SqlValable</code>. This requires that there is an implementation of
+  <code>HasSqlValueSyntax (Sql92ExpressionValueSyntax syntax) x</code> for the type <code>x</code> in
+  the appropriate <code>syntax</code> for the <code>QGenExpr</code>. For example, to construct a value
+  of type <code>Vector Int</code> in the <code>beam-postgres</code> backend.</li>
+</ul>
+<pre><code class="haskell">val_ (V.fromList [1, 2, 3 :: Int])
 </code></pre>
-
-<p>If you open up <code>&lt;module-name&gt;.hs</code>, it will contain the following</p>
-<pre><code class="haskell">module &lt;module-name&gt; ( module &lt;module-name&gt;.V0001, db, migration ) where
-
-import Database.Beam
-
-import qualified &lt;module-name&gt;.V0001 as V0001
-
-db :: DatabaseSettings be &lt;db-type&gt;
-db = V0001.db
-
-migration :: MigrationSteps be &lt;db-type&gt;
-migration = migrationStep &quot;Initial schema&quot; V0001.migration
-</code></pre>
-
-<p>If you specify the <code>--backend</code> option while running <code>beam-migrate new</code>, your
-schema will be specialized to the specific backend.</p>
-<p>When you create a new version of your schema, you will <em>not</em> delete the old one.
-Instead, you will copy it, increase the version number, make your changes to the
-database schema, write an appropriate migration, and then update the top-level
-module to use the newest schema and invoke the latest migration.</p>
               
             </div>
           </div>
@@ -265,10 +255,10 @@ module to use the newest schema and invoke the latest migration.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../tool/" class="btn btn-neutral float-right" title="The beam-migrate tool">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../queries/" class="btn btn-neutral float-right" title="Queries">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../../user-guide/queries/window-functions/" class="btn btn-neutral" title="Window functions"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../user-guide/custom-backends/" class="btn btn-neutral" title="Writing a Custom Backend"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -294,10 +284,10 @@ module to use the newest schema and invoke the latest migration.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../../user-guide/queries/window-functions/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../../user-guide/custom-backends/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../tool/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../queries/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

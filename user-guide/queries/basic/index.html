@@ -78,6 +78,25 @@
     <a class="current" href="./">Basic Queries</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#data-types">Data types</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#the-q-data-type">The Q data type</a></li>
+        
+            <li><a class="toctree-l4" href="#the-qgenexpr-type">The QGenExpr type</a></li>
+        
+            <li><a class="toctree-l4" href="#a-note-on-type-inference">A note on type inference</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#simple-queries">Simple queries</a></li>
+    
+
+    <li class="toctree-l3"><a href="#connecting-to-a-database">Connecting to a database</a></li>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -143,6 +162,21 @@
           
             <li class="toctree-l1">
 		
+    <span class="caption-text">Reference</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../reference/expression/">Expressions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../reference/queries/">Queries</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
     <span class="caption-text">About</span>
     <ul class="subnav">
                 <li class="">
@@ -196,7 +230,177 @@
           <div role="main">
             <div class="section">
               
-                <p>basic queries</p>
+                <p>Given our database definition and database descriptor, we can query database
+entities and retrieve data. Before we discuss writing queries, we will take a
+look at some of the important query types.</p>
+<h2 id="data-types">Data types</h2>
+<h3 id="the-q-data-type">The <code>Q</code> data type</h3>
+<p>Beam queries are built using the <code>Q</code> data type. <code>Q</code>'s signature is as follows</p>
+<pre><code class="haskell">data Q syntax db s a
+</code></pre>
+
+<p>In this definition</p>
+<ul>
+<li>
+<p><code>syntax</code> is the particular dialect of SQL this <code>Q</code> monad will evaluate to.
+  Often times, this is any instance of <code>IsSql92SelectSyntax</code>, but sometimes you
+  use syntax-specific features. For example, if you want to use named windows in
+  postgres, you'll likely have to specialize this to <code>PgSelectSyntax</code> from
+  <code>Database.Beam.Postgres.Syntax</code>.</p>
+</li>
+<li>
+<p><code>db</code> is the type of the database (as we defined above). This is used to ensure
+  you only query database entities that are in scope in this database.</p>
+</li>
+<li>
+<p><code>s</code> is the scope parameter. For the most part, you'll write your queries so
+  that they work over all <code>s</code>. Beam manipulates this parameter internally to
+  ensure that the fields in your expressions are always in scope at run-time.</p>
+</li>
+<li>
+<p><code>a</code> is the type of the result of the query.</p>
+</li>
+</ul>
+<h3 id="the-qgenexpr-type">The <code>QGenExpr</code> type</h3>
+<p>While <code>Q</code> represents the result of whole queries (entire <code>SELECT</code>s for example),
+<code>QGenExpr</code> represents the type of SQL expressions. <code>QGenExpr</code> also takes some
+type parameters:</p>
+<pre><code class="haskell">data QGenExpr context syntax s a
+</code></pre>
+
+<ul>
+<li>
+<p><code>context</code> is the particular way in which this expression is being used. For
+  example, expressions containing aggregates have <code>context ~ QAggregateContext</code>.
+  Expressions returning scalar values have <code>context ~ QValueContext</code>.</p>
+</li>
+<li>
+<p><code>syntax</code> is the particular SQL dialect this expression is written in. Note
+  that this is usually different than the <code>syntax</code> for <code>Q</code>, because <code>Q</code>'s syntax
+  refers to a particular syntax for <code>SELECT</code> expressions (a type implementing
+  <code>IsSql92SelectSyntax</code>), while <code>QGenExpr</code>'s syntax usually refers to an
+  expression syntax (a type implementing <code>IsSql92ExpressionSyntax</code>). Of course,
+  since syntaxes are related, you can get from a <code>Q</code> <code>SELECT</code> syntax to a
+  <code>QGenExpr</code> <code>syntax</code> with the <code>Sql92SelectExpressionSyntax</code> type family.</p>
+</li>
+</ul>
+<p>Thus, a <code>QGenExpr</code> with syntax <code>Sql92SelectExpressionSyntax select</code> can be
+  used in the <code>FILTER</code> clause of a query with type <code>Q select db s a</code>.</p>
+<ul>
+<li>
+<p><code>s</code> is a scoping parameter, which will match the <code>s</code> in <code>Q</code>.</p>
+</li>
+<li>
+<p><code>a</code> is the type of this expression. For example, expressions returning SQL
+  <code>int</code> values, will have Haskell type <code>Int</code>. This ensures that your SQL query
+  won't fail at run-time with a type error.</p>
+</li>
+</ul>
+<p>Beam defines some specializations of <code>QGenExpr</code> for common uses.</p>
+<pre><code class="haskell">type QExpr = QGenExpr QValueContext
+type QAgg = QGenExpr QAggregateContext
+type QOrd = QGenExpr QOrderingContext
+type QWindowExpr = QGenExpr QWindowingContext
+type QWindowFrame = QGenExpr QWindowFrameContext
+type QGroupExpr = QGenExpr QGroupingContext
+</code></pre>
+
+<p>Thus, value expressions can be given the simpler type of <code>QExpr syntax s a</code>.
+Expressions containing aggregates are typed as <code>QAgg syntax s a</code>.</p>
+<h3 id="a-note-on-type-inference">A note on type inference</h3>
+<p>These types may seem incredibly complicated. Indeed, the safety that beam tries
+to provide requires these scary-looking types.</p>
+<p>But alas, do not fear! Beam is also designed to assist type inference. For the
+most part, you will rarely need to annotate these types in your code.
+Occassionally you will need to provide a type for the result of an expression.
+For example, <code>SELECT</code>ing just the literal <code>1</code> may cause an ambiguity, because
+the compiler won't know which <code>Integral</code> type to use. Beam provides an easy
+utility function <code>as_</code> for this. With <code>-XTypeApplications</code> enabled,</p>
+<pre><code class="haskell">as_ @Int (ambiguous expression)
+</code></pre>
+
+<p>ensures that <code>ambiguous expression</code> has the type <code>QGenExpr ctxt syntax s Int</code>
+with the <code>ctxt</code>, <code>syntax</code>, and <code>s</code> types appropriately inferred.</p>
+<h2 id="simple-queries">Simple queries</h2>
+<p>The easiest query is simply getting all the rows in a specific table. If you
+have a database object (something with type <code>DatabaseSettings be db</code>) with some
+table or view entities, you can use the <code>all_</code> function to retrieve all rows in
+a specific table or view.</p>
+<p>For example, to retrieve all <code>PersonT</code> entries in the <code>exampleDb</code> we defined in
+the last section, we can say </p>
+<pre><code class="haskell">all_ (persons exampleDb) :: Q syntax ExampleDb s (PersonT (QExpr s))
+</code></pre>
+
+<p>Two things to note. Firstly, here <code>PersonT</code> is parameterized over the <code>QExpr s</code>
+higher-kinded type. This means that each field in <code>PersonT</code> now contains a SQL
+expression instead of a Haskell value. This is the magic that our parameterized
+types allow.</p>
+<p>Thus,</p>
+<pre><code class="haskell">personFirstName (all_ (persons exampleDb)) :: QExpr s Text
+</code></pre>
+
+<p>and</p>
+<pre><code class="haskell">personFirstName (Person &quot;John&quot; &quot;Smith&quot; 23 &quot;john.smith@example.com&quot; &quot;8888888888&quot; :: Person) :: Text
+</code></pre>
+
+<p>Secondly, the field type has the same scope variable as the entire query. This
+means, it can only be used in the scope of this query. You will never be able to
+inspect the type of <code>s</code> from outside <code>Q</code>.</p>
+<p>Once we have a query in terms of <code>Q</code>, we can use the <code>select</code> function from
+<code>Database.Beam.Query</code> to turn it into a select statement that can be run against
+the backend.</p>
+<pre><code class="haskell">select (all_ (persons exampleDb)) :: (...) =&gt; SqlSelect syntax Person
+</code></pre>
+
+<p>The <code>...</code> in the context represents a bunch of requirements for <code>syntax</code> that
+GHC will generate.</p>
+<p>Normally, you'd ship this select statement off to a backend to run, but for the
+purposes of this tutorial, we can also ask beam to dump what the standard SQL
+expression this query encodes.</p>
+<pre><code class="haskell">dumpSqlSelect (all_ (persons exampleDb))
+SELECT &quot;t0&quot;.&quot;first_name&quot; AS &quot;res0&quot;, &quot;t0&quot;.&quot;last_name&quot; AS &quot;res1&quot;, &quot;t0&quot;.&quot;age&quot; AS &quot;res2&quot;, &quot;t0&quot;.&quot;email&quot; AS &quot;res3&quot;, &quot;t0&quot;.&quot;phone&quot; AS &quot;res4&quot; FROM &quot;person&quot; AS &quot;t0&quot;
+</code></pre>
+
+<p>Internally, <code>dumpSqlSelect</code> uses a <code>beam-core</code> provided syntax to generate
+standard ANSI SQL expressions. Note that these expressions should not be shipped
+to a backend directly, as they may not be escaped properly. Still, it is useful
+to see what would run.</p>
+<h2 id="connecting-to-a-database">Connecting to a database</h2>
+<p>Okay, so we can print out a SQL statement, but how do we execute it against a
+database? Beam provides a convenient <code>MonadBeam</code> type class that allows us to
+write queries in a backend agnostic manner. This is good-enough for most
+applications and preserves portability across databases. However, <code>MonadBeam</code>
+does not support features specific to each backend, nor does it guarantee the
+highest-performance. Most backends provide additional methods to query a
+database, and you should prefer these if you've committed to a particular
+backend. For tutorial purposes, we will use the <code>beam-sqlite</code> backend.</p>
+<p>First, install <code>beam-sqlite</code> with <code>cabal</code> or <code>stack</code>:</p>
+<pre><code>$ cabal install beam-sqlite
+# or
+$ stack install beam-sqlite
+</code></pre>
+
+<p>Now, load <code>beam-sqlite</code> in GHCi. </p>
+<pre><code>Prelude&gt; import Database.Beam.Sqlite
+Prelude Database.Beam.Sqlite&gt; 
+</code></pre>
+
+<p>Now, in another terminal, load the example database provided. </p>
+<pre><code>$ sqlite3 basics.db &lt; beam-sqlite/examples/basics.sql
+</code></pre>
+
+<p>Now, back in GHCi, we can create a connection to this database.</p>
+<pre><code>Prelude Database.Beam.Sqlite&gt; basics &lt;- open &quot;basics.db&quot;
+Prelude Database.Beam.Sqlite&gt; withDatabase basics $ runSelectReturningList (select (all_ (persons exampleDb)))
+[ .. ]
+</code></pre>
+
+<p>The <code>runSelectReturningList</code> function takes a <code>SqlSelect</code> for the given syntax
+and returns the results via a list.</p>
+<p>Voilà! We've successfully created our first query and run it against an example
+database. We have now seen the major functionalities of the beam library. In the
+next section we'll explore more advanced querying and using relationships
+between tables.</p>
               
             </div>
           </div>
