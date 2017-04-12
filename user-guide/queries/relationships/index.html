@@ -9,11 +9,15 @@
   
   <link rel="shortcut icon" href="../../../img/favicon.ico">
   <title>Relationships - Beam Documentation</title>
+
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../../../css/highlight.css">
+  <link href="../../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
   
   <script>
     // Current page data
@@ -86,6 +90,8 @@
     
         <ul>
         
+            <li><a class="toctree-l4" href="#nullable-columns">Nullable columns</a></li>
+        
             <li><a class="toctree-l4" href="#one-to-one">One-to-one</a></li>
         
         </ul>
@@ -109,7 +115,7 @@
         
             <li><a class="toctree-l4" href="#left-and-right-joins">Left and right joins</a></li>
         
-            <li><a class="toctree-l4" href="#outer-joins_1">Outer joins</a></li>
+            <li><a class="toctree-l4" href="#full-outer-joins">Full Outer joins</a></li>
         
         </ul>
     
@@ -188,6 +194,10 @@
                     
     <a class="" href="../../../reference/queries/">Queries</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../../../reference/extensibility/">Extending</a>
+                </li>
     </ul>
 	    </li>
           
@@ -252,16 +262,16 @@ its DSL.</p>
 <p>For these examples, we're going to use the <code>beam-sqlite</code> backend with the
 provided sample Chinook database.</p>
 <p>First, create a SQLite database from the included example.</p>
-<pre><code>&gt; sqlite3 chinook.db &lt; beam-sqlite/examples/chinook.sql
+<pre><code  class="">&gt; sqlite3 chinook.db &lt; beam-sqlite/examples/chinook.sql
 </code></pre>
 
 <p>Now, load the chinook database schema in GHCi.</p>
-<pre><code class="haskell">Prelude Database.Beam.Sqlite&gt; :load beam-sqlite/examples/Chinook/Schema.hs
+<pre><code  class="haskell">Prelude Database.Beam.Sqlite&gt; :load beam-sqlite/examples/Chinook/Schema.hs
 Prelude Chinook.Schema&gt; chinook &lt;- open &quot;chinook.db&quot;
 </code></pre>
 
 <p>One more thing, before we explore how beam handles relationships. Before we do, let's define a quick utility function.</p>
-<pre><code class="haskell">Prelude Chinook.Schema&gt; let withConnectionTutorial = withDatabaseDebug putStrLn chinook
+<pre><code  class="haskell">Prelude Chinook.Schema&gt; let withConnectionTutorial = withDatabaseDebug putStrLn chinook
 </code></pre>
 
 <p>This function prints each of our queries to standard output before running them.
@@ -269,43 +279,114 @@ Using this function will let us see what SQL is executing.</p>
 <h2 id="one-to-many">One-to-many</h2>
 <p>Beam supports querying for one-to-many joins. For example, to get every
 <code>InvoiceLine</code> for each <code>Invoice</code>, use the <code>oneToMany_</code> combinator.</p>
-<pre><code class="haskell">do i &lt;- all_ (invoice chinookDb)
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-sqlite3" aria-controls="tab-0-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-postgres" aria-controls="tab-0-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <pre><code  class="haskell">do i &lt;- all_ (invoice chinookDb)
    ln &lt;- oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice i
    pure (i, ln)
 </code></pre>
-
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,
+       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;
+FROM &quot;Invoice&quot; AS &quot;t0&quot;
+INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;InvoiceId&quot;)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,
+       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;
+FROM &quot;Invoice&quot; AS &quot;t0&quot;
+INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;) = (&quot;t0&quot;.&quot;InvoiceId&quot;)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
 <p>Or, if you have an actual <code>Invoice</code> (called <code>oneInvoice</code>) and you want all the
 associated <code>InvoiceLine</code>s, you can use <code>val_</code> to convert <code>oneInvoice</code> to the SQL
 expression level.</p>
-<pre><code class="haskell">oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice (val_ i)
+<pre><code  class="haskell">oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice (val_ i)
 </code></pre>
 
 <p>If you find yourself repeating yourself constantly, you can define a helper.</p>
-<pre><code class="haskell">invoiceLines_ :: OneToMany InvoiceT InvoiceLineT
+<pre><code  class="haskell">invoiceLines_ :: OneToMany InvoiceT InvoiceLineT
 invoiceLines_ = oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice
 </code></pre>
 
 <p>Then the above queries become</p>
-<pre><code class="haskell">do i &lt;- all_ (invoice chinookDb)
+<pre><code  class="haskell">do i &lt;- all_ (invoice chinookDb)
    ln &lt;- invoiceLines_ i
 </code></pre>
 
 <p>and</p>
-<pre><code class="haskell">invoiceLines (val_ i)
+<pre><code  class="haskell">invoiceLines (val_ i)
 </code></pre>
 
+<h3 id="nullable-columns">Nullable columns</h3>
+<p>If you have a nullable foreign key in your many table, you can use
+<code>oneToManyOptional_</code> and <code>OneToManyOptional</code>, respectively. For example, </p>
 <h3 id="one-to-one">One-to-one</h3>
 <p>One to one relationships are a special case of one to many relationships, save
 for a unique constraint on one column. Thus, there are no special constructs for
 one-to-one relationships.</p>
 <p>For convenience, <code>oneToOne_</code> and <code>OneToOne</code> are equivalent to <code>oneToMany_</code> and
-<code>OneToMany</code>.</p>
+<code>OneToMany</code>. Additionally, <code>oneToMaybe_</code> and <code>OneToMaybe</code> correspond to
+<code>oneToManyOptional_</code> and <code>OneToManyOptional</code>.</p>
 <h2 id="many-to-many">Many-to-many</h2>
 <p>Many to many relationships require a linking table, with foreign keys to each
 table part of the relationship.</p>
 <p>The <code>manyToMany_</code> construct can be used to fetch both, one, or no sides of a
 many-to-many relationship.</p>
-<pre><code class="haskell">manyToMany_ :: ( Database db, Table joinThrough
+<pre><code  class="haskell">manyToMany_ :: ( Database db, Table joinThrough
                , Table left, Table right
                , Sql92SelectSanityCheck syntax
                , IsSql92SelectSyntax syntax
@@ -329,7 +410,7 @@ with those of <code>right</code> through <code>joinThrough</code> and return the
 <h3 id="many-to-many-with-arbitrary-data">Many-to-many with arbitrary data</h3>
 <p>Sometimes you want to have additional data for each relationship. For this, use
 <code>manyToManyPassthrough_</code>.</p>
-<pre><code class="haskell">manyToManyPassthrough_ 
+<pre><code  class="haskell">manyToManyPassthrough_ 
     :: ( Database db, Table joinThrough
        , Table left, Table right
        , Sql92SelectSanityCheck syntax
@@ -345,16 +426,28 @@ with those of <code>right</code> through <code>joinThrough</code> and return the
 </code></pre>
 
 <p>Under the hood <code>manyToMany_</code> is defined simply as </p>
-<pre><code class="haskell">manyToMany_ = fmap (\(_, left, right) -&gt; (left, right)) manyToManyPassthrough_
+<pre><code  class="haskell">manyToMany_ = fmap (\(_, left, right) -&gt; (left, right)) manyToManyPassthrough_
 </code></pre>
 
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>It would be nice to have a <code>ManyToMany</code> type or some equivalent.</p>
+</div>
 <h2 id="arbitrary-joins">Arbitrary Joins</h2>
 <p>Joins with arbitrary conditions can be specified using the <code>join_</code> construct.</p>
 <h2 id="outer-joins">Outer joins</h2>
 <h3 id="left-and-right-joins">Left and right joins</h3>
 <p>Left joins with arbitrary conditions can be specified with the <code>leftJoin_</code> construct.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p><code>rightJoin_</code> is not yet implemented</p>
+</div>
 <p>Right joins are supported (albeit awkwardly) with the <code>rightJoin_</code> construct.</p>
-<h3 id="outer-joins_1">Outer joins</h3>
+<h3 id="full-outer-joins">Full Outer joins</h3>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p><code>outerJoin_</code> not yet supported</p>
+</div>
 <p>Full outer joins are supported via the <code>outerJoin_</code> construct.</p>
 <h2 id="subqueries">Subqueries</h2>
 <p>Sometimes you want to join against a <em>subquery</em> rather than a table. For the
@@ -363,16 +456,101 @@ written using subqueries. For example, to join two result sets cointaining a SQL
 LIMIT, you would normally have to write both queries as subqueries. In beam, you
 can write such queries as you'd expect. The library takes care of creating
 subqueries as expected.</p>
-<p>For example,</p>
-<pre><code class="haskell">do i &lt;- limit_ 10 $ all_ (invoice chinookDb)
-   line &lt;- limit_ 10 $ invoiceLInes_ i
+<p>For example, the following query generates the code you'd expect.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-sqlite3" aria-controls="tab-1-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-postgres" aria-controls="tab-1-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+            <pre><code  class="haskell">do (i :: _) &lt;- limit_ 10 $ all_ (invoice chinookDb)
+   line &lt;- invoiceLines i
    pure (i, line)
 </code></pre>
-
-<p>generates</p>
-<pre><code class="sql">-- TODO 
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;res4&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;res5&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;res6&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;res7&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;res8&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,
+       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+          &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+          &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+          &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+          &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+          &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+          &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;
+   FROM &quot;Invoice&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;res0&quot;)
 </code></pre>
-
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;res4&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;res5&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;res6&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;res7&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;res8&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,
+       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+          &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+          &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+          &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+          &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+          &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+          &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;
+   FROM &quot;Invoice&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;) = (&quot;t0&quot;.&quot;res0&quot;)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
 <p>If you need to (for efficiency for example), you can also generate subqueries
 explicitly, using <code>subselect_</code>.</p>
               
@@ -418,7 +596,13 @@ explicitly, using <code>subselect_</code>.</p>
       
     </span>
 </div>
+
     <script src="../../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
 
 </body>
 </html>

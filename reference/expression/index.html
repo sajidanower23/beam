@@ -9,11 +9,15 @@
   
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>Expressions - Beam Documentation</title>
+
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
   
   <script>
     // Current page data
@@ -153,11 +157,30 @@
     <li class="toctree-l3"><a href="#literals">Literals</a></li>
     
 
+    <li class="toctree-l3"><a href="#arithmetic">Arithmetic</a></li>
+    
+
+    <li class="toctree-l3"><a href="#case-when-else-statements">CASE .. WHEN .. ELSE .. statements</a></li>
+    
+
+    <li class="toctree-l3"><a href="#sql-functions-and-operators">SQL Functions and operators</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#my-favorite-operator-function-isnt-listed-here">My favorite operator / function isn't listed here!</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
                 <li class="">
                     
     <a class="" href="../queries/">Queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../extensibility/">Extending</a>
                 </li>
     </ul>
 	    </li>
@@ -223,7 +246,7 @@
 having to give explicit types for the other <code>QGenExpr</code> parameters. You can do
 this with the <code>as_</code> combinator and <code>-XTypeApplications</code>.</p>
 <p>The following code types the literal 1 as a <code>Double</code>.</p>
-<pre><code class="haskell">as_ @Double 1
+<pre><code  class="haskell">as_ @Double 1
 </code></pre>
 
 <p>This is rarely needed, but there are a few cases where the beam types are too
@@ -246,8 +269,145 @@ general for the compiler to meaningfully infer types.</p>
   the appropriate <code>syntax</code> for the <code>QGenExpr</code>. For example, to construct a value
   of type <code>Vector Int</code> in the <code>beam-postgres</code> backend.</li>
 </ul>
-<pre><code class="haskell">val_ (V.fromList [1, 2, 3 :: Int])
+<pre><code  class="haskell">val_ (V.fromList [1, 2, 3 :: Int])
 </code></pre>
+
+<ul>
+<li><strong>Explicit tables</strong> can be brought to the SQL value level by using <code>val_</code> as
+  well. For example, if you have an <code>AddressT Identity</code> named <code>a</code>, <code>val_ a ::
+  AddressT (QGenExpr context expr s)</code>.</li>
+</ul>
+<h2 id="arithmetic">Arithmetic</h2>
+<p>Arithmetic operations that are part of the <code>Fractional</code> and <code>Num</code> classes can be
+used directly. For example, if <code>a</code> and <code>b</code> are <code>QGenExpr</code>s of the same type,
+then <code>a + b</code> is a <code>QGenExpr</code> of the same type.</p>
+<p>Because of the <code>toInteger</code> class method in <code>Integral</code>, <code>QGenExpr</code>s cannot
+implement <code>Integral</code>. Nevertheless, versions of <code>div</code> and <code>mod</code> are available as
+<code>div_</code> and <code>mod_</code>, respectively, having the corresponding type.</p>
+<h2 id="case-when-else-statements"><code>CASE .. WHEN .. ELSE ..</code> statements</h2>
+<p>The SQL <code>CASE .. WHEN .. ELSE</code> construct can be used to implement a multi-way
+if. The corresponding beam syntax is</p>
+<pre><code  class="haskell">if_ [ cond1 `then_` result1, cond2 `then_` result2, ... ] (else_ elseResult)
+</code></pre>
+
+<p>where <code>cond&lt;n&gt;</code> are <code>QGenExpr</code> of type <code>Bool</code>, and <code>result1</code>, <code>result2</code>, and
+<code>elseResult</code> are <code>QGenExprs</code> of the same type.</p>
+<h2 id="sql-functions-and-operators">SQL Functions and operators</h2>
+<table>
+<thead>
+<tr>
+<th align="left">SQL construct</th>
+<th align="center">SQL standard</th>
+<th align="left">Beam equivalent</th>
+<th align="left">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>EXISTS (x)</code></td>
+<td align="center">SQL92</td>
+<td align="left">exists_ x</td>
+<td align="left">Here, <code>x</code> is any query (of type <code>Q</code>)</td>
+</tr>
+<tr>
+<td align="left"><code>UNIQUE (x)</code></td>
+<td align="center">SQL92</td>
+<td align="left">unique_ x</td>
+<td align="left">See note for <code>EXISTS (x)</code></td>
+</tr>
+<tr>
+<td align="left"><code>DISTINCT (x)</code></td>
+<td align="center">SQL99</td>
+<td align="left">distinct_ x</td>
+<td align="left">See note for <code>EXISTS (x)</code></td>
+</tr>
+<tr>
+<td align="left"><code>SELECT .. FROM ...</code> <br/> as an expression (subqueries)</td>
+<td align="center">SQL92</td>
+<td align="left">subquery_ x</td>
+<td align="left"><code>x</code> is an query (of type <code>Q</code>)</td>
+</tr>
+<tr>
+<td align="left"><code>COALESCE(a, b, c, ...)</code></td>
+<td align="center">SQL92</td>
+<td align="left">coalesce_ [a, b, c, ...]</td>
+<td align="left"><code>a</code>, <code>b</code>, and <code>c</code> must be of <br/>type <code>Maybe a</code>.<br/>The result has type <code>a</code></td>
+</tr>
+<tr>
+<td align="left"><code>a BETWEEN b AND c</code></td>
+<td align="center">SQL92</td>
+<td align="left">between_ a b c</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>a LIKE b</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>a `like_` b</code></td>
+<td align="left"><code>a</code> and <code>b</code> should be string types</td>
+</tr>
+<tr>
+<td align="left"><code>a SIMILAR TO b</code></td>
+<td align="center">SQL99</td>
+<td align="left"><code>a `similarTo_` b</code></td>
+<td align="left">See note for <code>LIKE</code></td>
+</tr>
+<tr>
+<td align="left"><code>POSITION(x IN y)</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>position_ x y</code></td>
+<td align="left"><code>x</code> and <code>y</code> should be string types</td>
+</tr>
+<tr>
+<td align="left"><code>CHAR_LENGTH(x)</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>charLength_ x</code></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>OCTET_LENGTH(x)</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>octetLength_ x</code></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>BIT_LENGTH(x)</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>bitLength_ x</code></td>
+<td align="left"><code>x</code> must be of the beam-specific <code>SqlBitString</code> type</td>
+</tr>
+<tr>
+<td align="left"><code>x IS TRUE</code> / <code>x IS NOT TRUE</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>isTrue_ x</code> / <code>isNotTrue_ x</code></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>x IS FALSE</code> / <code>x IS NOT FALSE</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>isFalse_ x</code> / <code>isNotFalse_ x</code></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>x IS UNKNOWN</code> / <code>x IS NOT UNKNOWN</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>isUnknown_ x</code> / <code>isNotUnknown_ x</code></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><code>NOT x</code></td>
+<td align="center">SQL92</td>
+<td align="left"><code>not_ x</code></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<h3 id="my-favorite-operator-function-isnt-listed-here">My favorite operator / function isn't listed here!</h3>
+<p>If your favorite operator or function is not provided here, first ask yourself
+if it is part of any SQL standard. If it is not, then check the backend you are
+using to see if it provides a corresponding construct. If the backend does not
+or if the function / operator you need is part of a SQL standard, please open an
+issue on GitHub. Alternatively, implement the construct yourself and send us a
+pull request! See the section on <a href="reference/extensibility.md">adding your own functions</a></p>
               
             </div>
           </div>
@@ -291,7 +451,13 @@ general for the compiler to meaningfully infer types.</p>
       
     </span>
 </div>
+
     <script src="../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
 
 </body>
 </html>

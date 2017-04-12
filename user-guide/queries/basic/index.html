@@ -9,11 +9,15 @@
   
   <link rel="shortcut icon" href="../../../img/favicon.ico">
   <title>Basic Queries - Beam Documentation</title>
+
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../../../css/highlight.css">
+  <link href="../../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
   
   <script>
     // Current page data
@@ -94,6 +98,15 @@
     <li class="toctree-l3"><a href="#simple-queries">Simple queries</a></li>
     
 
+    <li class="toctree-l3"><a href="#filtering-results">Filtering results</a></li>
+    
+
+    <li class="toctree-l3"><a href="#fetching-only-certain-results">Fetching only certain results</a></li>
+    
+
+    <li class="toctree-l3"><a href="#a-note-on-composability">A note on composability</a></li>
+    
+
     <li class="toctree-l3"><a href="#connecting-to-a-database">Connecting to a database</a></li>
     
 
@@ -172,6 +185,10 @@
                     
     <a class="" href="../../../reference/queries/">Queries</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../../../reference/extensibility/">Extending</a>
+                </li>
     </ul>
 	    </li>
           
@@ -236,7 +253,7 @@ look at some of the important query types.</p>
 <h2 id="data-types">Data types</h2>
 <h3 id="the-q-data-type">The <code>Q</code> data type</h3>
 <p>Beam queries are built using the <code>Q</code> data type. <code>Q</code>'s signature is as follows</p>
-<pre><code class="haskell">data Q syntax db s a
+<pre><code  class="haskell">data Q syntax db s a
 </code></pre>
 
 <p>In this definition</p>
@@ -265,7 +282,7 @@ look at some of the important query types.</p>
 <p>While <code>Q</code> represents the result of whole queries (entire <code>SELECT</code>s for example),
 <code>QGenExpr</code> represents the type of SQL expressions. <code>QGenExpr</code> also takes some
 type parameters:</p>
-<pre><code class="haskell">data QGenExpr context syntax s a
+<pre><code  class="haskell">data QGenExpr context syntax s a
 </code></pre>
 
 <ul>
@@ -297,7 +314,7 @@ type parameters:</p>
 </li>
 </ul>
 <p>Beam defines some specializations of <code>QGenExpr</code> for common uses.</p>
-<pre><code class="haskell">type QExpr = QGenExpr QValueContext
+<pre><code  class="haskell">type QExpr = QGenExpr QValueContext
 type QAgg = QGenExpr QAggregateContext
 type QOrd = QGenExpr QOrderingContext
 type QWindowExpr = QGenExpr QWindowingContext
@@ -316,7 +333,7 @@ Occassionally you will need to provide a type for the result of an expression.
 For example, <code>SELECT</code>ing just the literal <code>1</code> may cause an ambiguity, because
 the compiler won't know which <code>Integral</code> type to use. Beam provides an easy
 utility function <code>as_</code> for this. With <code>-XTypeApplications</code> enabled,</p>
-<pre><code class="haskell">as_ @Int (ambiguous expression)
+<pre><code  class="haskell">as_ @Int (ambiguous expression)
 </code></pre>
 
 <p>ensures that <code>ambiguous expression</code> has the type <code>QGenExpr ctxt syntax s Int</code>
@@ -328,7 +345,7 @@ table or view entities, you can use the <code>all_</code> function to retrieve a
 a specific table or view.</p>
 <p>For example, to retrieve all <code>PersonT</code> entries in the <code>exampleDb</code> we defined in
 the last section, we can say </p>
-<pre><code class="haskell">all_ (persons exampleDb) :: Q syntax ExampleDb s (PersonT (QExpr s))
+<pre><code  class="haskell">all_ (persons exampleDb) :: Q syntax ExampleDb s (PersonT (QExpr s))
 </code></pre>
 
 <p>Two things to note. Firstly, here <code>PersonT</code> is parameterized over the <code>QExpr s</code>
@@ -336,11 +353,11 @@ higher-kinded type. This means that each field in <code>PersonT</code> now conta
 expression instead of a Haskell value. This is the magic that our parameterized
 types allow.</p>
 <p>Thus,</p>
-<pre><code class="haskell">personFirstName (all_ (persons exampleDb)) :: QExpr s Text
+<pre><code  class="haskell">personFirstName (all_ (persons exampleDb)) :: QExpr s Text
 </code></pre>
 
 <p>and</p>
-<pre><code class="haskell">personFirstName (Person &quot;John&quot; &quot;Smith&quot; 23 &quot;john.smith@example.com&quot; &quot;8888888888&quot; :: Person) :: Text
+<pre><code  class="haskell">personFirstName (Person &quot;John&quot; &quot;Smith&quot; 23 &quot;john.smith@example.com&quot; &quot;8888888888&quot; :: Person) :: Text
 </code></pre>
 
 <p>Secondly, the field type has the same scope variable as the entire query. This
@@ -349,7 +366,7 @@ inspect the type of <code>s</code> from outside <code>Q</code>.</p>
 <p>Once we have a query in terms of <code>Q</code>, we can use the <code>select</code> function from
 <code>Database.Beam.Query</code> to turn it into a select statement that can be run against
 the backend.</p>
-<pre><code class="haskell">select (all_ (persons exampleDb)) :: (...) =&gt; SqlSelect syntax Person
+<pre><code  class="haskell">select (all_ (persons exampleDb)) :: (...) =&gt; SqlSelect syntax Person
 </code></pre>
 
 <p>The <code>...</code> in the context represents a bunch of requirements for <code>syntax</code> that
@@ -357,7 +374,7 @@ GHC will generate.</p>
 <p>Normally, you'd ship this select statement off to a backend to run, but for the
 purposes of this tutorial, we can also ask beam to dump what the standard SQL
 expression this query encodes.</p>
-<pre><code class="haskell">dumpSqlSelect (all_ (persons exampleDb))
+<pre><code  class="haskell">dumpSqlSelect (all_ (persons exampleDb))
 SELECT &quot;t0&quot;.&quot;first_name&quot; AS &quot;res0&quot;, &quot;t0&quot;.&quot;last_name&quot; AS &quot;res1&quot;, &quot;t0&quot;.&quot;age&quot; AS &quot;res2&quot;, &quot;t0&quot;.&quot;email&quot; AS &quot;res3&quot;, &quot;t0&quot;.&quot;phone&quot; AS &quot;res4&quot; FROM &quot;person&quot; AS &quot;t0&quot;
 </code></pre>
 
@@ -365,6 +382,17 @@ SELECT &quot;t0&quot;.&quot;first_name&quot; AS &quot;res0&quot;, &quot;t0&quot;
 standard ANSI SQL expressions. Note that these expressions should not be shipped
 to a backend directly, as they may not be escaped properly. Still, it is useful
 to see what would run.</p>
+<h2 id="filtering-results">Filtering results</h2>
+<h2 id="fetching-only-certain-results">Fetching only certain results</h2>
+<p>You can use <code>limit_</code> to force your query to return a maximum number of results.
+<code>offset_</code> can be used to drop rows from the beginning of the result set.</p>
+<h2 id="a-note-on-composability">A note on composability</h2>
+<p>All beam queries are <em>composable</em>. This means that you can freely mix values of
+type <code>Q</code> in whichever way typechecks and expect a reasonable SQL query. This
+differs from the behavior of SQL, where the syntax for composing queries depends
+on the structure of that query.</p>
+<p>For example, suppose you wanted to fetch all rows of a table, filter them by a
+condition, and then limit the amount of rows returned. In beam, </p>
 <h2 id="connecting-to-a-database">Connecting to a database</h2>
 <p>Okay, so we can print out a SQL statement, but how do we execute it against a
 database? Beam provides a convenient <code>MonadBeam</code> type class that allows us to
@@ -375,22 +403,22 @@ highest-performance. Most backends provide additional methods to query a
 database, and you should prefer these if you've committed to a particular
 backend. For tutorial purposes, we will use the <code>beam-sqlite</code> backend.</p>
 <p>First, install <code>beam-sqlite</code> with <code>cabal</code> or <code>stack</code>:</p>
-<pre><code>$ cabal install beam-sqlite
+<pre><code  class="">$ cabal install beam-sqlite
 # or
 $ stack install beam-sqlite
 </code></pre>
 
 <p>Now, load <code>beam-sqlite</code> in GHCi. </p>
-<pre><code>Prelude&gt; import Database.Beam.Sqlite
+<pre><code  class="">Prelude&gt; import Database.Beam.Sqlite
 Prelude Database.Beam.Sqlite&gt; 
 </code></pre>
 
 <p>Now, in another terminal, load the example database provided. </p>
-<pre><code>$ sqlite3 basics.db &lt; beam-sqlite/examples/basics.sql
+<pre><code  class="">$ sqlite3 basics.db &lt; beam-sqlite/examples/basics.sql
 </code></pre>
 
 <p>Now, back in GHCi, we can create a connection to this database.</p>
-<pre><code>Prelude Database.Beam.Sqlite&gt; basics &lt;- open &quot;basics.db&quot;
+<pre><code  class="">Prelude Database.Beam.Sqlite&gt; basics &lt;- open &quot;basics.db&quot;
 Prelude Database.Beam.Sqlite&gt; withDatabase basics $ runSelectReturningList (select (all_ (persons exampleDb)))
 [ .. ]
 </code></pre>
@@ -444,7 +472,13 @@ between tables.</p>
       
     </span>
 </div>
+
     <script src="../../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
 
 </body>
 </html>

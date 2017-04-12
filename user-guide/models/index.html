@@ -9,11 +9,15 @@
   
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>Models - Beam Documentation</title>
+
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
   
   <script>
     // Current page data
@@ -185,6 +189,10 @@
                     
     <a class="" href="../../reference/queries/">Queries</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../../reference/extensibility/">Extending</a>
+                </li>
     </ul>
 	    </li>
           
@@ -249,7 +257,7 @@ features that allow Beam to introspect them at run-time.</p>
 <h2 id="a-simple-model">A Simple Model</h2>
 <p>Let's define a simple model to represent a person. Open up a file named
 <code>Schema.hs</code> and add the following.</p>
-<pre><code class="haskell">{-# LANGUAGE GADTs #-}
+<pre><code  class="haskell">{-# LANGUAGE GADTs #-}
 {-# LANGUAGE DeriveGeneric #-}
 module Schema where
 
@@ -271,7 +279,7 @@ instance Beamable PersonT
 <p>Beam also requires that your tables have a primary key that can be used to
 uniquely identify each tuple in your relation. We tell beam about the primary
 key by implementing the <code>Table</code> type class for your table.</p>
-<pre><code class="haskell">instance Table PersonT where
+<pre><code  class="haskell">instance Table PersonT where
   data PrimaryKey PersonT f
       = PersonKey
       { personKeyFirstName :: Columnar f Text
@@ -285,7 +293,7 @@ here to illustrate using multiple fields as the primary key.</p>
 <p>For ease-of-use purposes we define some type synonyms for <code>PersonT</code> and
 <code>PrimaryKey PersonT</code> and some convenient instances. These are not strictly
 required but make working with these tables much easier.</p>
-<pre><code class="haskell">type Person = PersonT Identity
+<pre><code  class="haskell">type Person = PersonT Identity
 type PersonKey = PrimaryKey PersonT Identity
 deriving instance Show Person; deriving instance Eq Person
 deriving instance Show PersonKey; deriving instance Eq PersonKey
@@ -293,7 +301,7 @@ deriving instance Show PersonKey; deriving instance Eq PersonKey
 
 <p>Due to the magic of the <code>Columnar</code> type family, the <code>Person</code> type can
 be thought of as having the following definition.</p>
-<pre><code class="haskell">data Person
+<pre><code  class="haskell">data Person
     = Person
     { personFirstName :: Text
     , personLastName  :: Text
@@ -308,7 +316,7 @@ Haskell data structures without wrapping/unwrapping.</p>
 embedding the <code>PrimaryKey</code> of the referred to table directly in the
 parent. For example, suppose we want to create a new model
 representing a post by a user.</p>
-<pre><code class="haskell">data PostT f
+<pre><code  class="haskell">data PostT f
     = Post
     { postId       :: Columnar f (Auto Int)
     , postPostedAt :: Columnar f LocalTime
@@ -417,7 +425,7 @@ support, rather than in the model declarations.</p>
 contains all the entities (tables or otherwise) that would be present in your
 database. Our database only has one table right now, so it only contains one
 field.</p>
-<pre><code class="haskell">data ExampleDb f
+<pre><code  class="haskell">data ExampleDb f
     = ExampleDb
     { persons :: f (TableEntity PersonT)
     } deriving Generic
@@ -429,7 +437,7 @@ exampleDb = autoDbSettings
 
 <h2 id="using-your-database">Using your database</h2>
 <p>Let's open up a SQLite database. Open up <code>ghci</code> and import your module.</p>
-<pre><code>Prelude&gt; :load Schema.hs
+<pre><code  class="">Prelude&gt; :load Schema.hs
 Prelude Schema&gt; conn &lt;- open &quot;beam-manual.db&quot;
 </code></pre>
 
@@ -467,12 +475,12 @@ for ANSI-standard SQL DDL operations, as well as tools to manipulate
 database schemas. See the section on migrations for more information.</p>
 <p>For our example, we will simply issue a <code>CREATE TABLE</code> command
 directly against the database using <code>sqlite-simple</code> functionality:</p>
-<pre><code class="text">Prelude Schema&gt; execute_ conn &quot;CREATE TABLE persons ( first_name TEXT NOT NULL, last_name TEXT NOT NULL, age INT NOT NULL, PRIMARY KEY(first_name, last_name) )&quot;
+<pre><code  class="text">Prelude Schema&gt; execute_ conn &quot;CREATE TABLE persons ( first_name TEXT NOT NULL, last_name TEXT NOT NULL, age INT NOT NULL, PRIMARY KEY(first_name, last_name) )&quot;
 </code></pre>
 
 <p>Now we can insert some data into our database. Beam ships with a
 function <code>withDatabase</code>, with the following signature:</p>
-<pre><code class="haskell">withDatabase :: MonadBeam syntax be m =&gt; DbHandle be -&gt; m a -&gt; IO a
+<pre><code  class="haskell">withDatabase :: MonadBeam syntax be m =&gt; DbHandle be -&gt; m a -&gt; IO a
 </code></pre>
 
 <p><code>DbHandle be</code> is a type family that refers to a backend-specific type
@@ -483,7 +491,7 @@ Database.Sqlite.Simple.Connection</code>. </p>
 to a monad we can use to execute data query and manipulation commands.</p>
 <p>Let's insert some data into our database. We are going to use the
 <code>runInsert</code> function from <code>MonadBeam</code>.</p>
-<pre><code class="text">Prelude Schema&gt; :{
+<pre><code  class="text">Prelude Schema&gt; :{
 Prelude Schema| withDatabase conn $ do
 Prelude Schema|   runInsert $ insert (persons exampleDb) $
 Prelude Schema|               insertValues [ Person &quot;Bob&quot; &quot;Smith&quot; 50
@@ -493,13 +501,13 @@ Prelude Schema| :}
 </code></pre>
 
 <p>The <code>runInsert</code> function has the type signature</p>
-<pre><code class="haskell">runInsert :: MonadBeam syntax be m =&gt; SqlInsert syntax -&gt; m ()
+<pre><code  class="haskell">runInsert :: MonadBeam syntax be m =&gt; SqlInsert syntax -&gt; m ()
 </code></pre>
 
 <p><code>SqlInsert syntax</code> represents a SQL <code>INSERT</code> command in the given
 <code>syntax</code>. We construct this value using the <code>insert</code> function from
 <code>Database.Beam.Query</code>.</p>
-<pre><code class="haskell">insert :: IsSql92InsertSyntax syntax =&gt;
+<pre><code  class="haskell">insert :: IsSql92InsertSyntax syntax =&gt;
           DatabaseEntity be db (TableEntity table)
        -&gt; Sql92InsertValuesSyntax syntax
        -&gt; SqlInsert syntax
@@ -513,7 +521,7 @@ we get the <code>insertValues</code> function from. <code>IsSql92InsertValuesSyn
 also defines the <code>insertSelect</code> function for inserting values from the
 result of a <code>SELECT</code> statement. Other backends may provide other ways
 of specifying the source of values. This brings us to another point</p>
-<pre><code class="text">Prelude Schema&gt; runSelect (select (all_ (persons exampleDb)))
+<pre><code  class="text">Prelude Schema&gt; runSelect (select (all_ (persons exampleDb)))
 [ Person { personFirstName = &quot;Bob&quot;, personLastName=&quot;Smith&quot;, personAge=50 }, ... ]
 </code></pre>
               
@@ -559,7 +567,13 @@ of specifying the source of values. This brings us to another point</p>
       
     </span>
 </div>
+
     <script src="../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
 
 </body>
 </html>

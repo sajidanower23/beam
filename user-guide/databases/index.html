@@ -9,11 +9,15 @@
   
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>Databases - Beam Documentation</title>
+
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
   
   <script>
     // Current page data
@@ -180,6 +184,10 @@
                     
     <a class="" href="../../reference/queries/">Queries</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../../reference/extensibility/">Extending</a>
+                </li>
     </ul>
 	    </li>
           
@@ -247,7 +255,7 @@ with must also be included in your database type.</p>
 <p>Like tables, a database type takes a functor and applies it to each
 entity in the database. For example, a database type for the two
 tables defined above has the form.</p>
-<pre><code class="haskell">data ExampleDb f
+<pre><code  class="haskell">data ExampleDb f
     = ExampleDb
     { persons :: f (TableEntity PersonT)
     , posts   :: f (TableEntity PersonT)
@@ -260,10 +268,14 @@ exampleDb = autoDbSettings
 
 <h2 id="other-database-entities">Other database entities</h2>
 <h3 id="views">Views</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Views have not yet been implemented, but this is the expected syntax</p>
+</div>
 <p>Some databases also offer the concept of 'views' -- pseudo-tables that
 are built from a pre-defined query. Suppose we wanted to create a view
 that returned the latest comments and their respective posters.</p>
-<pre><code class="haskell">data PostAndPosterView f
+<pre><code  class="haskell">data PostAndPosterView f
     = PostAndPosterView
     { post   :: PostT f
     , poster :: PersonT f
@@ -272,7 +284,7 @@ instance Beamable PostAndPosterView
 </code></pre>
 
 <p>We can include this in our database:</p>
-<pre><code class="haskell">data ExampleDb f
+<pre><code  class="haskell">data ExampleDb f
     = ExampleDb
     { persons        :: f (TableEntity PersonT)
     , posts          :: f (TableEntity PersonT)
@@ -285,12 +297,16 @@ need to specify the definition of the view. The definition is not important to
 access the view, so beam does not need to know about it at the type-level. If
 you want to manipulate view definitions, use the migrations packgae.</p>
 <h3 id="unique-constraints">Unique constraints</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the current implementation plan. Uniques are not currently implemented.</p>
+</div>
 <p>The <code>TableEntityWithUnique</code> database entity allows you to declare
 tables with additional uniqueness constraints (the primary key is
 considered to be unique by default).</p>
 <p>For example, suppose you wanted to re-define the <code>PersonT</code> table with
 an additional unique e-mail and another unique phone column.</p>
-<pre><code class="haskell">data PersonT f
+<pre><code  class="haskell">data PersonT f
     = Person
     { personFirstName :: Columnar f Text
     , personLastName  :: Columnar f Text
@@ -304,7 +320,7 @@ data PersonByPhone f = PersonByPhone (Columnar f Text)
 </code></pre>
 
 <p>Now, use <code>TableEntityWithUnique</code> to declare the table.</p>
-<pre><code class="haskell">data ExampleDb f
+<pre><code  class="haskell">data ExampleDb f
     = ExampleDb
     { persons        :: f (TableEntityWithUnique PersonT '[PersonByEmail, PersonByPhone])
     , posts          :: f (TableEntity PersonT)
@@ -315,7 +331,7 @@ data PersonByPhone f = PersonByPhone (Columnar f Text)
 <p>Beam will not complain about this definition, but you will need to
 declare additional instances in order to actually use the unique
 constraints.</p>
-<pre><code class="haskell">instance Unique PersonT PersonByEmail where
+<pre><code  class="haskell">instance Unique PersonT PersonByEmail where
   mkUnique = PersonByEmail . personEmail
 
 instance Unique PersonT PersonByPhone where
@@ -346,7 +362,7 @@ database type defined, you can create a database descriptor using the
 <code>defaultDbSettings</code> function.</p>
 <p>For example, to create a backend-agnostic database descriptor for the
 <code>ExampleDb</code> type:</p>
-<pre><code class="haskell">exampleDb :: DatabaseSettings be ExampleDb
+<pre><code  class="haskell">exampleDb :: DatabaseSettings be ExampleDb
 exampleDb = defaultDbSettings
 </code></pre>
 
@@ -396,7 +412,13 @@ for <a href="../models/#defaults">table fields</a></p>
       
     </span>
 </div>
+
     <script src="../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
 
 </body>
 </html>

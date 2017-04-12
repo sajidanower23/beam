@@ -9,11 +9,15 @@
   
   <link rel="shortcut icon" href="../../img/favicon.ico">
   <title>The Migrations Framework - Beam Documentation</title>
+
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
   
   <script>
     // Current page data
@@ -156,6 +160,10 @@
                     
     <a class="" href="../../reference/queries/">Queries</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../../reference/extensibility/">Extending</a>
+                </li>
     </ul>
 	    </li>
           
@@ -221,7 +229,7 @@ Haskell datatypes you feed it.</p>
 way of managing schema changes. It is an optional part of beam provided in the
 <code>beam-migrate</code> package.</p>
 <p>Install the migrations framework and tool by running</p>
-<pre><code>$ cabal install beam-migrate
+<pre><code  class="">$ cabal install beam-migrate
 # or
 $ stack install beam-migrate
 </code></pre>
@@ -234,12 +242,12 @@ automatically and correctly set for you.</p>
 specifies a precise way to lay out your schema definitions.</p>
 <p>You can use the <code>beam-migrate new &lt;module-name&gt; &lt;db-type&gt;</code> command to create a new
 migration schema module. This will create the following directory structure</p>
-<pre><code>&lt;module-name&gt;.hs
+<pre><code  class="">&lt;module-name&gt;.hs
 &lt;module-name&gt;/V0001.hs
 </code></pre>
 
 <p>If you open up <code>&lt;module-name&gt;.hs</code>, it will contain the following</p>
-<pre><code class="haskell">module &lt;module-name&gt; ( module &lt;module-name&gt;.V0001, db, migration ) where
+<pre><code  class="haskell">module &lt;module-name&gt; ( module &lt;module-name&gt;.V0001, db, migration ) where
 
 import Database.Beam
 
@@ -301,7 +309,13 @@ module to use the newest schema and invoke the latest migration.</p>
       
     </span>
 </div>
+
     <script src="../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
 
 </body>
 </html>

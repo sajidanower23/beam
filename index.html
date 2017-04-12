@@ -9,11 +9,15 @@
   
   <link rel="shortcut icon" href="./img/favicon.ico">
   <title>Home - Beam Documentation</title>
+
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link rel="stylesheet" href="./css/theme.css" type="text/css" />
   <link rel="stylesheet" href="./css/theme_extra.css" type="text/css" />
   <link rel="stylesheet" href="./css/highlight.css">
+  <link href="./theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
   
   <script>
     // Current page data
@@ -168,6 +172,10 @@
                     
     <a class="" href="reference/queries/">Queries</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="reference/extensibility/">Extending</a>
+                </li>
     </ul>
 	    </li>
           
@@ -244,11 +252,11 @@ backends, see the <a href="user-guide/custom-backends/">manual section</a> for m
 <p>Beam is available via both <a href="https://hackage.haskell.org/packages/beam">Hackage</a>
 and <a href="https://www.stackage.org/package/beam">Stack</a>. For most Haskell
 installations, one of the two commands should work.</p>
-<pre><code class="bash">cabal install beam-core beam-migrate &lt;backend&gt;
+<pre><code  class="bash">cabal install beam-core beam-migrate &lt;backend&gt;
 </code></pre>
 
 <p>or</p>
-<pre><code>stack install beam-core beam-migrate &lt;backend&gt;
+<pre><code  class="">stack install beam-core beam-migrate &lt;backend&gt;
 </code></pre>
 
 <p>You will also need to install an appropriate backend. Available backends are</p>
@@ -269,12 +277,12 @@ installations, one of the two commands should work.</p>
 <h2 id="quick-start-guide">Quick Start Guide</h2>
 <p>If you already have a database schema, you can use the <code>beam-migrate</code> command to
 automatically generate appropriate Beam data definitions.</p>
-<pre><code class="bash">beam-migrate --backend &lt;backend-module&gt; &lt;backend-options&gt; new &lt;output-module-name&gt;
+<pre><code  class="bash">beam-migrate --backend &lt;backend-module&gt; &lt;backend-options&gt; new &lt;output-module-name&gt;
 </code></pre>
 
 <p>For example, to generate a schema for the Postgres database <code>employees</code> at
 <code>localhost:5000</code> with the user <code>beam</code>, run the following command.</p>
-<pre><code class="bash">beam-migrate --backend Database.Beam.Postgres.Migrate --pgconnect postgres://beam@localhost:5000/employees new BeamTutorial.Schema
+<pre><code  class="bash">beam-migrate --backend Database.Beam.Postgres.Migrate --pgconnect postgres://beam@localhost:5000/employees new BeamTutorial.Schema
 </code></pre>
 
 <p>This will generate a</p>
@@ -356,12 +364,18 @@ generate properly formed SQL from Haskell expressions.</p>
       
     </span>
 </div>
+
     <script src="./js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
 
 </body>
 </html>
 
 <!--
 MkDocs version : 0.16.2
-Build Date UTC : 2017-04-11 00:17:18
+Build Date UTC : 2017-04-12 19:07:32
 -->
