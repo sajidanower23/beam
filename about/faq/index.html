@@ -64,6 +64,9 @@
     <li class="toctree-l2"><a href="#how-does-beam-compare-with-x">How does beam compare with &lt;x&gt;?</a></li>
     
 
+    <li class="toctree-l2"><a href="#help-the-type-checker-keeps-complaining-about-syntax-types">Help! The type checker keeps complaining about Syntax types</a></li>
+    
+
     </ul>
 	    </li>
           
@@ -86,6 +89,14 @@
                 <li class="">
                     
     <a class="" href="../../user-guide/queries/basic/">Basic Queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/ordering/">Ordering</a>
                 </li>
                 <li class="">
                     
@@ -219,6 +230,43 @@
             <div class="section">
               
                 <h2 id="how-does-beam-compare-with-x">How does <code>beam</code> compare with <code>&lt;x&gt;</code>?</h2>
+<h2 id="help-the-type-checker-keeps-complaining-about-syntax-types">Help! The type checker keeps complaining about <code>Syntax</code> types</h2>
+<p>Suppose you had the following code to run a query over an arbitrary backend that
+supported the SQL92 syntax.</p>
+<pre><code  class="haskell">listEmployees :: (IsSql92Syntax cmd, MonadBeam cmd be hdl m) =&gt; m [Employee]
+listEmployees = runSelectReturningList $ select (all_ (employees employeeDb))
+</code></pre>
+
+<p>You may get an error message like the following</p>
+<pre><code  class="">MyQueries.hs:1:1: error:
+    * Could not deduce: Sql92ProjectionExpressionSyntax
+                          (Sql92SelectTableProjectionSyntax
+                             (Sql92SelectSelectTableSyntax (Sql92SelectSyntax cmd)))
+                        ~
+                        Sql92SelectTableExpressionSyntax
+                          (Sql92SelectSelectTableSyntax (Sql92SelectSyntax cmd))
+        arising from a use of 'select'
+</code></pre>
+
+<p>Beam uses a <a href="http://okmij.org/ftp/tagless-final/JFP.pdf">finally-tagless</a>
+encoding for syntaxes. This means we never deal with concrete syntax types
+internally, just types that fulfill certain constraints (in this case, being a
+valid description of a SQL92 syntax). This works really nicely for
+extensibility, but makes the types slightly confusing. Here, the type checker is
+complaining that it cannot prove that the type of expressions used in
+projections is the same as the type of expressions used in <code>WHERE</code> and <code>HAVING</code>
+clauses. Of course, any sane SQL92 syntax would indeed meet this criteria, but
+this criteria is difficult to enforce at the type class level (it leads to
+cycles in superclasses, which requires the scary-looking
+<code>UndecidableSuperclasses</code> extension in GHC).</p>
+<p>Nevertheless, we can avoid all this hullabaloo by using the <code>Sql92SanityCheck</code>
+constraint synonym. This takes a command syntax and asserts all the type
+equalities that a sane SQL92 syntax would support. Thus the code above becomes.</p>
+<pre><code  class="haskell">listEmployees :: ( IsSql92Syntax cmd, Sql92SanityCheck cmd
+                 , MonadBeam cmd be hdl m)
+              =&gt; m [Employee]
+listEmployees = runSelectReturningList $ select (all_ (employees employeeDb))
+</code></pre>
               
             </div>
           </div>

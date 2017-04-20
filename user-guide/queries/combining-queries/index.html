@@ -83,6 +83,14 @@
                 </li>
                 <li class="">
                     
+    <a class="" href="../select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ordering/">Ordering</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../relationships/">Relationships</a>
                 </li>
                 <li class="">
@@ -94,6 +102,18 @@
     <a class="current" href="./">Combining queries</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#sql-set-operations">SQL Set operations</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#combining-arbitrary-set-expressions">Combining arbitrary set expressions</a></li>
+        
+        </ul>
+    
+
+    <li class="toctree-l3"><a href="#limitoffset-and-set-operations">LIMIT/OFFSET and set operations</a></li>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -219,7 +239,308 @@
           <div role="main">
             <div class="section">
               
-                <p>Combining queries</p>
+                <p>SQL lets you combine the results of multiple <code>SELECT</code> statements using the
+<code>UNION</code>, <code>INTERSECT</code>, and <code>EXCEPT</code> clauses.</p>
+<h2 id="sql-set-operations">SQL Set operations</h2>
+<p>The SQL Set operations are provided as the <code>union_</code>, <code>intersect_</code>, and <code>except_</code>
+functions. SQL also allows an optional <code>ALL</code> clause to be specified with each of
+these. Beam implements these as <code>unionAll_</code>, <code>intersectAll_</code>, and <code>exceptAll_</code>
+respectively. Each combinator takes two queries as arguments. The results of
+both queries will be combined accordingly. The returned type is the same as the
+type of both query arguments, which must be the same.</p>
+<p>For example, suppose we wanted the first and last names of both customers and
+employees.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-sqlite3" aria-controls="tab-0-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-postgres" aria-controls="tab-0-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <pre><code  class="haskell">let customerNames =
+      fmap (\c -&gt; (customerFirstName c, customerLastName c))
+           (all_ (customer chinookDb))
+    employeeNames =
+      fmap (\e -&gt; (employeeFirstName e, employeeLastName e))
+           (all_ (employee chinookDb))
+in union_ customerNames employeeNames
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+UNION
+SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+FROM &quot;Employee&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <pre><code  class="postgres">
+  (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+   FROM &quot;Customer&quot; AS &quot;t0&quot;)
+UNION
+  (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+   FROM &quot;Employee&quot; AS &quot;t0&quot;)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<h3 id="combining-arbitrary-set-expressions">Combining arbitrary set expressions</h3>
+<p>Suppose we wanted all employee and customer first names that were also customer
+last names but not also employee last names. We could use <code>UNION</code> to combine the
+results of a query over the first names of employees and customers, and an
+<code>EXCEPT</code> to get all customer last names that were not employee ones. Finally, an
+<code>INTERSECT</code> would give us the result we want. The beam query language allows
+this and many popular backends do as well, but standard SQL makes it difficult
+to express. Beam has decided to go with the most common implement solution,
+which is to allow such nesting. This simplifies the API design.</p>
+<p>On backends which allow such nesting (like Postgres), the query is translated
+directly. On backends that do not (like SQLite), an appropriate subselect is
+generated.</p>
+<div class="admonition todo">
+<p class="admonition-title">TODO</p>
+<p>This isn't implemented yet :)</p>
+</div>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-sqlite3" aria-controls="tab-1-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-postgres" aria-controls="tab-1-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+            <pre><code  class="haskell">let customerFirstNames =
+      fmap customerFirstName
+           (all_ (customer chinookDb))
+    employeeFirstNames =
+      fmap employeeFirstName
+           (all_ (employee chinookDb))
+    customerLastNames =
+      fmap customerLastName
+           (all_ (customer chinookDb))
+    employeeLastNames =
+      fmap employeeFirstName
+           (all_ (employee chinookDb))
+in (customerFirstNames `union_`employeeFirstNames) `intersect_`
+   (customerLastNames `except_` employeeLastNames)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+UNION
+SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+FROM &quot;Employee&quot; AS &quot;t0&quot; INTERSECT
+SELECT &quot;t0&quot;.&quot;LastName&quot; AS &quot;res0&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+EXCEPT
+SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+FROM &quot;Employee&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-postgres">
+            <pre><code  class="postgres">(
+   (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+    FROM &quot;Customer&quot; AS &quot;t0&quot;)
+ UNION
+   (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+    FROM &quot;Employee&quot; AS &quot;t0&quot;)) INTERSECT (
+                                           (SELECT &quot;t0&quot;.&quot;LastName&quot; AS &quot;res0&quot;
+                                            FROM &quot;Customer&quot; AS &quot;t0&quot;)
+                                         EXCEPT
+                                           (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+                                            FROM &quot;Employee&quot; AS &quot;t0&quot;))
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<h2 id="limitoffset-and-set-operations"><code>LIMIT</code>/<code>OFFSET</code> and set operations</h2>
+<p>The <code>LIMIT</code> and <code>OFFSET</code> clauses generated by <code>limit_</code> and <code>offset_</code> apply to
+the entire result of the set operation. Beam will correctly generate the query
+you specify, placing the <code>LIMIT</code> and <code>OFFSET</code> at the appropriate point. If
+necessary, it will also generate a sub select to preserve the meaning of the
+query.</p>
+<p>For example, to get the second ten full names in common.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-sqlite3" aria-controls="tab-2-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-postgres" aria-controls="tab-2-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <pre><code  class="haskell">let customerNames =
+      fmap (\c -&gt; (customerFirstName c, customerLastName c))
+           (all_ (customer chinookDb))
+    employeeNames =
+      fmap (\e -&gt; (employeeFirstName e, employeeLastName e))
+           (all_ (employee chinookDb))
+in limit_ 10 (union_ customerNames employeeNames)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+UNION
+SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+FROM &quot;Employee&quot; AS &quot;t0&quot;
+LIMIT 10
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-postgres">
+            <pre><code  class="postgres">
+  (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+   FROM &quot;Customer&quot; AS &quot;t0&quot;)
+UNION
+  (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+   FROM &quot;Employee&quot; AS &quot;t0&quot;)
+LIMIT 10
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>If we only wanted the union of the first 10 names of each.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-12-haskell" aria-controls="tab-12-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-12-sqlite3" aria-controls="tab-12-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-12-postgres" aria-controls="tab-12-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-12-haskell">
+            <pre><code  class="haskell">let customerNames =
+      fmap (\c -&gt; (customerFirstName c, customerLastName c))
+           (all_ (customer chinookDb))
+    employeeNames =
+      fmap (\e -&gt; (employeeFirstName e, employeeLastName e))
+           (all_ (employee chinookDb))
+in union_ (limit_ 10 customerNames) (limit_ 10 employeeNames)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-12-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+   FROM &quot;Customer&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+UNION
+SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+   FROM &quot;Employee&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-12-postgres">
+            <pre><code  class="postgres">
+  (SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;
+   FROM
+     (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+             &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+      FROM &quot;Customer&quot; AS &quot;t0&quot;
+      LIMIT 10) AS &quot;t0&quot;)
+UNION
+  (SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;
+   FROM
+     (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;,
+             &quot;t0&quot;.&quot;LastName&quot; AS &quot;res1&quot;
+      FROM &quot;Employee&quot; AS &quot;t0&quot;
+      LIMIT 10) AS &quot;t0&quot;)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
               
             </div>
           </div>

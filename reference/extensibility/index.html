@@ -83,6 +83,14 @@
                 </li>
                 <li class="">
                     
+    <a class="" href="../../user-guide/queries/select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/ordering/">Ordering</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../../user-guide/queries/relationships/">Relationships</a>
                 </li>
                 <li class="">
@@ -159,6 +167,12 @@
     <a class="current" href="./">Extending</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#custom-expressions">Custom expressions</a></li>
+    
+
+    <li class="toctree-l3"><a href="#custom-queries">Custom queries</a></li>
+    
+
     </ul>
                 </li>
     </ul>
@@ -219,7 +233,32 @@
           <div role="main">
             <div class="section">
               
-                <p>extensibility</p>
+                <p>The <code>beam-core</code> library and respective backends strive to expose the full power
+of each underlying database. If a particular feature is missing, please feel
+free to file a bug report on the GitHub issue tracker.</p>
+<p>However, in the meantime, beam offers a few options to inject raw SQL into your
+queries. Of course, beam cannot predict types of expressions and queries that
+were not created with its combinators, so <em>caveat emptor</em>.</p>
+<h2 id="custom-expressions">Custom expressions</h2>
+<p>If you'd like to write an expression that beam currently does not support, you
+can use the <code>customExpr_</code> function. Your backend's syntax must implement the
+<code>IsSqlCustomExpressionSyntax</code> type class. <code>customExpr_</code> takes a function of
+arity <em>n</em> and <em>n</em> arguments, which must all be <code>QGenExpr</code>s with the same thread
+parameter. The expressions may be from different contexts (i.e., you can pass an
+aggregate and scalar into the same <code>customExpr_</code>).</p>
+<p>The function supplied must return a <code>ByteString</code> corresponding to the custom bit
+of SQL that implements your expression. The function's arguments are <em>n</em>
+<code>ByteString</code>s corresponding to the expressions which will evaluate to the value
+of each of the arguments to <code>customExpr_</code>. The arguments are properly
+parenthesized and can be inserted whole into the final expression. You will
+likely need to explicitly supply a result type using the <code>as_</code> function.</p>
+<h2 id="custom-queries">Custom queries</h2>
+<p>Sometimes you would like to drop down to raw SQL to write a query that will
+return an entire result. Beam supports this through the <code>customQuery_</code> function.
+Like <code>customExpr_</code>, this takes a function of <em>n</em> arity and <em>n</em> arguments, which
+may be either <code>QGenExpr</code>s or <code>Q</code>s from the same thread, select syntax, etc. The
+function supplied to <code>customQuery_</code> must return a <code>ByteString</code> and its arguments
+are <code>ByteString</code>s corresponding to the given <code>Q</code> or <code>QGenExpr</code> parameter.</p>
               
             </div>
           </div>

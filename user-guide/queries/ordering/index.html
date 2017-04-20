@@ -8,7 +8,7 @@
   
   
   <link rel="shortcut icon" href="../../../img/favicon.ico">
-  <title>beam-sqlite - Beam Documentation</title>
+  <title>Ordering - Beam Documentation</title>
 
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
@@ -21,9 +21,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "beam-sqlite";
-    var mkdocs_page_input_path = "user-guide/backends/beam-sqlite.md";
-    var mkdocs_page_url = "/user-guide/backends/beam-sqlite/";
+    var mkdocs_page_name = "Ordering";
+    var mkdocs_page_input_path = "user-guide/queries/ordering.md";
+    var mkdocs_page_url = "/user-guide/queries/ordering/";
   </script>
   
   <script src="../../../js/jquery-2.1.1.min.js"></script>
@@ -79,35 +79,38 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../../queries/basic/">Basic Queries</a>
+    <a class="" href="../basic/">Basic Queries</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../queries/select/">More complex SELECTs</a>
+    <a class="" href="../select/">More complex SELECTs</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">Ordering</a>
+    <ul class="subnav">
+            
+    </ul>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../queries/ordering/">Ordering</a>
+    <a class="" href="../relationships/">Relationships</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../queries/relationships/">Relationships</a>
+    <a class="" href="../aggregates/">Aggregates</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../queries/aggregates/">Aggregates</a>
+    <a class="" href="../combining-queries/">Combining queries</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../queries/combining-queries/">Combining queries</a>
+    <a class="" href="../data-types/">Common data types</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../queries/data-types/">Common data types</a>
-                </li>
-                <li class="">
-                    
-    <a class="" href="../../queries/window-functions/">Window functions</a>
+    <a class="" href="../window-functions/">Window functions</a>
                 </li>
     </ul>
 	    </li>
@@ -137,17 +140,11 @@
     <ul class="subnav">
                 <li class="">
                     
-    <a class="" href="../beam-postgres/">beam-postgres</a>
+    <a class="" href="../../backends/beam-postgres/">beam-postgres</a>
                 </li>
-                <li class=" current">
+                <li class="">
                     
-    <a class="current" href="./">beam-sqlite</a>
-    <ul class="subnav">
-            
-    <li class="toctree-l3"><a href="#compatibility">Compatibility</a></li>
-    
-
-    </ul>
+    <a class="" href="../../backends/beam-sqlite/">beam-sqlite</a>
                 </li>
                 <li class="">
                     
@@ -216,11 +213,11 @@
     
       
         
-          <li>Backends &raquo;</li>
+          <li>User Guide &raquo;</li>
         
       
     
-    <li>beam-sqlite</li>
+    <li>Ordering</li>
     <li class="wy-breadcrumbs-aside">
       
     </li>
@@ -230,18 +227,8 @@
           <div role="main">
             <div class="section">
               
-                <p>SQLite is a lightweight RDBMS meant for embedding in larger applications.
-Because it is not designed to be full-featured, not all Beam queries will work
-with SQLite. The module <code>Database.Beam.SQLite.Checked</code> provides many symbols
-usually imported from the <code>Database.Beam</code> module that enforce extra checks on
-queries to assure compliance with SQLite. Use this module in code that is SQLite
-specific for maximal compile-time safety. Note that this module should be
-imported instead of <code>Database.Beam</code> to avoid name clashes.</p>
-<h2 id="compatibility">Compatibility</h2>
-<p>SQLite is compatible enough with Beam's query syntax, that adapting to its
-quirks is pretty straightforwards. The main special case for SQLite is its
-handling of nested set operations. On most backends, beam can output these
-directly, but SQLite requires us to generate subqueries.</p>
+                <p>Usually, queries are ordered before <code>LIMIT</code> and <code>OFFSET</code> are applied. Beam
+supports the standard SQL <code>ORDER BY</code> construct through the <code>orderBy_</code> function.</p>
               
             </div>
           </div>
@@ -249,10 +236,10 @@ directly, but SQLite requires us to generate subqueries.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../custom-backends/" class="btn btn-neutral float-right" title="Writing a Custom Backend">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../relationships/" class="btn btn-neutral float-right" title="Relationships">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../beam-postgres/" class="btn btn-neutral" title="beam-postgres"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../select/" class="btn btn-neutral" title="More complex SELECTs"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -278,10 +265,10 @@ directly, but SQLite requires us to generate subqueries.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../beam-postgres/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../select/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../../custom-backends/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../relationships/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

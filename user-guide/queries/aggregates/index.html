@@ -83,6 +83,14 @@
                 </li>
                 <li class="">
                     
+    <a class="" href="../select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ordering/">Ordering</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../relationships/">Relationships</a>
                 </li>
                 <li class=" current">
@@ -100,6 +108,12 @@
     
 
     <li class="toctree-l3"><a href="#sql-compatibility">SQL compatibility</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#the-having-clause">The HAVING clause</a></li>
+        
+        </ul>
     
 
     </ul>
@@ -350,7 +364,8 @@ GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
                     </p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p><code>count_</code> can return any <code>Integral</code> type. Adding the explicit <code>as_ @Int</code> above prevents an ambiguous type error.</p>
+<p><code>count_</code> can return any <code>Integral</code> type. Adding the explicit <code>as_ @Int</code> above 
+prevents an ambiguous type error.</p>
 </div>
 <h2 id="sql-compatibility">SQL compatibility</h2>
 <p>Above, we demonstrated the use of <code>count_</code> and <code>countAll_</code> which map to the
@@ -367,6 +382,64 @@ each aggregate is obtained by using the <code>allInGroup_</code> quantifier. Thu
 sumOver_ allInGroup_</code>. Because <code>ALL</code> is the default set quantifier, beam does
 not typically generate it in queries. If, for some reason, you would like beam
 to be explicit about it, you can use the <code>allInGroupExplicitly_</code> quantifier.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-sqlite3" aria-controls="tab-2-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-postgres" aria-controls="tab-2-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <pre><code  class="haskell">aggregate_ (\(genre, track) -&gt;
+              ( group_ genre
+              , as_ @Int $ countOver_ distinctInGroup_ (trackUnitPrice track)
+              , sumOver_ allInGroupExplicitly_ (trackMilliseconds track) `div_` 1000 )) $
+           ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+       COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+       (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?) AS &quot;res3&quot;
+FROM &quot;Genre&quot; AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+         &quot;t0&quot;.&quot;Name&quot;
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+       COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+       (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000) AS &quot;res3&quot;
+FROM &quot;Genre&quot; AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+         &quot;t0&quot;.&quot;Name&quot;
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
 <p>The <code>beam-core</code> library supports the standard SQL aggregation functions.
 Individual backends are likely to support the full range of aggregates available
 on that backend (if not, please send a bug report).</p>
@@ -430,6 +503,483 @@ on that backend (if not, please send a bug report).</p>
 </tr>
 </tbody>
 </table>
+<h3 id="the-having-clause">The <code>HAVING</code> clause</h3>
+<p>SQL allows users to specify a <code>HAVING</code> condition to filter results based on the
+computed result of an aggregate. Beam fully supports <code>HAVIVG</code> clauses, but does
+not use any special syntax. Simply use <code>filter_</code> or <code>guard_</code> as usual, and beam
+will add a <code>HAVING</code> clause if it forms legal SQL. Otherwise, beam will create a
+subselect and add a <code>WHERE</code> clause. Either way, this is transparent to the user.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-3-haskell" aria-controls="tab-3-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-sqlite3" aria-controls="tab-3-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-postgres" aria-controls="tab-3-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-3-haskell">
+            <pre><code  class="haskell">-- Only return results for genres whose total track length is over 5 minutes
+filter_ (\(genre, distinctPriceCount, totalTrackLength) -&gt; totalTrackLength &gt;=. 300000) $
+aggregate_ (\(genre, track) -&gt;
+              ( group_ genre
+              , as_ @Int $ countOver_ distinctInGroup_ (trackUnitPrice track)
+              , sumOver_ allInGroupExplicitly_ (trackMilliseconds track) `div_` 1000 )) $
+           ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+       COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+       (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?) AS &quot;res3&quot;
+FROM &quot;Genre&quot; AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+         &quot;t0&quot;.&quot;Name&quot;
+HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+       COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+       (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000) AS &quot;res3&quot;
+FROM &quot;Genre&quot; AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+         &quot;t0&quot;.&quot;Name&quot;
+HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000)) &gt;= (300000)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Beam will also handle the <code>filter_</code> correctly in the presence of more
+complicated queries. For example, we can now join our aggregate on genres back
+over tracks.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-4-haskell" aria-controls="tab-4-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-4-sqlite3" aria-controls="tab-4-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-4-postgres" aria-controls="tab-4-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-4-haskell">
+            <pre><code  class="haskell">-- Only return results for genres whose total track length is over 5 minutes
+filter_ (\(genre, track, distinctPriceCount, totalTrackLength) -&gt; totalTrackLength &gt;=. 300000) $
+do (genre, priceCnt, trackLength) &lt;-
+            aggregate_ (\(genre, track) -&gt;
+                          ( group_ genre
+                          , as_ @Int $ countOver_ distinctInGroup_ (trackUnitPrice track)
+                          , sumOver_ allInGroupExplicitly_ (trackMilliseconds track) `div_` 1000 )) $
+            ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb))
+   track &lt;- join_ (track chinookDb) (\track -&gt; trackGenreId track ==. just_ (pk genre))
+   pure (genre, track, priceCnt, trackLength)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-4-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t1&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t1&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t1&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t1&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t1&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t1&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+          COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+          (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?) AS &quot;res3&quot;
+   FROM &quot;Genre&quot; AS &quot;t0&quot;
+   INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;)
+WHERE (&quot;t0&quot;.&quot;res3&quot;)&gt;=(?)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-4-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t1&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t1&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t1&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t1&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t1&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t1&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+          COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+          (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000) AS &quot;res3&quot;
+   FROM &quot;Genre&quot; AS &quot;t0&quot;
+   INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;) = (&quot;t0&quot;.&quot;res0&quot;)
+WHERE (&quot;t0&quot;.&quot;res3&quot;) &gt;= (300000)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>The position of <code>filter_</code> changes the code generated. Above, the <code>filter_</code>
+produced a <code>WHERE</code> clause on the outermost <code>SELECT</code>. If instead, we put the
+<code>filter_</code> clause right outside the <code>aggregate_</code>, beam will produce a <code>HAVING</code> clause instead.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-5-haskell" aria-controls="tab-5-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-5-sqlite3" aria-controls="tab-5-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-5-postgres" aria-controls="tab-5-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-5-haskell">
+            <pre><code  class="haskell">-- Only return results for genres whose total track length is over 5 minutes
+do (genre, priceCnt, trackLength) &lt;-
+            filter_ (\(genre, distinctPriceCount, totalTrackLength) -&gt; totalTrackLength &gt;=. 300000) $
+            aggregate_ (\(genre, track) -&gt;
+                          ( group_ genre
+                          , as_ @Int $ countOver_ distinctInGroup_ (trackUnitPrice track)
+                          , sumOver_ allInGroupExplicitly_ (trackMilliseconds track) `div_` 1000 )) $
+            ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb))
+   track &lt;- join_ (track chinookDb) (\track -&gt; trackGenreId track ==. just_ (pk genre))
+   pure (genre, track, priceCnt, trackLength)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-5-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t1&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t1&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t1&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t1&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t1&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t1&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+          COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+          (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?) AS &quot;res3&quot;
+   FROM &quot;Genre&quot; AS &quot;t0&quot;
+   INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+            &quot;t0&quot;.&quot;Name&quot;
+   HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)) AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-5-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t1&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t1&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t1&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t1&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t1&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t1&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+          COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+          (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000) AS &quot;res3&quot;
+   FROM &quot;Genre&quot; AS &quot;t0&quot;
+   INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+            &quot;t0&quot;.&quot;Name&quot;
+   HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000)) &gt;= (300000)) AS &quot;t0&quot;
+INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;) = (&quot;t0&quot;.&quot;res0&quot;)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Due to the monadic structure, putting the filtered aggregate as the second
+clause in the JOIN causes the HAVING to be floated out, because the compiler
+can't prove that the conditional expression only depends on the results of the
+aggregate.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-6-haskell" aria-controls="tab-6-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-6-sqlite3" aria-controls="tab-6-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-6-postgres" aria-controls="tab-6-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-6-haskell">
+            <pre><code  class="haskell">-- Only return results for genres whose total track length is over 5 minutes
+do track_ &lt;- all_ (track chinookDb)
+   (genre, priceCnt, trackLength) &lt;-
+            filter_ (\(genre, distinctPriceCount, totalTrackLength) -&gt; totalTrackLength &gt;=. 300000) $
+            aggregate_ (\(genre, track) -&gt;
+                          ( group_ genre
+                          , as_ @Int $ countOver_ distinctInGroup_ (trackUnitPrice track)
+                          , sumOver_ allInGroupExplicitly_ (trackMilliseconds track) `div_` 1000 )) $
+            ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb)) 
+   guard_ (trackGenreId track_ ==. just_ (pk genre))
+   pure (genre, track_, priceCnt, trackLength)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-6-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t1&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t1&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM &quot;Track&quot; AS &quot;t0&quot;
+INNER JOIN
+  (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+          COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+          (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?) AS &quot;res3&quot;
+   FROM &quot;Genre&quot; AS &quot;t0&quot;
+   INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t1&quot;
+WHERE ((&quot;t1&quot;.&quot;res3&quot;)&gt;=(?))
+  AND ((&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-6-postgres">
+            <pre><code  class="postgres">SELECT &quot;t1&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t1&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM &quot;Track&quot; AS &quot;t0&quot;
+INNER JOIN
+  (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+          COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+          (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000) AS &quot;res3&quot;
+   FROM &quot;Genre&quot; AS &quot;t0&quot;
+   INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t1&quot;
+WHERE ((&quot;t1&quot;.&quot;res3&quot;) &gt;= (300000))
+  AND ((&quot;t0&quot;.&quot;GenreId&quot;) = (&quot;t1&quot;.&quot;res0&quot;))
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>You can prove to the compiler that the <code>filter_</code> should generate a having by
+using the <code>subselect_</code> combinator.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-24-haskell" aria-controls="tab-24-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-24-sqlite3" aria-controls="tab-24-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-24-postgres" aria-controls="tab-24-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-24-haskell">
+            <pre><code  class="haskell">-- Only return results for genres whose total track length is over 5 minutes
+do track_ &lt;- all_ (track chinookDb)
+   (genre, priceCnt, trackLength) &lt;-
+            subselect_ $
+            filter_ (\(genre, distinctPriceCount, totalTrackLength) -&gt; totalTrackLength &gt;=. 300000) $
+            aggregate_ (\(genre, track) -&gt;
+                          ( group_ genre
+                          , as_ @Int $ countOver_ distinctInGroup_ (trackUnitPrice track)
+                          , sumOver_ allInGroupExplicitly_ (trackMilliseconds track) `div_` 1000 )) $
+            ((,) &lt;$&gt; all_ (genre chinookDb) &lt;*&gt; all_ (track chinookDb)) 
+   guard_ (trackGenreId track_ ==. just_ (pk genre))
+   pure (genre, track_, priceCnt, trackLength)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-24-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t1&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t1&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM &quot;Track&quot; AS &quot;t0&quot;
+INNER JOIN
+  (SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,
+          &quot;t0&quot;.&quot;res3&quot; AS &quot;res3&quot;
+   FROM
+     (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+             &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+             COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+             (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?) AS &quot;res3&quot;
+      FROM &quot;Genre&quot; AS &quot;t0&quot;
+      INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+      GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+               &quot;t0&quot;.&quot;Name&quot;
+      HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)) AS &quot;t0&quot;) AS &quot;t1&quot;
+WHERE (&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-24-postgres">
+            <pre><code  class="postgres">SELECT &quot;t1&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t1&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;MediaTypeId&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Composer&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Milliseconds&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Bytes&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;UnitPrice&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;res2&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;res3&quot; AS &quot;res12&quot;
+FROM &quot;Track&quot; AS &quot;t0&quot;
+INNER JOIN
+  (SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,
+          &quot;t0&quot;.&quot;res3&quot; AS &quot;res3&quot;
+   FROM
+     (SELECT &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res0&quot;,
+             &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+             COUNT(DISTINCT &quot;t1&quot;.&quot;UnitPrice&quot;) AS &quot;res2&quot;,
+             (SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000) AS &quot;res3&quot;
+      FROM &quot;Genre&quot; AS &quot;t0&quot;
+      INNER JOIN &quot;Track&quot; AS &quot;t1&quot;
+      GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,
+               &quot;t0&quot;.&quot;Name&quot;
+      HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (1000)) &gt;= (300000)) AS &quot;t0&quot;) AS &quot;t1&quot;
+WHERE (&quot;t0&quot;.&quot;GenreId&quot;) = (&quot;t1&quot;.&quot;res0&quot;)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
               
             </div>
           </div>

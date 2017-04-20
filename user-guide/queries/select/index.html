@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../../img/favicon.ico">
+  <title>More complex SELECTs - Beam Documentation</title>
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../../css/highlight.css">
+  <link href="../../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "More complex SELECTs";
+    var mkdocs_page_input_path = "user-guide/queries/select.md";
+    var mkdocs_page_url = "/user-guide/queries/select/";
+  </script>
+  
+  <script src="../../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../../.." class="icon icon-home"> Beam Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../../about/faq/">Frequently Asked Questions</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">User Guide</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../getting-started/">Getting Started</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../models/">Models</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../databases/">Databases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../basic/">Basic Queries</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">More complex SELECTs</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#where-clause">WHERE clause</a></li>
+    
+
+    <li class="toctree-l3"><a href="#limitoffset-support">LIMIT/OFFSET support</a></li>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ordering/">Ordering</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../relationships/">Relationships</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../aggregates/">Aggregates</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../combining-queries/">Combining queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../data-types/">Common data types</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../window-functions/">Window functions</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Schema management</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../schema-guide/migrations/">The Migrations Framework</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../schema-guide/tool/">The beam-migrate tool</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../schema-guide/supported/">Supported migrations</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Backends</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../backends/beam-postgres/">beam-postgres</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../backends/beam-sqlite/">beam-sqlite</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../custom-backends/">Writing a Custom Backend</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Reference</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../reference/expression/">Expressions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../reference/queries/">Queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../reference/extensibility/">Extending</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">About</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../about/compatibility/">Compatibility Matrix</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../about/license/">License</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../../about/release-notes/">Release Notes</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../..">Beam Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>User Guide &raquo;</li>
+        
+      
+    
+    <li>More complex SELECTs</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>We've seen how to create simple queries from our schema. Beam supports other
+clauses in the SQL SELECT statement.</p>
+<p>For these examples, we're going to use the <code>beam-sqlite</code> backend with the
+provided sample Chinook database. The Chinook database schema is modeled after a
+fictional record store. It provides several tables containing information on the
+music as well as the billing operations. Thus, it provides a good 'real-world'
+demonstration of beam's capabalities.</p>
+<p>First, create a SQLite database from the included example.</p>
+<pre><code  class="console">$ sqlite3 chinook.db &lt; beam-sqlite/examples/chinook.sql
+</code></pre>
+
+<p>Now, load the chinook database schema in GHCi.</p>
+<pre><code  class="haskell">Prelude Database.Beam.Sqlite&gt; :load beam-sqlite/examples/Chinook/Schema.hs
+Prelude Chinook.Schema&gt; chinook &lt;- open &quot;chinook.db&quot;
+</code></pre>
+
+<p>One more thing, before we see more complex examples, let's define a quick
+utility function.</p>
+<pre><code  class="haskell">Prelude Chinook.Schema&gt; let withConnectionTutorial = withDatabaseDebug putStrLn chinook
+</code></pre>
+
+<p>Let's test it!</p>
+<p>We can run all our queries like:</p>
+<pre><code  class="haskell">withConnectionTutorial $ runSelectReturningList $ select $ &lt;query&gt;
+</code></pre>
+
+<p>Let's select all the tracks.</p>
+<pre><code  class="haskell">withConnectionTutorial $ runSelectReturningList $ select $ all_ (track chinookDb)
+</code></pre>
+
+<p>For the rest of the guide, we will also show the generated SQL code for both
+sqlite and postgres.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-sqlite3" aria-controls="tab-0-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-postgres" aria-controls="tab-0-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <pre><code  class="haskell">all_ (track chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;TrackId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;MediaTypeId&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;Composer&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;Milliseconds&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Bytes&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;UnitPrice&quot; AS &quot;res8&quot;
+FROM &quot;Track&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;TrackId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;MediaTypeId&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;GenreId&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;Composer&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;Milliseconds&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Bytes&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;UnitPrice&quot; AS &quot;res8&quot;
+FROM &quot;Track&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<h2 id="where-clause"><code>WHERE</code> clause</h2>
+<p>We've seen how to use <code>all_</code> to select all rows of a table. Sometimes, you would
+like to filter results based on the result of some condition. For example,
+perhaps you would like to fetch all customers whose names start with "Jo". We
+can filter over results using the <code>filter_</code> function.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-sqlite3" aria-controls="tab-1-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-postgres" aria-controls="tab-1-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+            <pre><code  class="haskell">filter_ (\customer -&gt; customerFirstName customer `like_` &quot;Jo%&quot;) $
+all_ (customer chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (&quot;t0&quot;.&quot;FirstName&quot;) LIKE (?)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (&quot;t0&quot;.&quot;FirstName&quot;) LIKE ('Jo%')
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>You can use <code>(&amp;&amp;.)</code> and <code>(||.)</code> to combine boolean expressions, as you'd expect.
+For example, to select all customers whose first name begins with "Jo", last
+name begins with "S", and who live in either California or Washington:</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-sqlite3" aria-controls="tab-2-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-postgres" aria-controls="tab-2-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <pre><code  class="haskell">filter_ (\customer -&gt; ((customerFirstName customer `like_` &quot;Jo%&quot;) &amp;&amp;. (customerLastName customer `like_` &quot;S%&quot;)) &amp;&amp;.
+                      (addressState (customerAddress customer) ==. just_ &quot;CA&quot; ||. addressState (customerAddress customer) ==. just_ &quot;WA&quot;)) $
+        all_ (customer chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (((&quot;t0&quot;.&quot;FirstName&quot;) LIKE (?))
+       AND ((&quot;t0&quot;.&quot;LastName&quot;) LIKE (?)))
+  AND (((&quot;t0&quot;.&quot;State&quot;)=(?))
+       OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (((&quot;t0&quot;.&quot;FirstName&quot;) LIKE ('Jo%'))
+       AND ((&quot;t0&quot;.&quot;LastName&quot;) LIKE ('S%')))
+  AND (((&quot;t0&quot;.&quot;State&quot;) = ('CA'))
+       OR ((&quot;t0&quot;.&quot;State&quot;) = ('WA')))
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We had to use the <code>just_</code> function above to compare
+<code>addressState (customerAddress customer)</code>. This is because <code>addressState
+(customerAddress customer)</code> represents a nullable column which beam types as
+<code>Maybe Text</code>. Just as in Haskell, we need to explicitly unwrap the <code>Maybe</code>
+type. This is an example of beam offering stronger typing than SQL itself.</p>
+</div>
+<h2 id="limitoffset-support"><code>LIMIT</code>/<code>OFFSET</code> support</h2>
+<p>The <code>limit_</code> and <code>offset_</code> functions can be used to truncate the result set at a
+certain length and fetch different portions of the result. They correspond to
+the <code>LIMIT</code> and <code>OFFSET</code> SQL constructs.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-3-haskell" aria-controls="tab-3-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-sqlite3" aria-controls="tab-3-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-postgres" aria-controls="tab-3-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-3-haskell">
+            <pre><code  class="haskell">limit_ 10 $ offset_ 100 $
+filter_ (\customer -&gt; ((customerFirstName customer `like_` &quot;Jo%&quot;) &amp;&amp;. (customerLastName customer `like_` &quot;S%&quot;)) &amp;&amp;.
+                      (addressState (customerAddress customer) ==. just_ &quot;CA&quot; ||. addressState (customerAddress customer) ==. just_ &quot;WA&quot;)) $
+        all_ (customer chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (((&quot;t0&quot;.&quot;FirstName&quot;) LIKE (?))
+       AND ((&quot;t0&quot;.&quot;LastName&quot;) LIKE (?)))
+  AND (((&quot;t0&quot;.&quot;State&quot;)=(?))
+       OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))
+LIMIT 10
+OFFSET 100
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (((&quot;t0&quot;.&quot;FirstName&quot;) LIKE ('Jo%'))
+       AND ((&quot;t0&quot;.&quot;LastName&quot;) LIKE ('S%')))
+  AND (((&quot;t0&quot;.&quot;State&quot;) = ('CA'))
+       OR ((&quot;t0&quot;.&quot;State&quot;) = ('WA')))
+LIMIT 10
+OFFSET 100
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Nested <code>limit_</code>s and <code>offset_</code>s compose in the way you'd expect without
+generating extraneous subqueries.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">Warning</p>
+<p>Note that the order of the <code>limit_</code> and <code>offset_</code> functions matter.
+Offseting an already limited result is not the same as limiting an offseted
+result. For example, if you offset three rows into a limited set of five
+results, you will get at most two rows. On the other hand, if you offset
+three rows and then limit the result to the next five, you may get up to
+five. Beam will generate exactly the query you specify. Notice the
+difference below, where the order of the clauses made beam generate a query
+that returns no results.</p>
+</div>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-20-haskell" aria-controls="tab-20-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-20-sqlite3" aria-controls="tab-20-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-20-postgres" aria-controls="tab-20-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-20-haskell">
+            <pre><code  class="haskell">offset_ 100 $ limit_ 10 $
+filter_ (\customer -&gt; ((customerFirstName customer `like_` &quot;Jo%&quot;) &amp;&amp;. (customerLastName customer `like_` &quot;S%&quot;)) &amp;&amp;.
+                      (addressState (customerAddress customer) ==. just_ &quot;CA&quot; ||. addressState (customerAddress customer) ==. just_ &quot;WA&quot;)) $
+        all_ (customer chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-20-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (((&quot;t0&quot;.&quot;FirstName&quot;) LIKE (?))
+       AND ((&quot;t0&quot;.&quot;LastName&quot;) LIKE (?)))
+  AND (((&quot;t0&quot;.&quot;State&quot;)=(?))
+       OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))
+LIMIT 0
+OFFSET 100
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-20-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,
+       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,
+       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,
+       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,
+       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;
+FROM &quot;Customer&quot; AS &quot;t0&quot;
+WHERE (((&quot;t0&quot;.&quot;FirstName&quot;) LIKE ('Jo%'))
+       AND ((&quot;t0&quot;.&quot;LastName&quot;) LIKE ('S%')))
+  AND (((&quot;t0&quot;.&quot;State&quot;) = ('CA'))
+       OR ((&quot;t0&quot;.&quot;State&quot;) = ('WA')))
+LIMIT 0
+OFFSET 100
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../ordering/" class="btn btn-neutral float-right" title="Ordering">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../basic/" class="btn btn-neutral" title="Basic Queries"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../basic/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../ordering/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+    <script src="../../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
+
+</body>
+</html>

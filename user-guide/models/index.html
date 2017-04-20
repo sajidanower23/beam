@@ -118,6 +118,14 @@
                 </li>
                 <li class="">
                     
+    <a class="" href="../queries/select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/ordering/">Ordering</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../queries/relationships/">Relationships</a>
                 </li>
                 <li class="">
@@ -288,8 +296,18 @@ key by implementing the <code>Table</code> type class for your table.</p>
   primaryKey person = PersonKey (personFirstName person) (personLastName person)
 </code></pre>
 
-<p><em>Note</em>: Using the first and last name as a primary key is a bad idea, we use it
-here to illustrate using multiple fields as the primary key.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Using the first and last name as a primary key is a bad idea, we use it here
+to illustrate using multiple fields as the primary key.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Many people find it useful to use the <code>Applicative</code> instance for <code>(-&gt;) a</code> to
+write <code>primaryKey</code>. For example, we could have written the above <code>primaryKey
+person = PersonKey (personFirstName person) (personLastName person)</code> as
+<code>primaryKey = PersonKey &lt;$&gt; personFirstName &lt;*&gt; personLastName</code>.</p>
+</div>
 <p>For ease-of-use purposes we define some type synonyms for <code>PersonT</code> and
 <code>PrimaryKey PersonT</code> and some convenient instances. These are not strictly
 required but make working with these tables much easier.</p>
@@ -311,6 +329,12 @@ be thought of as having the following definition.</p>
 
 <p>This allows us to use your type definitions for Beam as regular
 Haskell data structures without wrapping/unwrapping.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Typing <code>Columnar</code> may become tiresome. <code>Database.Beam</code> also exports <code>C</code> as a
+type alias for <code>Columnar</code>, which may make writing models easier. Since <code>C</code>
+may cause name clashes, all examples are given using <code>Columnar</code>.</p>
+</div>
 <h2 id="foreign-references">Foreign references</h2>
 <p>Foreign references are also easily supported in models by simply
 embedding the <code>PrimaryKey</code> of the referred to table directly in the

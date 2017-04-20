@@ -98,12 +98,6 @@
     <li class="toctree-l3"><a href="#simple-queries">Simple queries</a></li>
     
 
-    <li class="toctree-l3"><a href="#filtering-results">Filtering results</a></li>
-    
-
-    <li class="toctree-l3"><a href="#fetching-only-certain-results">Fetching only certain results</a></li>
-    
-
     <li class="toctree-l3"><a href="#a-note-on-composability">A note on composability</a></li>
     
 
@@ -111,6 +105,14 @@
     
 
     </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ordering/">Ordering</a>
                 </li>
                 <li class="">
                     
@@ -348,6 +350,11 @@ the last section, we can say </p>
 <pre><code  class="haskell">all_ (persons exampleDb) :: Q syntax ExampleDb s (PersonT (QExpr s))
 </code></pre>
 
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We give the full type of the query here for illustrative purposes only. There 
+is no need to do so in your own code</p>
+</div>
 <p>Two things to note. Firstly, here <code>PersonT</code> is parameterized over the <code>QExpr s</code>
 higher-kinded type. This means that each field in <code>PersonT</code> now contains a SQL
 expression instead of a Haskell value. This is the magic that our parameterized
@@ -382,10 +389,6 @@ SELECT &quot;t0&quot;.&quot;first_name&quot; AS &quot;res0&quot;, &quot;t0&quot;
 standard ANSI SQL expressions. Note that these expressions should not be shipped
 to a backend directly, as they may not be escaped properly. Still, it is useful
 to see what would run.</p>
-<h2 id="filtering-results">Filtering results</h2>
-<h2 id="fetching-only-certain-results">Fetching only certain results</h2>
-<p>You can use <code>limit_</code> to force your query to return a maximum number of results.
-<code>offset_</code> can be used to drop rows from the beginning of the result set.</p>
 <h2 id="a-note-on-composability">A note on composability</h2>
 <p>All beam queries are <em>composable</em>. This means that you can freely mix values of
 type <code>Q</code> in whichever way typechecks and expect a reasonable SQL query. This
@@ -436,7 +439,7 @@ between tables.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../relationships/" class="btn btn-neutral float-right" title="Relationships">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../select/" class="btn btn-neutral float-right" title="More complex SELECTs">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../../databases/" class="btn btn-neutral" title="Databases"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -468,7 +471,7 @@ between tables.</p>
         <span><a href="../../databases/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../relationships/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../select/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

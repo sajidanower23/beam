@@ -83,6 +83,14 @@
                 </li>
                 <li class="">
                     
+    <a class="" href="../../queries/select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../queries/ordering/">Ordering</a>
+                </li>
+                <li class="">
+                    
     <a class="" href="../../queries/relationships/">Relationships</a>
                 </li>
                 <li class="">
@@ -132,6 +140,15 @@
     <a class="current" href="./">beam-postgres</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#postgres-specific-data-types">Postgres-specific data types</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#the-tsvector-and-tsquery-types">The tsvector and tsquery types</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
                 <li class="">
@@ -225,6 +242,13 @@ usually expect most queries to simply work. Additionally, <code>beam-postgres</c
 part of the standard Beam distribution, and so upgrades are applied
 periodically, and new functions are added to achieve feature-parity with the
 latest Postgres stable</p>
+<h2 id="postgres-specific-data-types">Postgres-specific data types</h2>
+<p>Postgres has several data types not available from <code>beam-core</code>. The
+<code>beam-postgres</code> library provides several types and functions to make working
+with these easier.</p>
+<h3 id="the-tsvector-and-tsquery-types">The <code>tsvector</code> and <code>tsquery</code> types</h3>
+<p>The <code>tsvector</code> and <code>tsquery</code> types form the basis of full-text search in
+Postgres.</p>
               
             </div>
           </div>

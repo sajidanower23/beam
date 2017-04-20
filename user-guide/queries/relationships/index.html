@@ -81,6 +81,14 @@
                     
     <a class="" href="../basic/">Basic Queries</a>
                 </li>
+                <li class="">
+                    
+    <a class="" href="../select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../ordering/">Ordering</a>
+                </li>
                 <li class=" current">
                     
     <a class="current" href="./">Relationships</a>
@@ -437,8 +445,23 @@ with those of <code>right</code> through <code>joinThrough</code> and return the
 <p>Joins with arbitrary conditions can be specified using the <code>join_</code> construct.</p>
 <h2 id="outer-joins">Outer joins</h2>
 <h3 id="left-and-right-joins">Left and right joins</h3>
-<p>Left joins with arbitrary conditions can be specified with the <code>leftJoin_</code> construct.</p>
-<div class="admonition todo">
+<p>Left joins with arbitrary conditions can be specified with the <code>leftJoin_</code>
+construct. <code>leftJoin_</code> takes a table and a join condition. It associates each
+result record with a record of the table given or an fully NULL row of that
+table in case no row matches. For this reason, the result of <code>leftJoin_</code> has an
+extra <code>Nullable</code> column tag, which converts each field into the corresponding
+<code>Maybe</code> type.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The table parameter passed in as the join condition does not have a 
+<code>Nullable</code> column tag. The join condition should be written as if a 
+concrete row from that table exists.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">TODO</p>
+<p>Give an example of <code>leftJoin_</code></p>
+</div>
+<div class="admonition note">
 <p class="admonition-title">TODO</p>
 <p><code>rightJoin_</code> is not yet implemented</p>
 </div>
@@ -479,7 +502,7 @@ subqueries as expected.</p>
         <div class="tab-content">
             
         <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
-            <pre><code  class="haskell">do (i :: _) &lt;- limit_ 10 $ all_ (invoice chinookDb)
+            <pre><code  class="haskell">do i &lt;- limit_ 10 $ all_ (invoice chinookDb)
    line &lt;- invoiceLines i
    pure (i, line)
 </code></pre>
@@ -552,7 +575,104 @@ INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;In
                 </div>
                     </p>
 <p>If you need to (for efficiency for example), you can also generate subqueries
-explicitly, using <code>subselect_</code>.</p>
+explicitly, using <code>subselect_</code>. The <code>subselect_</code> will force a new query to be
+output in most cases. For simple queries, such as <code>all_</code>, <code>subselect_</code> will have
+no effect.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-19-haskell" aria-controls="tab-19-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-19-sqlite3" aria-controls="tab-19-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-19-postgres" aria-controls="tab-19-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-19-haskell">
+            <pre><code  class="haskell">-- Same as above, but with explicit sub select
+do i &lt;- subselect_ $ limit_ 10 $ all_ (invoice chinookDb)
+   line &lt;- invoiceLines i
+   pure (i, line)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-19-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;res4&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;res5&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;res6&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;res7&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;res8&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,
+       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+          &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+          &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+          &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+          &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+          &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+          &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;
+   FROM &quot;Invoice&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;res0&quot;)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-19-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;res3&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;res4&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;res5&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;res6&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;res7&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;res8&quot; AS &quot;res8&quot;,
+       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,
+       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,
+       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,
+       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,
+       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+          &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+          &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+          &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+          &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+          &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+          &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;
+   FROM &quot;Invoice&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;) = (&quot;t0&quot;.&quot;res0&quot;)
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
               
             </div>
           </div>
@@ -563,7 +683,7 @@ explicitly, using <code>subselect_</code>.</p>
         <a href="../aggregates/" class="btn btn-neutral float-right" title="Aggregates">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../basic/" class="btn btn-neutral" title="Basic Queries"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../ordering/" class="btn btn-neutral" title="Ordering"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -589,7 +709,7 @@ explicitly, using <code>subselect_</code>.</p>
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../basic/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../ordering/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
         <span style="margin-left: 15px"><a href="../aggregates/" style="color: #fcfcfc">Next &raquo;</a></span>
