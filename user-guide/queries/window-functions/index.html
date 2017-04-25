@@ -347,9 +347,9 @@ FROM &quot;Invoice&quot; AS &quot;t0&quot;
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code>rank_</code> is only available in backends that implement the optional SQL2003
-T621 feature "Enhanced Numeric Functions". Beam syntaxes that implement this
+T611 feature "Elementary OLAP operations". Beam syntaxes that implement this
 functionality implement the
-<code>IsSql2003ExpressionEnhancedNumericFunctionsSyntax</code> type class.</p>
+<code>IsSql2003ExpressionElementaryOLAPOperationsSyntax</code> type class.</p>
 </div>
 <p>Notice that aggregates over the result of the window expression work as you'd
 expect. Beam automatically generates a subquery once a query has been windowed.
