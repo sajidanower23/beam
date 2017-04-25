@@ -118,11 +118,11 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../data-types/">Common data types</a>
+    <a class="" href="../window-functions/">Window functions</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../window-functions/">Window functions</a>
+    <a class="" href="../advanced-features/">Advanced features</a>
                 </li>
     </ul>
 	    </li>
@@ -169,6 +169,10 @@
 		
     <span class="caption-text">Reference</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../reference/models/">Models</a>
+                </li>
                 <li class="">
                     
     <a class="" href="../../../reference/expression/">Expressions</a>
@@ -321,10 +325,6 @@ which is to allow such nesting. This simplifies the API design.</p>
 <p>On backends which allow such nesting (like Postgres), the query is translated
 directly. On backends that do not (like SQLite), an appropriate subselect is
 generated.</p>
-<div class="admonition todo">
-<p class="admonition-title">TODO</p>
-<p>This isn't implemented yet :)</p>
-</div>
 <p>
                 <div class="code-nav-container">
                     
@@ -357,7 +357,7 @@ generated.</p>
       fmap customerLastName
            (all_ (customer chinookDb))
     employeeLastNames =
-      fmap employeeFirstName
+      fmap employeeLastName
            (all_ (employee chinookDb))
 in (customerFirstNames `union_`employeeFirstNames) `intersect_`
    (customerLastNames `except_` employeeLastNames)
@@ -365,16 +365,18 @@ in (customerFirstNames `union_`employeeFirstNames) `intersect_`
         </div>
     
         <div role="tabpanel" class="tab-pane " id="tab-1-sqlite3">
-            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
-FROM &quot;Customer&quot; AS &quot;t0&quot;
-UNION
-SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
-FROM &quot;Employee&quot; AS &quot;t0&quot; INTERSECT
-SELECT &quot;t0&quot;.&quot;LastName&quot; AS &quot;res0&quot;
-FROM &quot;Customer&quot; AS &quot;t0&quot;
-EXCEPT
-SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
-FROM &quot;Employee&quot; AS &quot;t0&quot;
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+   FROM &quot;Customer&quot; AS &quot;t0&quot;
+   UNION SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+   FROM &quot;Employee&quot; AS &quot;t0&quot;) AS &quot;t0&quot; INTERSECT
+SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;LastName&quot; AS &quot;res0&quot;
+   FROM &quot;Customer&quot; AS &quot;t0&quot;
+   EXCEPT SELECT &quot;t0&quot;.&quot;LastName&quot; AS &quot;res0&quot;
+   FROM &quot;Employee&quot; AS &quot;t0&quot;) AS &quot;t0&quot;
 </code></pre>
         </div>
     
@@ -388,7 +390,7 @@ FROM &quot;Employee&quot; AS &quot;t0&quot;
                                            (SELECT &quot;t0&quot;.&quot;LastName&quot; AS &quot;res0&quot;
                                             FROM &quot;Customer&quot; AS &quot;t0&quot;)
                                          EXCEPT
-                                           (SELECT &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res0&quot;
+                                           (SELECT &quot;t0&quot;.&quot;LastName&quot; AS &quot;res0&quot;
                                             FROM &quot;Employee&quot; AS &quot;t0&quot;))
 </code></pre>
         </div>
@@ -548,7 +550,7 @@ UNION
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../data-types/" class="btn btn-neutral float-right" title="Common data types">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../window-functions/" class="btn btn-neutral float-right" title="Window functions">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../aggregates/" class="btn btn-neutral" title="Aggregates"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -580,7 +582,7 @@ UNION
         <span><a href="../aggregates/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../data-types/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../window-functions/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

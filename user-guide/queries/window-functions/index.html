@@ -101,16 +101,22 @@
                     
     <a class="" href="../combining-queries/">Combining queries</a>
                 </li>
-                <li class="">
-                    
-    <a class="" href="../data-types/">Common data types</a>
-                </li>
                 <li class=" current">
                     
     <a class="current" href="./">Window functions</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#the-withwindow_-function">The withWindow_ function</a></li>
+    
+
+    <li class="toctree-l3"><a href="#frame-syntax">Frame syntax</a></li>
+    
+
     </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../advanced-features/">Advanced features</a>
                 </li>
     </ul>
 	    </li>
@@ -157,6 +163,10 @@
 		
     <span class="caption-text">Reference</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../reference/models/">Models</a>
+                </li>
                 <li class="">
                     
     <a class="" href="../../../reference/expression/">Expressions</a>
@@ -227,7 +237,254 @@
           <div role="main">
             <div class="section">
               
-                <p>window functions</p>
+                <p>Window functions allow you to calculate aggregates over portions of your result
+set. They are defined in SQL2003. Some databases use the alternative
+nomenclature <em>analytic functions</em>. They are expressed in SQL with the <code>OVER</code>
+clause. The
+<a href="https://www.postgresql.org/docs/9.1/static/tutorial-window.html">Postgres documentation</a>
+offers a good overview of window functions.</p>
+<h2 id="the-withwindow_-function">The <code>withWindow_</code> function</h2>
+<p>When you want to add windows to a query, use the <code>withWindow_</code> function to
+introduce your frames, and compute the projection. You may notice that this is a
+departure from SQL syntax, where you can define window expressions inline. Beam
+seeks to be type-safe. Queries with window functions follow slightly different
+rules. Wrapping such a query with a special function allows beam to enforce
+these rules.</p>
+<p>For example, to get each invoice along with the average invoice total by each
+customer, use <code>withWindow_</code> as follows.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-postgres" aria-controls="tab-0-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <pre><code  class="haskell">withWindow_ (\i -&gt; frame_ (partitionBy_ (invoiceCustomer i)) noOrder_ noBounds_)
+            (\i w -&gt; (i, avg_ (invoiceTotal i) `over_` w))
+            (all_ (invoice chinookDb))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,
+       AVG(&quot;t0&quot;.&quot;Total&quot;) OVER (PARTITION BY &quot;t0&quot;.&quot;CustomerId&quot;) AS &quot;res9&quot;
+FROM &quot;Invoice&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Or to get each invoice along with the ranking of each invoice by total per
+customer <em>and</em> the overall ranking,</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-postgres" aria-controls="tab-1-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+            <pre><code  class="haskell">withWindow_ (\i -&gt; ( frame_ noPartition_ (orderPartitionBy_ (asc_ (invoiceTotal i))) noBounds_
+                   , frame_ (partitionBy_ (invoiceCustomer i)) (orderPartitionBy_ (asc_ (invoiceTotal i))) noBounds_ ))
+            (\i (allInvoices, customerInvoices) -&gt; (i, rank_ `over_` allInvoices, rank_ `over_` customerInvoices))
+            (all_ (invoice chinookDb))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,
+       RANK() OVER (
+                    ORDER BY &quot;t0&quot;.&quot;Total&quot; ASC) AS &quot;res9&quot;,
+       RANK() OVER (PARTITION BY &quot;t0&quot;.&quot;CustomerId&quot;
+                    ORDER BY &quot;t0&quot;.&quot;Total&quot; ASC) AS &quot;res10&quot;
+FROM &quot;Invoice&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>rank_</code> is only available in backends that implement the optional SQL2003
+T621 feature "Enhanced Numeric Functions". Beam syntaxes that implement this
+functionality implement the
+<code>IsSql2003ExpressionEnhancedNumericFunctionsSyntax</code> type class.</p>
+</div>
+<p>Notice that aggregates over the result of the window expression work as you'd
+expect. Beam automatically generates a subquery once a query has been windowed.
+For example, to get the sum of the totals of the invoices, by rank.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-postgres" aria-controls="tab-2-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <pre><code  class="haskell">orderBy_ (\(rank, _) -&gt; asc_ rank) $
+aggregate_ (\(i, rank) -&gt; (group_ rank, sum_ $ invoiceTotal i)) $
+withWindow_ (\i -&gt; frame_ (partitionBy_ (invoiceCustomer i)) (orderPartitionBy_ (asc_ (invoiceTotal i))) noBounds_)
+            (\i w -&gt; (i, rank_ `over_` w))
+            (all_ (invoice chinookDb))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;res9&quot; AS &quot;res0&quot;,
+       SUM(&quot;t0&quot;.&quot;res8&quot;) AS &quot;res1&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+          &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+          &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+          &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+          &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+          &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+          &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,
+          RANK() OVER (PARTITION BY &quot;t0&quot;.&quot;CustomerId&quot;
+                       ORDER BY &quot;t0&quot;.&quot;Total&quot; ASC) AS &quot;res9&quot;
+   FROM &quot;Invoice&quot; AS &quot;t0&quot;) AS &quot;t0&quot;
+GROUP BY &quot;t0&quot;.&quot;res9&quot;
+ORDER BY &quot;t0&quot;.&quot;res9&quot; ASC
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<h2 id="frame-syntax">Frame syntax</h2>
+<p>The <code>frame_</code> function takes a partition, ordering, and bounds parameter, all of
+which are optional. To specify no partition, use <code>noPartition_</code>. For no
+ordering, use <code>noOrder_</code>. For no bounds, use <code>noBounds_</code>.</p>
+<p>To specify a partition, use <code>partitionBy_</code> with an expression or a tuple of
+expressions. To specify an ordering use <code>orderPartitionBy_</code> with an ordering
+expression or a tuple of ordering expressions. Ordering expressions are scalar
+expressions passed to either <code>asc_</code> or <code>desc_</code>. Finally, to specify bounds, use
+<code>bounds_</code> or <code>fromBound_</code>. <code>fromBound_</code> starts the window at the specified
+position, which can be <code>unbounded_</code> (the default) to include all rows seen thus
+far. <code>bounds_</code> lets you specify an optional ending bound, which can be <code>Nothing</code>
+(the default), <code>Just unbounded_</code> (the semantic default, but producing an
+explicit bound syntactically), or <code>Just (nrows_ x)</code>, where <code>x</code> is an integer
+expression, specifying the number of rows before or after to include in the
+calculation.</p>
+<p>The following query illustrates some of these features. Along with each invoice, it returns</p>
+<ul>
+<li>The average total of all invoices, given by the frame with no partition, ordering, and bounds.</li>
+<li>The average total of all invoices, by customer.</li>
+<li>The rank of each invoice over all the rows, when ordered by total.</li>
+<li>The average of the totals of the invoices starting at the two immediately
+  preceding and ending with the two immediately succeeding invoices, when
+  ordered by date.</li>
+</ul>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-8-haskell" aria-controls="tab-8-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-8-postgres" aria-controls="tab-8-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-8-haskell">
+            <pre><code  class="haskell">withWindow_ (\i -&gt; ( frame_ noPartition_ noOrder_ noBounds_
+                   , frame_ (partitionBy_ (invoiceCustomer i)) noOrder_ noBounds_
+                   , frame_ noPartition_ (orderPartitionBy_ (asc_ (invoiceTotal i))) noBounds_
+                   , frame_ noPartition_ (orderPartitionBy_ (asc_ (invoiceDate i))) (bounds_ (nrows_ 2) (Just (nrows_ 2)))))
+            (\i (allRows_, sameCustomer_, totals_, fourInvoicesAround_) -&gt;
+                 ( i
+                 , avg_ (invoiceTotal i) `over_` allRows_
+                 , avg_ (invoiceTotal i) `over_` sameCustomer_
+                 , rank_ `over_` totals_
+                 , avg_ (invoiceTotal i) `over_` fourInvoicesAround_ ))
+            (all_ (invoice chinookDb))
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-8-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,
+       &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,
+       &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,
+       &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,
+       &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,
+       &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,
+       &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,
+       AVG(&quot;t0&quot;.&quot;Total&quot;) OVER () AS &quot;res9&quot;,
+       AVG(&quot;t0&quot;.&quot;Total&quot;) OVER (PARTITION BY &quot;t0&quot;.&quot;CustomerId&quot;) AS &quot;res10&quot;,
+       RANK() OVER (
+                    ORDER BY &quot;t0&quot;.&quot;Total&quot; ASC) AS &quot;res11&quot;,
+       AVG(&quot;t0&quot;.&quot;Total&quot;) OVER (
+                               ORDER BY &quot;t0&quot;.&quot;InvoiceDate&quot; ASC ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING) AS &quot;res12&quot;
+FROM &quot;Invoice&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
               
             </div>
           </div>
@@ -235,10 +492,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../../../schema-guide/migrations/" class="btn btn-neutral float-right" title="The Migrations Framework">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../advanced-features/" class="btn btn-neutral float-right" title="Advanced features">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../data-types/" class="btn btn-neutral" title="Common data types"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../combining-queries/" class="btn btn-neutral" title="Combining queries"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -264,10 +521,10 @@
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../data-types/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../combining-queries/" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../../../schema-guide/migrations/" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../advanced-features/" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

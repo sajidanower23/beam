@@ -103,11 +103,11 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../../user-guide/queries/data-types/">Common data types</a>
+    <a class="" href="../../user-guide/queries/window-functions/">Window functions</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../user-guide/queries/window-functions/">Window functions</a>
+    <a class="" href="../../user-guide/queries/advanced-features/">Advanced features</a>
                 </li>
     </ul>
 	    </li>
@@ -154,6 +154,10 @@
 		
     <span class="caption-text">Reference</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../reference/models/">Models</a>
+                </li>
                 <li class="">
                     
     <a class="" href="../../reference/expression/">Expressions</a>
@@ -242,23 +246,1981 @@ accessible, I've done my best to piece together features from various
 documents available online. I believe I've covered most of the common
 cases, but there may be pieces of functionality that are missing. File
 an issue if this is the case.</p>
-<p>The table below summarizes the features defined in each SQL standard
-and beam's support for them.</p>
+<p>The table below summarizes the features defined in each SQL standard and beam's
+support for them. FULL means beam supports everything in that feature. NONE
+means that there is no support for that feature, and none planned. N/A means
+that the feature only applies to RDBMSs, not the SQL language. WONTFIX means
+that the feature has been considered and willfully ignored. UNKNOWN means not
+enough investigation has gone into the feature to make a determination. TODO
+means the feature has not been implemented yet, but an implementation is
+planned.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The 'TODO' items are a great way to contribute to beam!</p>
+</div>
 <table>
 <thead>
 <tr>
 <th align="left">Feature</th>
-<th align="center">Standard</th>
 <th align="center">Status</th>
 <th align="left">Notes</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">TODO</td>
+<td align="left"><strong>B011 Embedded Ada</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B012 Embedded C</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B013 Embedded COBOL</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B014 Embedded FORTRAN</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B015 Embedded MUMPS</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B016 Embedded Pascal</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B017 Embedded PL/I</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B021 Direct SQL</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B031 Basic dynamic SQL</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B032 Extended dynamic SQL</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B033 Untyped SQL-invoked function arguments</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B034 Dynamic specification of cursor attributes</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B035 Non-extended descriptor names</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B051 Enhanced execution rights</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B111 Module language Ada</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B112 Module language C</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B113 Module language COBOL</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B114 Module language Fortran</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B115 Module language MUMPS</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B116 Module language Pascal</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B117 Module language PL/I</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B121 Routine language Ada</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B122 Routine language C</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B123 Routine language COBOL</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B124 Routine language Fortran</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B125 Routine language MUMPS</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B126 Routine language Pascal</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B127 Routine language PL/I</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B128 Routine language SQL</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B211 Module language Ada: VARCHAR and NUMERIC support</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>B221 Routine language Ada: VARCHAR and NUMERIC support</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>E011 - Numeric data types</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E011-01 INTEGER and SMALLINT data types</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>Int32</code> for <code>INTEGER</code>, <code>Int16</code> for <code>SMALLINT</code></td>
+</tr>
+<tr>
+<td align="left">E011-02 REAL, DOUBLE PRECISION, FLOAT</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>Double</code> and <code>Float</code></td>
+</tr>
+<tr>
+<td align="left">E011-03 DECIMAL and NUMERIC data types</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>Scientific</code>. You can provide the database precision using <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left">E011-04 Arithmetic operators</td>
+<td align="center">FULL</td>
+<td align="left">Use the <code>Num</code> instance for <code>QGenExpr</code></td>
+</tr>
+<tr>
+<td align="left">E011-05 Numeric comparison</td>
+<td align="center">FULL</td>
+<td align="left">Use the <code>.</code> prefixed operators (i.e., <code>==.</code>, <code>/=.</code>, <code>&lt;.</code>, etc)</td>
+</tr>
+<tr>
+<td align="left">E011-06 Implicit casting among numeric data types</td>
+<td align="center">WONTFIX</td>
+<td align="left">Beam never implicitly casts. Use <code>cast_</code></td>
+</tr>
+<tr>
+<td align="left"><strong>E021 Character string types</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E021-01 CHARACTER data type</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>Text</code>. Use <code>beam-migrate</code> to specify width</td>
+</tr>
+<tr>
+<td align="left">E021-02 CHARACTER VARYING data type</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>Text</code>. Use <code>beam-migrate</code> to specify width.</td>
+</tr>
+<tr>
+<td align="left">E021-03 Character literals</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>val_</code></td>
+</tr>
+<tr>
+<td align="left">E021-04 CHARACTER_LENGTH function</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>charLength_</code></td>
+</tr>
+<tr>
+<td align="left">E021-05 OCTET_LENGTH function</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>octetLength_</code></td>
+</tr>
+<tr>
+<td align="left">E021-06 SUBSTRING function</td>
 <td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E021-07 Character concatenation</td>
 <td align="center">TODO</td>
-<td align="left">TODO</td>
+<td align="left">Use <code>(&amp;#x007c;&amp;#0x007c).</code></td>
+</tr>
+<tr>
+<td align="left">E021-08 UPPER and LOWER functions</td>
+<td align="center">TODO</td>
+<td align="left">Use <code>upper_</code> and <code>lower_</code></td>
+</tr>
+<tr>
+<td align="left">E021-09 TRIM function</td>
+<td align="center">TODO</td>
+<td align="left">Use <code>trim_</code></td>
+</tr>
+<tr>
+<td align="left">E021-10 Implicit casting among string types</td>
+<td align="center">WONTFIX</td>
+<td align="left">Beam never implicitly casts. Use <code>cast_</code></td>
+</tr>
+<tr>
+<td align="left">E021-11 POSITION function</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>position_</code></td>
+</tr>
+<tr>
+<td align="left">E021-12 Character comparison</td>
+<td align="center">FULL</td>
+<td align="left">Use comparison operators (See E011-05)</td>
+</tr>
+<tr>
+<td align="left"><strong>E031 Identifiers</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E031-01 Delimited identifiers</td>
+<td align="center">TODO</td>
+<td align="left">Find out more</td>
+</tr>
+<tr>
+<td align="left">E021-02 Lower case identifiers</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E021-03 Trailing underscore</td>
+<td align="center">N/A</td>
+<td align="left">Beam will use whatever column names you specify</td>
+</tr>
+<tr>
+<td align="left"><strong>E051 Basic query specification</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E051-01 SELECT DISTINCT</td>
+<td align="center">TODO</td>
+<td align="left">Use <code>selectDistinct_</code></td>
+</tr>
+<tr>
+<td align="left">E051-02 GROUP BY clause</td>
+<td align="center">FULL</td>
+<td align="left">See <code>aggregate_</code> or read the <a href="../../user-guide/queries/aggregates/">section on aggregates</a></td>
+</tr>
+<tr>
+<td align="left">E051-04 GROUP BY can contain columns not in SELECT</td>
+<td align="center">TODO</td>
+<td align="left">Unsure how this applies to beam in particular</td>
+</tr>
+<tr>
+<td align="left">E051-05 Select list items can be renamed</td>
+<td align="center">N/A</td>
+<td align="left">Beam uses this feature internally, the user never needs it</td>
+</tr>
+<tr>
+<td align="left">E051-06 HAVING clause</td>
+<td align="center">FULL</td>
+<td align="left"><code>guard_</code> and <code>filter_</code> are appropriately converted to <code>HAVING</code> when allowed</td>
+</tr>
+<tr>
+<td align="left">E051-07 Qualified * in select list</td>
+<td align="center">N/A</td>
+<td align="left">Beam handles projections instead</td>
+</tr>
+<tr>
+<td align="left">E051-08 Correlation names in FROM</td>
+<td align="center">TODO</td>
+<td align="left">Unsure how this applies to beam</td>
+</tr>
+<tr>
+<td align="left">E051-09 Rename columns in the FROM clause</td>
+<td align="center">NONE</td>
+<td align="left">Beam doesn't need this</td>
+</tr>
+<tr>
+<td align="left"><strong>E061 Basic predicates and search conditions</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E061-01 Comparison predicate</td>
+<td align="center">FULL</td>
+<td align="left">Use the comparison operators (see E011-05)</td>
+</tr>
+<tr>
+<td align="left">E061-02 BETWEEN predicate</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>between_</code></td>
+</tr>
+<tr>
+<td align="left">E061-03 IN predicate with list of values</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E061-04 LIKE predicate</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>like_</code></td>
+</tr>
+<tr>
+<td align="left">E061-05 LIKE predicate ESCAPE clause</td>
+<td align="center">TODO</td>
+<td align="left">Unsure how this would apply</td>
+</tr>
+<tr>
+<td align="left">E061-06 NULL predicate</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>isNull_</code> and <code>isNotNull_</code></td>
+</tr>
+<tr>
+<td align="left">E061-07 Quantified comparison predicate</td>
+<td align="center">PARTIAL</td>
+<td align="left">Supported in syntaxes, not exposed in <code>QGenExpr</code> (TODO)</td>
+</tr>
+<tr>
+<td align="left">E051-08 EXISTS predicate</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>exists_</code></td>
+</tr>
+<tr>
+<td align="left">E061-09 Subqueries in comparison predicate</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>subquery_</code> as usual</td>
+</tr>
+<tr>
+<td align="left">E061-11 Subqueries in IN predicate</td>
+<td align="center">TODO</td>
+<td align="left">Would be fixed by E061-03</td>
+</tr>
+<tr>
+<td align="left">E061-12 Subqueries in quantified comparison predicate</td>
+<td align="center">TODO</td>
+<td align="left">Would be fixed by E061-07</td>
+</tr>
+<tr>
+<td align="left">E061-13 Correlated subqueries</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>subquery_</code></td>
+</tr>
+<tr>
+<td align="left">E061-14 Search condition</td>
+<td align="center">FULL</td>
+<td align="left">Construct <code>QGenExprs</code> with type <code>Bool</code></td>
+</tr>
+<tr>
+<td align="left"><strong>E071 Basic query expressions</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E071-01 UNION DISTINCT table operator</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>union_</code></td>
+</tr>
+<tr>
+<td align="left">E071-02 UNION ALL table operator</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>unionAll_</code></td>
+</tr>
+<tr>
+<td align="left">E071-03 EXCEPT DISTINCT table operator</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>except_</code></td>
+</tr>
+<tr>
+<td align="left">E071-05 Columns combined via operators need not have same type</td>
+<td align="center">WONTFIX</td>
+<td align="left">Beam is strongly typed</td>
+</tr>
+<tr>
+<td align="left">E071-06 Table operators in subqueries</td>
+<td align="center">FULL</td>
+<td align="left">Supported for backends that support it</td>
+</tr>
+<tr>
+<td align="left"><strong>E081 Basic privileges</strong></td>
+<td align="center">NONE</td>
+<td align="left">Database security is not beam's focus. <code>beam-migrate</code> may expose this in the future</td>
+</tr>
+<tr>
+<td align="left"><strong>E091 Set functions</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E091-01 AVG</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>avg_</code> or <code>avgOver_</code></td>
+</tr>
+<tr>
+<td align="left">E091-02 COUNT</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>countAll_</code>, <code>countAllOver_</code>, <code>count_</code>, or <code>countOver_</code></td>
+</tr>
+<tr>
+<td align="left">E091-03 MAX</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>max_</code> or <code>maxOver_</code></td>
+</tr>
+<tr>
+<td align="left">E091-04 MIN</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>min_</code> or <code>minOver_</code></td>
+</tr>
+<tr>
+<td align="left">E091-05 SUM</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>sum_</code> or <code>sumOver_</code></td>
+</tr>
+<tr>
+<td align="left">E091-06 ALL quantifier</td>
+<td align="center">FULL</td>
+<td align="left">Use the <code>*Over_</code> functions with the <code>allInGroupExplicitly_</code> quantifier</td>
+</tr>
+<tr>
+<td align="left">E091-07 DISTINCT quantifier</td>
+<td align="center">FULL</td>
+<td align="left">Use the <code>*Over_</code> functions with the <code>distinctInGroup_</code> quantifier</td>
+</tr>
+<tr>
+<td align="left"><strong>E101 Basic data manipulation</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E101-01 INSERT statement</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>insert</code> and <code>SqlInsert</code></td>
+</tr>
+<tr>
+<td align="left">E101-03 Searched UPDATE</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>update</code> and <code>SqlUpdate</code></td>
+</tr>
+<tr>
+<td align="left">E101-04 Searched DELETE</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>delete</code> and <code>SqlDelete</code></td>
+</tr>
+<tr>
+<td align="left"><strong>E111 Single row SELECT statement</strong></td>
+<td align="center">FULL</td>
+<td align="left">Use <code>select</code> as expected</td>
+</tr>
+<tr>
+<td align="left"><strong>E121 Basic cursor support</strong></td>
+<td align="center">NONE</td>
+<td align="left">Use the backends explicitly</td>
+</tr>
+<tr>
+<td align="left"><strong>E131 Null value support</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Use <code>Maybe</code> column types, <code>Nullable</code>, and the <code>just_</code>, <code>nothing_</code>, and <code>maybe_</code> functions</td>
+</tr>
+<tr>
+<td align="left"><strong>E141 Basic integrity constraints</strong></td>
+<td align="center"></td>
+<td align="left">Implemented in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left">E141-01 NOT NULL constraints</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>notNull_</code></td>
+</tr>
+<tr>
+<td align="left">E141-02 UNIQUE constraints of NOT NULL columns</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E141-03 PRIMARY KEY constraints</td>
+<td align="center">FULL</td>
+<td align="left">Instantiate <code>Table</code> with the correct <code>PrimaryKey</code></td>
+</tr>
+<tr>
+<td align="left">E141-04 Basic FOREIGN KEY constraints</td>
+<td align="center">TODO</td>
+<td align="left">You can embed the <code>PrimaryKey</code> of the relation directly.</td>
+</tr>
+<tr>
+<td align="left">E141-06 CHECK constraints</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E141-07 Column defaults</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>default_</code> from <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left">E141-08 NOT NULL inferred on PRIMARY KEY</td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">E141-10 Names in a foreign key can be specified in any order</td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>E151 Transaction support</strong></td>
+<td align="center">None</td>
+<td align="left">Use the backend functions explicitly</td>
+</tr>
+<tr>
+<td align="left"><strong>E152 SET TRANSACTION statement</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>E153 Updatable queries with subqueries</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>E161 SQL comments with double minus</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>E171 SQLSTATE support</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>E182 Host language binding</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F031 Basic schema manipulation</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F031-01 CREATE TABLE for persistent base tables</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>createTable_</code> in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left">F031-02 CREATE VIEW statement</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F031-03 GRANT statement</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F031-04 ALTER TABLE statement: ADD COLUMN clause</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F031-13 DROP TABLE statement: RESTRICT clause</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F031-16 DROP VIEW statement: RESTRICT clause</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F031-19 REVOKE statement: RESTRICT clause</td>
+<td align="center">NONE</td>
+<td align="left">See note for E081</td>
+</tr>
+<tr>
+<td align="left"><strong>F032 CASCADE drop behavior</strong></td>
+<td align="center">TODO</td>
+<td align="left">Would be in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F033 ALTER TABLE statement: DROP COLUMN clause</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F034 Extended REVOKE statement</strong></td>
+<td align="center">NONE</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F041 Basic joined table</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F041-01 Inner join</td>
+<td align="center">FULL</td>
+<td align="left">Use the <a href="../../user-guide/queries/relationships/">monadic join interface</a></td>
+</tr>
+<tr>
+<td align="left">F041-02 INNER keyword</td>
+<td align="center">N/A</td>
+<td align="left">No semantic difference</td>
+</tr>
+<tr>
+<td align="left">F041-03 LEFT OUTER JOIN</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>leftJoin_</code></td>
+</tr>
+<tr>
+<td align="left">F041-04 RIGHT OUTER JOIN</td>
+<td align="center">PARTIAL</td>
+<td align="left">Supported in backend syntaxes, not exposed. Can always be written using LEFT OUTER JOIN</td>
+</tr>
+<tr>
+<td align="left">F041-05 Outer joins can be nested</td>
+<td align="center">TODO</td>
+<td align="left">Depends on <code>outerJoin_</code></td>
+</tr>
+<tr>
+<td align="left">F041-07 The inner table in outer join can be used in inner join</td>
+<td align="center">TODO</td>
+<td align="left">How does this apply to us?</td>
+</tr>
+<tr>
+<td align="left">F041-08 All comparison operators in JOIN</td>
+<td align="center">FULL</td>
+<td align="left">Arbitrary <code>QGenExpr</code>s are supported.</td>
+</tr>
+<tr>
+<td align="left"><strong>F051 Basic date and time</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F051-01 DATE data type</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>Day</code> from <code>Data.Time</code> and <code>val_</code></td>
+</tr>
+<tr>
+<td align="left">F051-02 TIME data type</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>TimeOfDay</code> from <code>Data.Time</code> and <code>val_</code></td>
+</tr>
+<tr>
+<td align="left">F051-03 TIMESTAMP datatype</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>LocalTime</code> from <code>Data.Time</code> and <code>val_</code>. Precision can be specified in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left">F051-04 Comparison predicate on time types</td>
+<td align="center">FULL</td>
+<td align="left">Use comparison operatiors (See E011-05)</td>
+</tr>
+<tr>
+<td align="left">F051-05 Explicit cast between date-time types and string</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F051-06 CURRENT_DATE</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F051-07 LOCALTIME</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F051-08 LOCALTIMESTAMP</td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F081 UNION and EXCEPT in views</strong></td>
+<td align="center">TODO</td>
+<td align="left">Depends on view support</td>
+</tr>
+<tr>
+<td align="left"><strong>F111 Isolation levels other than SERIALIZABLE</strong></td>
+<td align="center">NONE</td>
+<td align="left">Use backends</td>
+</tr>
+<tr>
+<td align="left"><strong>F121 Basic diagnostics mangement</strong></td>
+<td align="center">NONE</td>
+<td align="left">Use backends</td>
+</tr>
+<tr>
+<td align="left"><strong>F122 Extended diagnostics management</strong></td>
+<td align="center">NONE</td>
+<td align="left">Use backends</td>
+</tr>
+<tr>
+<td align="left"><strong>F123 All diagnostics</strong></td>
+<td align="center">NONE</td>
+<td align="left">Use backends</td>
+</tr>
+<tr>
+<td align="left"><strong>F131 Grouped operations</strong></td>
+<td align="center">TODO</td>
+<td align="left">Depends on grouped views</td>
+</tr>
+<tr>
+<td align="left"><strong>F171 Multiple schemas per user</strong></td>
+<td align="center">N/A</td>
+<td align="left">Depends on backend</td>
+</tr>
+<tr>
+<td align="left"><strong>F191 Referential delete actions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F181 Multiple module support</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F200 TRUNCATE TABLE statement</strong></td>
+<td align="center">TODO</td>
+<td align="left">May be added in the future</td>
+</tr>
+<tr>
+<td align="left"><strong>F201 CAST function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F202 TRUNCATE TABLE: identity column restart option</strong></td>
+<td align="center">TODO</td>
+<td align="left">Depends on F200</td>
+</tr>
+<tr>
+<td align="left"><strong>F221 Explicit defaults</strong></td>
+<td align="center">FULL</td>
+<td align="left">Use <code>Auto Nothing</code> when inserting</td>
+</tr>
+<tr>
+<td align="left"><strong>F222 INSERT statement: DEFAULT VALUES clause</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F251 Domain support</strong></td>
+<td align="center">TODO</td>
+<td align="left">Use <code>DomainType</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F261 CASE expression</strong></td>
+<td align="center"></td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">F261-01 Simple CASE</td>
+<td align="center">TODO</td>
+<td align="left">Use searched case (see F261-02)</td>
+</tr>
+<tr>
+<td align="left">F261-02 Searched CASE</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>if_</code>, <code>then_</code>, and <code>else_</code></td>
+</tr>
+<tr>
+<td align="left">F261-03 NULLIF</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>nullIf_</code></td>
+</tr>
+<tr>
+<td align="left">F261-04 COALESCE</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>coalesce_</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F262 Extended CASE expression</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Beam allows any value in a <code>CASE</code> expression</td>
+</tr>
+<tr>
+<td align="left"><strong>F263 Comma-separater predicates in simple CASE expression</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F271 Compound character literals</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Backends may do this automatically</td>
+</tr>
+<tr>
+<td align="left"><strong>F281 LIKE enhancements</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Supported in backends that support this</td>
+</tr>
+<tr>
+<td align="left"><strong>F291 UNIQUE predicate</strong></td>
+<td align="center">FULL</td>
+<td align="left">Use <code>unique_</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F301 CORRESPONDING in query expressions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F302 INTERSECT table operator</strong></td>
+<td align="center">FULL</td>
+<td align="left">Use <code>intersect_</code></td>
+</tr>
+<tr>
+<td align="left">F302-01 INTERSECT DISTINCT table operator</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>intersect_</code></td>
+</tr>
+<tr>
+<td align="left">F302-02 INTERSET ALL table operator</td>
+<td align="center">FULL</td>
+<td align="left">Use <code>intersectAll_</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F304 EXCEPT ALL table operator</strong></td>
+<td align="center">FULL</td>
+<td align="left">Use <code>exceptAll_</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F311 Schema definition statement</strong></td>
+<td align="center">TODO</td>
+<td align="left">Would be in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F312 MERGE statement</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F313 Enhanced MERGE statement</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F314 MERGE statement with DELETE branch</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F321 User authorization</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F361 Subprogram support</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F381 Extended schema manipulation</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F382 Alter column data type</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F384 Drop identity property clause</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F385 Drop column generation expression clause</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F386 Set identity column generation clause</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F391 Long identifiers</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Supported in backends that support it</td>
+</tr>
+<tr>
+<td align="left"><strong>F392 Unicode escapes in identifiers</strong></td>
+<td align="center">TODO</td>
+<td align="left">Unsure how this applies</td>
+</tr>
+<tr>
+<td align="left"><strong>F393 Unicode escapes in literals</strong></td>
+<td align="center">TODO</td>
+<td align="left">Unsure how this applies</td>
+</tr>
+<tr>
+<td align="left"><strong>F394 Optional normal form specification</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F401 Extended joined table</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left"><code>FULL OUTER JOIN</code> support planned with <code>outerJoin_</code>. <code>CROSS JOIN</code> is the same as <code>INNER JOIN</code>, and <code>NATURAL JOIN</code> has no meaning in beam.</td>
+</tr>
+<tr>
+<td align="left"><strong>F402 Named column joins for LOBs, arrays, and multisets</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Supported in backends that support it</td>
+</tr>
+<tr>
+<td align="left"><strong>F403 Partitioned join tables</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F411 Time zone specification</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F421 National character</strong></td>
+<td align="center">FULL</td>
+<td align="left">Supported in <code>beam-migrate</code> as a data type for <code>Text</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F431 Read-only scrollable cursors</strong></td>
+<td align="center">N/A</td>
+<td align="left">Use the underlying backend</td>
+</tr>
+<tr>
+<td align="left"><strong>F441 Extended set function support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F442 Mixed column references in set functions</strong></td>
+<td align="center">TODO</td>
+<td align="left">Unsure how this would work with beam</td>
+</tr>
+<tr>
+<td align="left"><strong>F451 Character set definition</strong></td>
+<td align="center">TODO</td>
+<td align="left">Likely would go in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F461 Named character sets</strong></td>
+<td align="center">TODO</td>
+<td align="left">See F451</td>
+</tr>
+<tr>
+<td align="left"><strong>F491 Constraint management</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F492 Optional table constraint enforcement</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F521 Assertions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F531 Temporary tables</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F481 Expanded NULL predicate</strong></td>
+<td align="center">FULL</td>
+<td align="left">Supported in backends that support it</td>
+</tr>
+<tr>
+<td align="left"><strong>F555 Enhanced seconds precision</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F561 Full value expressions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F571 Truth value tests</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F591 Derived tables</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F611 Indicator data types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F641 Row and table constructors</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Use <code>row_</code> (TODO)</td>
+</tr>
+<tr>
+<td align="left"><strong>F651 Catalog name qualifiers</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F661 Simple tables</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F671 Subqueries in CHECK constraints</strong></td>
+<td align="center">TODO</td>
+<td align="left">Planned with E141-06</td>
+</tr>
+<tr>
+<td align="left"><strong>F672 Retrospective CHECK constraints</strong></td>
+<td align="center">TODO</td>
+<td align="left">Would require temporal DB support</td>
+</tr>
+<tr>
+<td align="left"><strong>F690 Collation support</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left"><code>beam-migrate</code> supports some collation features</td>
+</tr>
+<tr>
+<td align="left"><strong>F692 Enhanced collation support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F693 SQL-session and client module collations</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F695 Translation support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F701 Referential update actions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F711 ALTER domain</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F721 Deferrable constraints</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">The syntax exists in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left"><strong>F731 INSERT column privileges</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F741 Referential MATCH type</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Exists in the syntax in <code>beam-migrate</code>, not exposed yet (TODO)</td>
+</tr>
+<tr>
+<td align="left"><strong>F751 View CHECK enhancements</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F761 Session management</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F762 CURRENT_CATALOG</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F763 CURRENT_SCHEMA</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F812 Basic flagging</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F841 LIKE_REGEX predicate</strong></td>
+<td align="center">TODO</td>
+<td align="left">Easy</td>
+</tr>
+<tr>
+<td align="left"><strong>F842 OCCURENCES_REGEX function</strong></td>
+<td align="center">TODO</td>
+<td align="left">Easy</td>
+</tr>
+<tr>
+<td align="left"><strong>F843 POSITION_REGEX function</strong></td>
+<td align="center">TODO</td>
+<td align="left">Easy</td>
+</tr>
+<tr>
+<td align="left"><strong>F844 SUBSTRING_REGEX function</strong></td>
+<td align="center">TODO</td>
+<td align="left">Easy</td>
+</tr>
+<tr>
+<td align="left"><strong>F845 TRANSLATE_REGEX function</strong></td>
+<td align="center">TODO</td>
+<td align="left">Easy</td>
+</tr>
+<tr>
+<td align="left"><strong>F846 Octet support in regular expression operators</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F847 Nonconstant regular expression</strong></td>
+<td align="center">TODO</td>
+<td align="left">Easy once regex support is added</td>
+</tr>
+<tr>
+<td align="left"><strong>F850 Top-level <order by clause> in <query expression></strong></td>
+<td align="center">FULL</td>
+<td align="left">Use <code>orderBy_</code> as usual. Beam will do the right thing behind the scenes.</td>
+</tr>
+<tr>
+<td align="left"><strong>F851 <onder by clause> in subqueries</strong></td>
+<td align="center">FULL</td>
+<td align="left">Works in backends that support it</td>
+</tr>
+<tr>
+<td align="left"><strong>F852 Top-level <order by clause> in views</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F855 Nested <order by clause> in <query expression></strong></td>
+<td align="center">UNKNOWN</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F856 Nested <fetch first clause> in <query expression></strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F857 Top-level <fetch first clause> in <query expression></strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F858 <fetch first clause> in subqueries</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F859 Top-level <fetch first clause> in subqueries</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">*<em>F860 dynamic <fetch first row count> in <fetch first clause></em></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left">*<em>F861 Top-level <result offset clause> in <query expression></em></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F862 <result offset clause> in subqueries</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F863 Nested <result offset clause> in <query expression></strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F864 TOp-level <result offset clause> in views</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F865 dynamic <offset row count> in <result offset clause></strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F866 FETCH FIRST clause: PERCENT option</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>F867 FETCH FIRST clause: WITH TIES option</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>R010 Row pattern recognition: FROM clause</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>R020 Row pattern recognition: WINDOW clause</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>R030 Row pattern recognition: full aggregate support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S011 Distinct data types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S023 Basic structured types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S024 Enhanced structured types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S025 Final structured types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S026 Self-referencing structured types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S027 Create method by specific method name</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S028 Permutable UDT options list</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S041 Basic reference types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S043 Enhanced reference types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S051 Create table of type</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S071 SQL paths in function and type name resolution</strong></td>
+<td align="center">N/A</td>
+<td align="left">Beam qualifies everything anyway</td>
+</tr>
+<tr>
+<td align="left"><strong>S081 Subtables</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">You can use them right now, but there's no support for their creation or management in <code>beam-migrate</code></td>
+</tr>
+<tr>
+<td align="left"><strong>S091 Basic array support</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Supported via custom syntax in some backends (<code>beam-postgres</code> for example)</td>
+</tr>
+<tr>
+<td align="left"><strong>S092 Arrays of user-defined types</strong></td>
+<td align="center">TODO</td>
+<td align="left">Depends on user-defined types</td>
+</tr>
+<tr>
+<td align="left"><strong>S094 Arrays of reference types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S095 Array constructors by query</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S096 Optional array bounds</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Supported in <code>beam-postgres</code></td>
+</tr>
+<tr>
+<td align="left"><strong>S097 Array element assignment</strong></td>
+<td align="center">TODO</td>
+<td align="left">Not yet, but should be easy enough in <code>beam-postgres</code></td>
+</tr>
+<tr>
+<td align="left"><strong>S098 ARRAY_AGG</strong></td>
+<td align="center">TODO</td>
+<td align="left">Easily added to <code>beam-postgres</code> (Easy)</td>
+</tr>
+<tr>
+<td align="left"><strong>S111 ONLY in query expressions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S151 Type predicate</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S161 Subtype treatment</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S162 Subtype treatment for references</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S201 SQL-invoked routines on arrays</strong></td>
+<td align="center">TODO</td>
+<td align="left">Would be subsumed by sql-routines (T-321)</td>
+</tr>
+<tr>
+<td align="left"><strong>S202 SQL-invoked routines on multisets</strong></td>
+<td align="center">TODO</td>
+<td align="left">Would be subsumed by sql-routines (T-321)</td>
+</tr>
+<tr>
+<td align="left"><strong>S211 User-defined cast functions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S231 Structured type locators</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S232 Array locators</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S233 Multiset locators</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S241 Transform functions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S242 Alter transform statement</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S251 User-defined orderings</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S261 Specific type method</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S271 Basic multiset support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S272 Multisets of user-defined types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S274 Multisets reference types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S275 Advanced multiset support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S281 Nested collection types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S291 Unique constraint on entire row</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S301 Enhanced UNNEST</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S401 Distinct types based on array types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S402 Distinct types based on distinct types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S403 ARRAY_MAX_CARDINALITY</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>S404 TRIM_ARRAY</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T021 BINARY and VARBINARY data types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T022 Advanced support for BINARY and VARBINARY data types</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T023 Compound binary literals</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T024 Spaces in binary literals</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T031 Boolean data type</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T041 Basic LOB data type support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T042 Extended LOB data type support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T043 Multiplier T</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T044 Multiplier P</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T051 Row types</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T061 UCS support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T071 BIGINT data type</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T101 Enhanced nullability detection</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T111 Updatable joins, unions,  and columns</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T121 WITH (excluding recursive) in query expression</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T122 WITH (excluding recursive) in subquery</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T131 Recursive query</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T132 Recursive query in subquery</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T141 SIMILAR predicate</strong></td>
+<td align="center">FULL</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T151 DISTINCT predicate</strong></td>
+<td align="center">FULL</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T152 DISTINCT predicate with negation</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T171 LIKE clause in table definition</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T172 AS subquery clause in table definition</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T173 Extended LIKE clause in table definition</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T174 Identity columns</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T175 Generated columns</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T176 Sequence generator support</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T177 Sequence generator support: simple restart option</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T178 Identity columns: simple restart option</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T180 System-versioned tables</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T181 Application-time period tables</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T191 Referential action RESTART</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T201 Comparable data types for referential constraints</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T211 Basic trigger capability</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T212 Enhanced trigger capability</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T213 INSTEAD OF triggers</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T231 Sensitive cursors</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T241 START TRANSACTION statement</strong></td>
+<td align="center">WONTFIX</td>
+<td align="left">Use the backend library</td>
+</tr>
+<tr>
+<td align="left"><strong>T251 SET TRANSACTION option: LOCAL option</strong></td>
+<td align="center">WONTFIX</td>
+<td align="left">Use the backend library</td>
+</tr>
+<tr>
+<td align="left"><strong>T261 Chained transactions</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T271 Savepoints</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T272 Enhanced savepoint management</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T281 SELECT privilege with column granularity</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T285 Enhanced derived column names</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T301 Functional dependencies</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T312 OVERLAY function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T321 Basic SQL-invoked routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T323 Explicit security for external routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T324 Explicit security for SQL routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T325 Qualified SQL parameter references</strong></td>
+<td align="center">N/A</td>
+<td align="left">Beam will likely use the qualified ones by default. Likely not exposed to user</td>
+</tr>
+<tr>
+<td align="left"><strong>T326 Table functions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T331 Basic roles</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T332 Extended roles</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T341 Overleading of SQL-invoked functions and procodures</strong></td>
+<td align="center">WONTFIX</td>
+<td align="left">Haskell doesn't allow overloading, and this seems complicated and unnecessary</td>
+</tr>
+<tr>
+<td align="left"><strong>T351 Bracketed comments</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T431 Extended grouping capabalities</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T432 Nested and concatenated GROUPING SETs</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T433 Multiargument GROUPING function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T434 GROUP BY DISTINCT</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T441 ABS and MOD functions</strong></td>
+<td align="center">FULL</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T461 Symmetric BETWEEN predicate</strong></td>
+<td align="center">FULL</td>
+<td align="left">Beam doesn't check this</td>
+</tr>
+<tr>
+<td align="left"><strong>T471 Result sets return value</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T472 DESCRIBE CURSOR</strong></td>
+<td align="center">N/A</td>
+<td align="left">Use the backend library</td>
+</tr>
+<tr>
+<td align="left"><strong>T491 LATERAL derived table</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T495 Combined data change and retrieval</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T501 Enhanced EXISTS predicate</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T502 Period predicates</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T511 Transaction counts</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T521 Nested arguments in CALL statement</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T522 Default values for IN parameters of SQL-invoked procs</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T551 Optional key words for DEFAULT syntax</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T561 Holdable locators</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T571 Array-returning SQL-invoked functions</strong></td>
+<td align="center">TODO</td>
+<td align="left">Will be supported once SQL-invoked functions are</td>
+</tr>
+<tr>
+<td align="left"><strong>T572 Multiset-returning SQL-invoked functions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T581 Regular expression substring function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T591 UNIQUE constraints of possible NULL columns</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T601 Local cursor references</strong></td>
+<td align="center">N/A</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T611 Elementary OLAP operations</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">See <code>withWindow_</code>, <a href="../../user-guide/queries/window-functions/">window functions</a>. Need <code>nullsFirst_</code> and <code>nullsLast_</code></td>
+</tr>
+<tr>
+<td align="left"><strong>T612 Advanced OLAP operations</strong></td>
+<td align="center">PARTIAL</td>
+<td align="left">Need <code>percentRank_</code>, <code>cumeDist_</code>, no exclusions yet</td>
+</tr>
+<tr>
+<td align="left"><strong>T613 Sampling</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T614 NTILE function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T615 LEAD and LAG function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T616 Null treatment for LEAD and LAG functions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T617 FIRST_VALUE and LAST_VALUE function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T618 NTH_VALUE function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T619 Nested window function</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T620 WINDOW clause: GROUPS option</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T621 Enhanced numeric functions</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T641 Multiple column assignment</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T651 SQL-schema statements in SQL routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T652 SQL-dynamic statements in SQL routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T653 SQL-schema statements in external routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T654 SQL-dynamic statements in external routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><strong>T655 Cyclically dependent routines</strong></td>
+<td align="center">TODO</td>
+<td align="left"></td>
 </tr>
 </tbody>
 </table>

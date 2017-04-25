@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>Models - Beam Documentation</title>
+
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/highlight.css">
+  <link href="../../theme/css/beam.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/beam.css"/>
+
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "Models";
+    var mkdocs_page_input_path = "reference/models.md";
+    var mkdocs_page_url = "/reference/models/";
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js"></script>
+  <script src="../../js/modernizr-2.8.3.min.js"></script>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> Beam Documentation</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">Home</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../../about/faq/">Frequently Asked Questions</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">User Guide</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../user-guide/getting-started/">Getting Started</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/models/">Models</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/databases/">Databases</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/basic/">Basic Queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/select/">More complex SELECTs</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/ordering/">Ordering</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/relationships/">Relationships</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/aggregates/">Aggregates</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/combining-queries/">Combining queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/window-functions/">Window functions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/queries/advanced-features/">Advanced features</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Schema management</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/migrations/">The Migrations Framework</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/tool/">The beam-migrate tool</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../schema-guide/supported/">Supported migrations</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Backends</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../user-guide/backends/beam-postgres/">beam-postgres</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/backends/beam-sqlite/">beam-sqlite</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../user-guide/custom-backends/">Writing a Custom Backend</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">Reference</span>
+    <ul class="subnav">
+                <li class=" current">
+                    
+    <a class="current" href="./">Models</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#the-table-type-class">The Table type class</a></li>
+    
+
+    <li class="toctree-l3"><a href="#the-identity-trick">The Identity trick</a></li>
+    
+
+    <li class="toctree-l3"><a href="#allowed-data-types">Allowed data types</a></li>
+    
+
+    <li class="toctree-l3"><a href="#maybe-types">Maybe types</a></li>
+    
+
+    <li class="toctree-l3"><a href="#column-tags">Column tags</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#converting-between-tags">Converting between tags</a></li>
+        
+        </ul>
+    
+
+    </ul>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../expression/">Expressions</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../queries/">Queries</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../extensibility/">Extending</a>
+                </li>
+    </ul>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">About</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../about/compatibility/">Compatibility Matrix</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../about/license/">License</a>
+                </li>
+                <li class="">
+                    
+    <a class="" href="../../about/release-notes/">Release Notes</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">Beam Documentation</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>Reference &raquo;</li>
+        
+      
+    
+    <li>Models</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <p>A beam model is any single-constructer Haskell record type parameterized by a
+type of kind <code>* -&gt; *</code>. The model must have an instance of <code>Generic</code>, <code>Beamable</code>,
+and <code>Table</code>. <code>Generic</code> can be derived using the <code>DeriveGeneric</code> extension of
+GHC. <code>Beamable</code> must be given an empty instance declaration (<code>instance Beamable
+Tbl</code> for a table of type <code>Tbl</code>). <code>Table</code> is discussed next.</p>
+<p>Each field in the record type must either be a sub-table (another parameterized
+type with a <code>Beamable</code> instance) or an explicit column. A column is specified
+using the <code>Columnar</code> type family applied to the type's parameter and the
+underlying Haskell type of the field.</p>
+<h2 id="the-table-type-class">The <code>Table</code> type class</h2>
+<p><code>Table</code> is a type class that must be instantiated for all types that you would
+like to use as a table. It has one associated <code>data</code> instance and one function.</p>
+<p>You must create a type to represent the primary key of the table. The primary
+key of a table <code>Tbl</code> is the associated data type <code>PrimaryKey Tbl</code>. Like <code>Tbl</code>,
+it takes one type parameter of kind <code>* -&gt; *</code>. It must have only one constructor
+which can hold all fields in the primary key. The constructor need not be a
+record constructor (although it can be).</p>
+<p>You must also write a function <code>primaryKey</code> that takes an instance of <code>Tbl</code>
+(parameterized over any functor <code>f</code>) and returns the associated <code>PrimaryKey</code>
+type. It is sometimes easiest to use the <code>Applicative</code> instance for <code>r -&gt;</code> to
+write this function. For example, if <code>tblField1</code> and <code>tblField2</code> are part of the
+primary key, you can write</p>
+<pre><code  class="haskell">instance Table Tbl where
+  data PrimaryKey Tbl f = TblKey (Columnar f ..) (Columnar f ..)
+  primaryKey t = TblKey (tblField1 t) (tblField2 t)
+</code></pre>
+
+<p>more simply as</p>
+<pre><code  class="haskell">instance Table Tbl where
+  data PrimaryKey Tbl f = TblKey (Columnar f ..) (Columnar f ..)
+  primaryKey = TblKey &lt;$&gt; tblField1 &lt;*&gt; tblField2
+</code></pre>
+
+<h2 id="the-identity-trick">The <code>Identity</code> trick</h2>
+<p>Beam table types are commonly prefixed by a <code>T</code> to indicate the name of the
+generic table type. Usually, a type synonym named by leaving out the <code>T</code> is
+defined by applying the table to <code>Identity</code>. Recall each field in the table is
+either another table or an application of <code>Columnar</code> to the type parameter. When
+the type is parameterized by <code>Identity</code>, every column is also parameterized by
+<code>Identity</code>.</p>
+<p><code>Columnar</code> is a type family defined such that <code>Columnar Identity x ~ x</code>. Thus,
+when parameterized over <code>Identity</code>, every field in the table type takes on the
+underlying Haskell type.</p>
+<p>Suppose you have a table type <code>ModelT</code> and a type synonym <code>type Model = ModelT
+Identity</code>. Notice that deriving <code>Show</code>, <code>Eq</code>, and other standard Haskell type
+classes won't generally work for <code>ModelT</code>. However, you can use the standalone
+deriving mechanism to derive these instances for <code>Model</code>.</p>
+<pre><code  class="haskell">data ModelT f = Model { .. } deriving Generic
+instance Beamable ModelT
+
+-- deriving instance Show (ModelT f) -- Won't work because GHC won't get the constraints right
+
+type Model = ModelT Identity
+deriving instance Show Model
+deriving instance Eq Model
+deriving instance Ord Model
+</code></pre>
+
+<h2 id="allowed-data-types">Allowed data types</h2>
+<p>Any data type can be used within a <code>Columnar</code>. Beam does no checking that a
+field can be used against a particular database when the data type is defined.
+Instead, type errors will occur when the table is being used as a query. For
+example, the following is allowed, even though many backends will not work with
+array data types.</p>
+<pre><code  class="haskell">import qualified Data.Vector as V
+
+data ArrayTable f
+    = ArrayTable
+    { arrayTablePoints :: Columnar f (V.Vector Int32)
+    } deriving Generic
+</code></pre>
+
+<p>You can construct values of type <code>ArrayTable Identity</code> and even write queries
+over it (relying on type inference to get the constraints right). However, if
+you attempt to solve the constraints over a database that doesn't support
+columns of type <code>V.Vector Int32</code>, GHC will throw an error. Thus, it's important
+to understand the limits of your backend when deciding which types to use. In
+general, numeric, floating-point, and text types are well supported.</p>
+<h2 id="maybe-types"><code>Maybe</code> types</h2>
+<p>Optional fields (those that allow a SQL <code>NULL</code>) can usually be given a <code>Maybe</code>
+type. However, you cannot use <code>Maybe</code> around an embedded table (you will be
+unable to instantiate <code>Beamable</code>).</p>
+<p>Beam offers a way around this. Instead of embedding the table applied to the
+type parameter <code>f</code>, apply it to <code>Nullable f</code>. <code>Columnar (Nullable f) a ~ Maybe
+(Columnar f a)</code> for all <code>a</code>. Thus, this will make every column in the embedded
+table take on the corresponding <code>Maybe</code> type.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code>Nullable</code> will nest <code>Maybe</code>s. That is <code>Columnar (Nullable f) (Maybe a) ~
+Maybe (Maybe a)</code>. This is bad from a SQL perspective, since SQL has no
+concept of a nested optional type. Beam treats a <code>Nothing</code> at any 'layer' of
+the <code>Maybe</code> stack as a corresponding SQL <code>NULL</code>. When marshalling data back,
+a SQL <code>NULL</code> is read in as a top-level <code>Nothing</code>.</p>
+<p>The reasons for this misfeature is basically code simplicity. Fixing this is
+a top priority of future versions of beam.</p>
+</div>
+<h2 id="column-tags">Column tags</h2>
+<p>Above, we saw that applying <code>Identity</code> to a table type results in a type whose
+columns are the underlying Haskell type. Beam uses other column tags for
+querying and describing databases. Below is a table of common column tags and
+their meaning.</p>
+<h3 id="converting-between-tags">Converting between tags</h3>
+<p>Suppose you have a <code>Beamable</code> type paramaterized over a tag <code>f</code> and needed one
+parameterized over a tag <code>g</code>. Given a function <code>conv :: forall a. Columnar f a
+-&gt; Columnar g a</code>, you can use <code>changeBeamRep</code> to convert between the tables.</p>
+<p>There is one caveat however -- since <code>Columnar</code> is a type family, the type of
+<code>conv</code> is actually ambiguous. We need a way to carry the type of <code>f</code>, <code>g</code>, and
+<code>a</code> into the code. For this reason, <code>conv</code> must actually be written over the
+<code>Columnar'</code>(notice the tick) <code>newtype</code>. <code>Columnar'</code> is a newtype defined as such</p>
+<pre><code  class="haskell">newtype Columnar' f a = Columnar' (Columnar f a)
+</code></pre>
+
+<p>Notice that, unlinke <code>Columnar</code> (a non-injective type family), <code>Columnar'</code> is a
+full type. The type of <code>conv' :: forall a. Columnar' f a -&gt; Columnar' g a</code> is
+now unambiguous. You can easily use <code>conv</code> to implement <code>conv'</code>:</p>
+<pre><code  class="haskell">conv' (Columnar' a) = Columnar' (conv a)
+</code></pre>
+
+<p>You will often need to write explicit type signatures in order to get the
+compiler to accept your code.</p>
+              
+            </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../expression/" class="btn btn-neutral float-right" title="Expressions">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../../user-guide/custom-backends/" class="btn btn-neutral" title="Writing a Custom Backend"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+	  
+        </div>
+      </div>
+
+    </section>
+    
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../../user-guide/custom-backends/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../expression/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
+</div>
+
+    <script src="../../js/theme.js"></script>
+<script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" language="javascript">
+ $(document.body).tab();
+</script>
+
+
+</body>
+</html>

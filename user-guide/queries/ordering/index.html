@@ -106,11 +106,11 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../data-types/">Common data types</a>
+    <a class="" href="../window-functions/">Window functions</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../window-functions/">Window functions</a>
+    <a class="" href="../advanced-features/">Advanced features</a>
                 </li>
     </ul>
 	    </li>
@@ -157,6 +157,10 @@
 		
     <span class="caption-text">Reference</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../../reference/models/">Models</a>
+                </li>
                 <li class="">
                     
     <a class="" href="../../../reference/expression/">Expressions</a>
@@ -229,6 +233,132 @@
               
                 <p>Usually, queries are ordered before <code>LIMIT</code> and <code>OFFSET</code> are applied. Beam
 supports the standard SQL <code>ORDER BY</code> construct through the <code>orderBy_</code> function.</p>
+<p><code>orderBy_</code> works like the Haskell function <code>sortBy</code>, wich some restructions. Its
+first argument is a function which takes as input the output of the given query.
+The function should return a sorting key, which is either a single sort ordering
+or a tuple of them. A sort ordering specifies an expression and a direction by
+which to sort. The result is then sorted lexicographically based on these sort
+expressions. The second argument to <code>orderBy_</code> is the query whose results to
+sort.</p>
+<p>Use the <code>asc_</code> and <code>desc_</code> functions to specify the sort ordering over an
+arbitrary expression.</p>
+<p>For example, to get the first ten albums when sorted lexicographically, use</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-sqlite3" aria-controls="tab-0-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-postgres" aria-controls="tab-0-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <pre><code  class="haskell">limit_ 10 $
+orderBy_ (asc_ . albumTitle) $
+all_ (album chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Title&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;ArtistId&quot; AS &quot;res2&quot;
+FROM &quot;Album&quot; AS &quot;t0&quot;
+ORDER BY &quot;t0&quot;.&quot;Title&quot; ASC
+LIMIT 10
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;Title&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;ArtistId&quot; AS &quot;res2&quot;
+FROM &quot;Album&quot; AS &quot;t0&quot;
+ORDER BY &quot;t0&quot;.&quot;Title&quot; ASC
+LIMIT 10
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Again, note that the ordering in which you apply the <code>limit_</code> and <code>orderBy_</code>
+matters. In general, you want to sort before you limit or offset, to keep your
+result set stable. However, if you really want to sort a limited number of
+arbitrarily chosen rows, you can use a different ordering.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-6-haskell" aria-controls="tab-6-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-6-sqlite3" aria-controls="tab-6-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-6-postgres" aria-controls="tab-6-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-6-haskell">
+            <pre><code  class="haskell">orderBy_ (asc_ . albumTitle) $
+limit_ 10 $
+all_ (album chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-6-sqlite3">
+            <pre><code  class="sqlite3">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Title&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;ArtistId&quot; AS &quot;res2&quot;
+   FROM &quot;Album&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+ORDER BY &quot;t0&quot;.&quot;res1&quot; ASC
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-6-postgres">
+            <pre><code  class="postgres">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,
+       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,
+       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;
+FROM
+  (SELECT &quot;t0&quot;.&quot;AlbumId&quot; AS &quot;res0&quot;,
+          &quot;t0&quot;.&quot;Title&quot; AS &quot;res1&quot;,
+          &quot;t0&quot;.&quot;ArtistId&quot; AS &quot;res2&quot;
+   FROM &quot;Album&quot; AS &quot;t0&quot;
+   LIMIT 10) AS &quot;t0&quot;
+ORDER BY &quot;t0&quot;.&quot;res1&quot; ASC
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
               
             </div>
           </div>

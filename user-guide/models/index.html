@@ -138,11 +138,11 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../queries/data-types/">Common data types</a>
+    <a class="" href="../queries/window-functions/">Window functions</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../queries/window-functions/">Window functions</a>
+    <a class="" href="../queries/advanced-features/">Advanced features</a>
                 </li>
     </ul>
 	    </li>
@@ -189,6 +189,10 @@
 		
     <span class="caption-text">Reference</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../../reference/models/">Models</a>
+                </li>
                 <li class="">
                     
     <a class="" href="../../reference/expression/">Expressions</a>
@@ -366,10 +370,53 @@ simply a newtype over <code>Maybe x</code>. The guarantee is that all values of
 type <code>Auto x</code> returned by beam in the result set will have a value,
 although this guarantee is not enforced at the type level (yet).</p>
 <h2 id="embedding">Embedding</h2>
-<p>Sometimes, we want to declare multiple models with fields in
-common. Beam allows you to simple embed such fields in common types
-and embed those directly into models. For example,</p>
-<!-- TODO(travis) -->
+<p>Sometimes, we want to declare multiple models with fields in common. Beam allows
+you to simple embed such fields in common types and embed those directly into
+models. For example, in the Chinook example schema (see
+<code>beam-sqlite/examples/Chinook/Schema.hs</code>), we define the following structure for
+addresses.</p>
+<pre><code  class="haskell">data AddressMixin f
+  = Address
+  { address           :: Columnar f (Maybe Text)
+  , addressCity       :: Columnar f (Maybe Text)
+  , addressState      :: Columnar f (Maybe Text)
+  , addressCountry    :: Columnar f (Maybe Text)
+  , addressPostalCode :: Columnar f (Maybe Text)
+  } deriving Generic
+instance Beamable AddressMixin
+type Address = AddressMixin Identity
+deriving instance Show (AddressMixin Identity)
+</code></pre>
+
+<p>We can then use <code>AddressMixin</code> in our models.</p>
+<pre><code  class="haskell">data EmployeeT f
+  = Employee
+  { employeeId        :: Columnar f Int32
+  , employeeLastName  :: Columnar f Text
+  , employeeFirstName :: Columnar f Text
+  , employeeTitle     :: Columnar f (Maybe Text)
+  , employeeReportsTo :: PrimaryKey EmployeeT (Nullable f)
+  , employeeBirthDate :: Columnar f (Maybe LocalTime)
+  , employeeHireDate  :: Columnar f (Maybe LocalTime)
+  , employeeAddress   :: AddressMixin f
+  , employeePhone     :: Columnar f (Maybe Text)
+  , employeeFax       :: Columnar f (Maybe Text)
+  , employeeEmail     :: Columnar f (Maybe Text)
+  } deriving Generic
+-- ...
+data CustomerT f
+  = Customer
+  { customerId        :: Columnar f Int32
+  , customerFirstName :: Columnar f Text
+  , customerLastName  :: Columnar f Text
+  , customerCompany   :: Columnar f (Maybe Text)
+  , customerAddress   :: AddressMixin f
+  , customerPhone     :: Columnar f (Maybe Text)
+  , customerFax       :: Columnar f (Maybe Text)
+  , customerEmail     :: Columnar f Text
+  , customerSupportRep :: PrimaryKey EmployeeT (Nullable f)
+  } deriving Generic
+</code></pre>
 
 <h2 id="defaults">Defaults</h2>
 <p>Based on your data type declarations, beam can already guess a lot
@@ -428,7 +475,7 @@ identifiers. Many DBMS's are case-sensitive for quoted
 identifiers. Thus, queries can sometimes fail if your tables use
 mixtures of lower- and upper-case to distinguish between fields.</p>
 <p>All of these defaults can be overriden using the modifications system,
-described in the next section.</p>
+described in the <a href="../../reference/models/">model reference</a>.</p>
 <h2 id="what-about-tables-without-primary-keys">What about tables without primary keys?</h2>
 <p>Tables without primary keys are considered bad style. However,
 sometimes you need to use beam with a schema that you have no control

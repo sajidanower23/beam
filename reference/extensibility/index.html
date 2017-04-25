@@ -103,11 +103,11 @@
                 </li>
                 <li class="">
                     
-    <a class="" href="../../user-guide/queries/data-types/">Common data types</a>
+    <a class="" href="../../user-guide/queries/window-functions/">Window functions</a>
                 </li>
                 <li class="">
                     
-    <a class="" href="../../user-guide/queries/window-functions/">Window functions</a>
+    <a class="" href="../../user-guide/queries/advanced-features/">Advanced features</a>
                 </li>
     </ul>
 	    </li>
@@ -154,6 +154,10 @@
 		
     <span class="caption-text">Reference</span>
     <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../models/">Models</a>
+                </li>
                 <li class="">
                     
     <a class="" href="../expression/">Expressions</a>
@@ -252,6 +256,45 @@ of SQL that implements your expression. The function's arguments are <em>n</em>
 of each of the arguments to <code>customExpr_</code>. The arguments are properly
 parenthesized and can be inserted whole into the final expression. You will
 likely need to explicitly supply a result type using the <code>as_</code> function.</p>
+<p>For example, below, we use <code>customExpr_</code> to access the <code>regr_intercept</code> and
+<code>regr_slope</code> functions in postgres.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-postgres" aria-controls="tab-0-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <pre><code  class="haskell">aggregate_ (\t -&gt; ( as_ @Double @QAggregateContext $ customExpr_ (\bytes ms -&gt; &quot;regr_intercept(&quot; &lt;&gt; bytes &lt;&gt; &quot;, &quot; &lt;&gt; ms &lt;&gt; &quot;)&quot;) (trackBytes t) (trackMilliseconds t)
+                  , as_ @Double @QAggregateContext $ customExpr_ (\bytes ms -&gt; &quot;regr_slope(&quot; &lt;&gt; bytes &lt;&gt; &quot;, &quot; &lt;&gt; ms &lt;&gt; &quot;)&quot;) (trackBytes t) (trackMilliseconds t) )) $
+all_ (track chinookDb)
+</code></pre>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <pre><code  class="postgres">SELECT regr_intercept((&quot;t0&quot;.&quot;Bytes&quot;), (&quot;t0&quot;.&quot;Milliseconds&quot;)) AS &quot;res0&quot;,
+       regr_slope((&quot;t0&quot;.&quot;Bytes&quot;), (&quot;t0&quot;.&quot;Milliseconds&quot;)) AS &quot;res1&quot;
+FROM &quot;Track&quot; AS &quot;t0&quot;
+</code></pre>
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Of course, this requires that the expression is easily expressible as a
+<code>ByteString</code>.</p>
 <h2 id="custom-queries">Custom queries</h2>
 <p>Sometimes you would like to drop down to raw SQL to write a query that will
 return an entire result. Beam supports this through the <code>customQuery_</code> function.
