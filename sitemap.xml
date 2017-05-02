@@ -20,6 +20,28 @@
     
         
     <url>
+     <loc>/tutorials/tutorial1/</loc>
+     <lastmod>2017-05-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/tutorials/tutorial2/</loc>
+     <lastmod>2017-05-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>/tutorials/tutorial3/</loc>
+     <lastmod>2017-05-02</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
      <loc>/user-guide/getting-started/</loc>
      <lastmod>2017-05-02</lastmod>
      <changefreq>daily</changefreq>
