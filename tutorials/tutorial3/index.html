@@ -267,6 +267,8 @@
     
     <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
     
+      
+    
     
     <a href="./" title="Part 3" class="md-nav__link md-nav__link--active">
       Part 3
@@ -305,18 +307,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/getting-started/" title="Getting Started" class="md-nav__link">
-      Getting Started
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../user-guide/models/" title="Models" class="md-nav__link">
       Models
     </a>
@@ -334,6 +324,37 @@
     </a>
   </li>
 
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/backends/" title="Backends" class="md-nav__link">
+      Backends
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-4" type="checkbox" id="nav-4-4">
+    
+    <label class="md-nav__link" for="nav-4-4">
+      Queries
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-4">
+        Queries
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -428,6 +449,83 @@
     <a href="../../user-guide/queries/advanced-features/" title="Advanced features" class="md-nav__link">
       Advanced features
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/extensibility/" title="Custom queries" class="md-nav__link">
+      Custom queries
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-6" type="checkbox" id="nav-4-6">
+    
+    <label class="md-nav__link" for="nav-4-6">
+      Data Manipulation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-6">
+        Data Manipulation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/manipulation/insert/" title="INSERT" class="md-nav__link">
+      INSERT
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/manipulation/update/" title="UPDATE" class="md-nav__link">
+      UPDATE
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/manipulation/delete/" title="DELETE" class="md-nav__link">
+      DELETE
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -566,82 +664,10 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      Reference
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        Reference
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/models/" title="Models" class="md-nav__link">
-      Models
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/expression/" title="Expressions" class="md-nav__link">
-      Expressions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/queries/" title="Queries" class="md-nav__link">
-      Queries
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/extensibility/" title="Extending" class="md-nav__link">
-      Extending
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
-    
-    <label class="md-nav__link" for="nav-8">
       About
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
+      <label class="md-nav__title" for="nav-7">
         About
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -702,6 +728,8 @@
 <nav class="md-nav md-nav--secondary">
   
   
+    
+  
   
 </nav>
                   </div>
@@ -714,9 +742,1334 @@
               
                 
                 
-                  <h1>Part 3</h1>
-                
-                
+                <h1 id="introduction">Introduction</h1>
+<p>In teh last part, we extended our shopping cart database to let users add
+multiple addresses. We saw how to establish one-to-many relations between two
+tables, and how to use the monadic query interface to write SQL JOINs. In this
+installment, we'll be adding support for products and orders to our database
+schema. We'll see how to use an intermediary table to create many-to-many
+relations and how to write LEFT JOINs. Finally, we'll see how to use <code>Nullable</code>
+to create optional foreign key references.</p>
+<h1 id="creating-tables-is-easy-now">Creating tables is easy now</h1>
+<p>Let's create our products table. By now, the pattern for adding a new table to
+the schema should be pretty familiar, so I'm going to skip the explanation.</p>
+<div class="codehilite"><pre><span></span><span class="kr">data</span> <span class="kt">ProductT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">Product</span>
+                <span class="p">{</span> <span class="n">_productId</span>          <span class="ow">::</span> <span class="kt">C</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Int</span><span class="p">)</span>
+                <span class="p">,</span> <span class="n">_productTitle</span>       <span class="ow">::</span> <span class="kt">C</span> <span class="n">f</span> <span class="kt">Text</span>
+                <span class="p">,</span> <span class="n">_productDescription</span> <span class="ow">::</span> <span class="kt">C</span> <span class="n">f</span> <span class="kt">Text</span>
+                <span class="p">,</span> <span class="n">_productPrice</span>       <span class="ow">::</span> <span class="kt">C</span> <span class="n">f</span> <span class="kt">Int</span> <span class="cm">{- Price in cents -}</span> <span class="p">}</span>
+                  <span class="kr">deriving</span> <span class="kt">Generic</span>
+<span class="kr">type</span> <span class="kt">Product</span> <span class="ow">=</span> <span class="kt">ProductT</span> <span class="kt">Identity</span>
+<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="kt">Product</span>
+
+<span class="kr">instance</span> <span class="kt">Table</span> <span class="kt">ProductT</span> <span class="kr">where</span>
+  <span class="kr">data</span> <span class="kt">PrimaryKey</span> <span class="kt">ProductT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">ProductId</span> <span class="p">(</span><span class="kt">Columnar</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Int</span><span class="p">))</span>
+                               <span class="kr">deriving</span> <span class="kt">Generic</span>
+  <span class="n">primaryKey</span> <span class="ow">=</span> <span class="kt">ProductId</span> <span class="o">.</span> <span class="n">_productId</span>
+
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="kt">ProductT</span>
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">ProductT</span><span class="p">)</span>
+</pre></div>
+
+
+<p>For orders, we want to store an id, date created, and the user who made the
+order. We'd also like to create an optional link to a shipping information
+table. When the shipping information is created, we'll fill in the shipping
+information in the order. In order to create the optional reference, we're going
+to use the <code>Nullable</code> tag modifier to modify the column tag. <code>Nullable</code> will
+turn all fields of type <code>x</code> into <code>Maybe x</code>. Note that we could also create this
+relation by installing a primary key on the shipping info table, and this is
+arguably the better option. However, we'll go with a nullable foreign key here
+to show the full breadth of beam's features, and because this sort of relation
+exists in many existing databases.</p>
+<div class="codehilite"><pre><span></span><span class="kr">import</span> <span class="nn">Data.Time</span>
+
+<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">AddressT</span> <span class="kt">Identity</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">OrderT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">Order</span>
+              <span class="p">{</span> <span class="n">_orderId</span>      <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Int</span><span class="p">)</span>
+              <span class="p">,</span> <span class="n">_orderDate</span>    <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">LocalTime</span>
+              <span class="p">,</span> <span class="n">_orderForUser</span> <span class="ow">::</span> <span class="kt">PrimaryKey</span> <span class="kt">UserT</span> <span class="n">f</span>
+              <span class="p">,</span> <span class="n">_orderShipToAddress</span> <span class="ow">::</span> <span class="kt">PrimaryKey</span> <span class="kt">AddressT</span> <span class="n">f</span>
+              <span class="p">,</span> <span class="n">_orderShippingInfo</span> <span class="ow">::</span> <span class="kt">PrimaryKey</span> <span class="kt">ShippingInfoT</span> <span class="p">(</span><span class="kt">Nullable</span> <span class="n">f</span><span class="p">)</span> <span class="p">}</span>
+                <span class="kr">deriving</span> <span class="kt">Generic</span>
+<span class="kr">type</span> <span class="kt">Order</span> <span class="ow">=</span> <span class="kt">OrderT</span> <span class="kt">Identity</span>
+<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="kt">Order</span>
+
+<span class="kr">instance</span> <span class="kt">Table</span> <span class="kt">OrderT</span> <span class="kr">where</span>
+    <span class="kr">data</span> <span class="kt">PrimaryKey</span> <span class="kt">OrderT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">OrderId</span> <span class="p">(</span><span class="kt">Columnar</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Int</span><span class="p">))</span>
+                               <span class="kr">deriving</span> <span class="kt">Generic</span>
+    <span class="n">primaryKey</span> <span class="ow">=</span> <span class="kt">OrderId</span> <span class="o">.</span> <span class="n">_orderId</span>
+
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="kt">OrderT</span>
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">OrderT</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">ShippingCarrier</span> <span class="ow">=</span> <span class="kt">USPS</span> <span class="o">|</span> <span class="kt">FedEx</span> <span class="o">|</span> <span class="kt">UPS</span> <span class="o">|</span> <span class="kt">DHL</span>
+                       <span class="kr">deriving</span> <span class="p">(</span><span class="kt">Show</span><span class="p">,</span> <span class="kt">Read</span><span class="p">,</span> <span class="kt">Eq</span><span class="p">,</span> <span class="kt">Ord</span><span class="p">,</span> <span class="kt">Enum</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">ShippingInfoT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">ShippingInfo</span>
+                     <span class="p">{</span> <span class="n">_shippingInfoId</span>             <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Int</span><span class="p">)</span>
+                     <span class="p">,</span> <span class="n">_shippingInfoCarrier</span>        <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">ShippingCarrier</span>
+                     <span class="p">,</span> <span class="n">_shippingInfoTrackingNumber</span> <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span> <span class="p">}</span>
+                       <span class="kr">deriving</span> <span class="kt">Generic</span>
+<span class="kr">type</span> <span class="kt">ShippingInfo</span> <span class="ow">=</span> <span class="kt">ShippingInfoT</span> <span class="kt">Identity</span>
+<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="kt">ShippingInfo</span>
+
+<span class="kr">instance</span> <span class="kt">Table</span> <span class="kt">ShippingInfoT</span> <span class="kr">where</span>
+    <span class="kr">data</span> <span class="kt">PrimaryKey</span> <span class="kt">ShippingInfoT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">ShippingInfoId</span> <span class="p">(</span><span class="kt">Columnar</span> <span class="n">f</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Int</span><span class="p">))</span>
+                                      <span class="kr">deriving</span> <span class="kt">Generic</span>
+    <span class="n">primaryKey</span> <span class="ow">=</span> <span class="kt">ShippingInfoId</span> <span class="o">.</span> <span class="n">_shippingInfoId</span>
+
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="kt">ShippingInfoT</span>
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">ShippingInfoT</span><span class="p">)</span>
+<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">ShippingInfoT</span> <span class="p">(</span><span class="kt">Nullable</span> <span class="kt">Identity</span><span class="p">))</span>
+</pre></div>
+
+
+<p>In the above example, we show how to use a custom data type as a beam column.
+Recall that beam lets you store any Haskell type in a <code>Columnar</code>. However, at
+some point, we will need to demonstrate to SQLite how to store values of type
+<code>ShippingCarrier</code>. We will come back to this later.</p>
+<p>We would also like to be able to associate a list of products with each order as
+line items. To do this we will create a table with two foreign keys. This table
+will establish a many-to-many relationship between orders and products.</p>
+<div class="codehilite"><pre><span></span><span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">OrderT</span> <span class="kt">Identity</span><span class="p">)</span>
+<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">ProductT</span> <span class="kt">Identity</span><span class="p">)</span>
+
+<span class="kr">data</span> <span class="kt">LineItemT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">LineItem</span>
+                 <span class="p">{</span> <span class="n">_lineItemInOrder</span>    <span class="ow">::</span> <span class="kt">PrimaryKey</span> <span class="kt">OrderT</span> <span class="n">f</span>
+                 <span class="p">,</span> <span class="n">_lineItemForProduct</span> <span class="ow">::</span> <span class="kt">PrimaryKey</span> <span class="kt">ProductT</span> <span class="n">f</span>
+                 <span class="p">,</span> <span class="n">_lineItemQuantity</span>   <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Int</span> <span class="p">}</span>
+                   <span class="kr">deriving</span> <span class="kt">Generic</span>
+<span class="kr">type</span> <span class="kt">LineItem</span> <span class="ow">=</span> <span class="kt">LineItemT</span> <span class="kt">Identity</span>
+<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="kt">LineItem</span>
+
+<span class="kr">instance</span> <span class="kt">Table</span> <span class="kt">LineItemT</span> <span class="kr">where</span>
+    <span class="kr">data</span> <span class="kt">PrimaryKey</span> <span class="kt">LineItemT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">LineItemId</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">OrderT</span> <span class="n">f</span><span class="p">)</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">ProductT</span> <span class="n">f</span><span class="p">)</span>
+                                  <span class="kr">deriving</span> <span class="kt">Generic</span>
+    <span class="n">primaryKey</span> <span class="ow">=</span> <span class="kt">LineItemId</span> <span class="o">&lt;$&gt;</span> <span class="n">_lineItemInOrder</span> <span class="o">&lt;*&gt;</span> <span class="n">_lineItemForProduct</span>
+
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="kt">LineItemT</span>
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">LineItemT</span><span class="p">)</span>
+</pre></div>
+
+
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>We used the <code>Applicative</code> instance for <code>(-&gt;) a</code> above to write the
+<code>primaryKey</code> function. The <code>Applicative ((-&gt;) a)</code> instance operates like an
+unwrapper <code>Reader</code> of <code>a</code>. The applicative actions are then functions from
+<code>a -&gt; x</code> that inject values from the <code>a</code> into the applicative bind.</p>
+</div>
+<p>Now we'll add all these tables to our database.</p>
+<div class="codehilite"><pre><span></span><span class="c1">-- Some convenience lenses</span>
+
+<span class="kt">LineItem</span> <span class="kr">_</span> <span class="kr">_</span> <span class="p">(</span><span class="kt">LensFor</span> <span class="n">lineItemQuantity</span><span class="p">)</span> <span class="ow">=</span> <span class="n">tableLenses</span>
+<span class="kt">Product</span> <span class="p">(</span><span class="kt">LensFor</span> <span class="n">productId</span><span class="p">)</span> <span class="p">(</span><span class="kt">LensFor</span> <span class="n">productTitle</span><span class="p">)</span> <span class="p">(</span><span class="kt">LensFor</span> <span class="n">productDescription</span><span class="p">)</span> <span class="p">(</span><span class="kt">LensFor</span> <span class="n">productPrice</span><span class="p">)</span> <span class="ow">=</span> <span class="n">tableLenses</span>
+
+<span class="kr">data</span> <span class="kt">ShoppingCartDb</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">ShoppingCartDb</span>
+                      <span class="p">{</span> <span class="n">_shoppingCartUsers</span>         <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="kt">TableEntity</span> <span class="kt">UserT</span><span class="p">)</span>
+                      <span class="p">,</span> <span class="n">_shoppingCartUserAddresses</span> <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="kt">TableEntity</span> <span class="kt">AddressT</span><span class="p">)</span>
+                      <span class="p">,</span> <span class="n">_shoppingCartProducts</span>      <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="kt">TableEntity</span> <span class="kt">ProductT</span><span class="p">)</span>
+                      <span class="p">,</span> <span class="n">_shoppingCartOrders</span>        <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="kt">TableEntity</span> <span class="kt">OrderT</span><span class="p">)</span>
+                      <span class="p">,</span> <span class="n">_shoppingCartShippingInfos</span> <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="kt">TableEntity</span> <span class="kt">ShippingInfoT</span><span class="p">)</span>
+                      <span class="p">,</span> <span class="n">_shoppingCartLineItems</span>     <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="kt">TableEntity</span> <span class="kt">LineItemT</span><span class="p">)</span> <span class="p">}</span>
+                        <span class="kr">deriving</span> <span class="kt">Generic</span>
+
+<span class="kr">instance</span> <span class="kt">Database</span> <span class="kt">ShoppingCartDb</span>
+
+<span class="kt">ShoppingCartDb</span> <span class="p">(</span><span class="kt">TableLens</span> <span class="n">shoppingCartUsers</span><span class="p">)</span> <span class="p">(</span><span class="kt">TableLens</span> <span class="n">shoppingCartUserAddresses</span><span class="p">)</span>
+               <span class="p">(</span><span class="kt">TableLens</span> <span class="n">shoppingCartProducts</span><span class="p">)</span> <span class="p">(</span><span class="kt">TableLens</span> <span class="n">shoppingCartOrders</span><span class="p">)</span>
+               <span class="p">(</span><span class="kt">TableLens</span> <span class="n">shoppingCartShippingInfos</span><span class="p">)</span> <span class="p">(</span><span class="kt">TableLens</span> <span class="n">shoppingCartLineItems</span><span class="p">)</span> <span class="ow">=</span> <span class="n">dbLenses</span>
+
+<span class="nf">shoppingCartDb</span> <span class="ow">::</span> <span class="kt">DatabaseSettings</span> <span class="n">be</span> <span class="kt">ShoppingCartDb</span>
+<span class="nf">shoppingCartDb</span> <span class="ow">=</span> <span class="n">defaultDbSettings</span> <span class="p">`</span><span class="n">withDbModification</span><span class="p">`</span>
+                 <span class="n">dbModification</span> <span class="p">{</span>
+                   <span class="n">_shoppingCartUserAddresses</span> <span class="ow">=</span>
+                     <span class="n">modifyTable</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="ow">-&gt;</span> <span class="s">&quot;addresses&quot;</span><span class="p">)</span> <span class="o">$</span>
+                     <span class="n">tableModification</span> <span class="p">{</span>
+                       <span class="n">_addressLine1</span> <span class="ow">=</span> <span class="n">fieldNamed</span> <span class="s">&quot;address1&quot;</span><span class="p">,</span>
+                       <span class="n">_addressLine2</span> <span class="ow">=</span> <span class="n">fieldNamed</span> <span class="s">&quot;address2&quot;</span>
+                     <span class="p">},</span>
+                   <span class="n">_shoppingCartProducts</span> <span class="ow">=</span> <span class="n">modifyTable</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="ow">-&gt;</span> <span class="s">&quot;products&quot;</span><span class="p">)</span> <span class="n">tableModification</span><span class="p">,</span>
+                   <span class="n">_shoppingCartOrders</span> <span class="ow">=</span> <span class="n">modifyTable</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="ow">-&gt;</span> <span class="s">&quot;orders&quot;</span><span class="p">)</span> <span class="o">$</span>
+                                         <span class="n">tableModification</span> <span class="p">{</span>
+                                           <span class="n">_orderShippingInfo</span> <span class="ow">=</span> <span class="kt">ShippingInfoId</span> <span class="s">&quot;shipping_info__id&quot;</span>
+                                         <span class="p">},</span>
+                   <span class="n">_shoppingCartShippingInfos</span> <span class="ow">=</span> <span class="n">modifyTable</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="ow">-&gt;</span> <span class="s">&quot;shipping_info&quot;</span><span class="p">)</span> <span class="o">$</span>
+                                                <span class="n">tableModification</span> <span class="p">{</span>
+                                                  <span class="n">_shippingInfoId</span> <span class="ow">=</span> <span class="s">&quot;id&quot;</span><span class="p">,</span>
+                                                  <span class="n">_shippingInfoCarrier</span> <span class="ow">=</span> <span class="s">&quot;carrier&quot;</span><span class="p">,</span>
+                                                  <span class="n">_shippingInfoTrackingNumber</span> <span class="ow">=</span> <span class="s">&quot;tracking_number&quot;</span>
+                                                <span class="p">},</span>
+                   <span class="n">_shoppingCartLineItems</span> <span class="ow">=</span> <span class="n">modifyTable</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="ow">-&gt;</span> <span class="s">&quot;line_items&quot;</span><span class="p">)</span> <span class="n">tableModification</span>
+                 <span class="p">}</span>
+</pre></div>
+
+
+<h1 id="fixtures">Fixtures</h1>
+<p>Let's put some sample data into a new database.</p>
+<div class="codehilite"><pre><span></span><span class="nf">conn</span> <span class="ow">&lt;-</span> <span class="n">open</span> <span class="s">&quot;shoppingcart3.db&quot;</span>
+
+<span class="nf">execute_</span> <span class="n">conn</span> <span class="s">&quot;CREATE TABLE cart_users (email VARCHAR NOT NULL, first_name VARCHAR NOT NULL, last_name VARCHAR NOT NULL, password VARCHAR NOT NULL, PRIMARY KEY( email ));&quot;</span>
+<span class="nf">execute_</span> <span class="n">conn</span> <span class="s">&quot;CREATE TABLE addresses ( id INTEGER PRIMARY KEY AUTOINCREMENT, address1 VARCHAR NOT NULL, address2 VARCHAR, city VARCHAR NOT NULL, state VARCHAR NOT NULL, zip VARCHAR NOT NULL, for_user__email VARCHAR NOT NULL );&quot;</span>
+<span class="nf">execute_</span> <span class="n">conn</span> <span class="s">&quot;CREATE TABLE products ( id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR NOT NULL, description VARCHAR NOT NULL, price INT NOT NULL );&quot;</span>
+<span class="nf">execute_</span> <span class="n">conn</span> <span class="s">&quot;CREATE TABLE orders ( id INTEGER PRIMARY KEY AUTOINCREMENT, date TIMESTAMP NOT NULL, for_user__email VARCHAR NOT NULL, ship_to_address__id INT NOT NULL, shipping_info__id INT);&quot;</span>
+<span class="nf">execute_</span> <span class="n">conn</span> <span class="s">&quot;CREATE TABLE shipping_info ( id INTEGER PRIMARY KEY AUTOINCREMENT, carrier VARCHAR NOT NULL, tracking_number VARCHAR NOT NULL);&quot;</span>
+<span class="nf">execute_</span> <span class="n">conn</span> <span class="s">&quot;CREATE TABLE line_items (item_in_order__id INTEGER NOT NULL, item_for_product__id INTEGER NOT NULL, item_quantity INTEGER NOT NULL)&quot;</span>
+</pre></div>
+
+
+<p>Let's put some sample data into our database. Below, we will use the
+<code>beam-sqlite</code> functions <code>insertReturning</code> and <code>runInsertReturningList</code> to insert
+rows <em>and</em> retrieve the inserted rows from the database. This will let us see
+what values the auto-incremented <code>id</code> columns took on, which will allow us to
+create references to these inserted rows.</p>
+<div class="codehilite"><pre><span></span><span class="kr">let</span> <span class="n">users</span><span class="o">@</span><span class="p">[</span><span class="n">james</span><span class="p">,</span> <span class="n">betty</span><span class="p">,</span> <span class="n">sam</span><span class="p">]</span> <span class="ow">=</span>
+          <span class="p">[</span> <span class="kt">User</span> <span class="s">&quot;james@example.com&quot;</span> <span class="s">&quot;James&quot;</span> <span class="s">&quot;Smith&quot;</span>  <span class="s">&quot;b4cc344d25a2efe540adbf2678e2304c&quot;</span> <span class="cm">{- james -}</span>
+          <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;betty@example.com&quot;</span> <span class="s">&quot;Betty&quot;</span> <span class="s">&quot;Jones&quot;</span>  <span class="s">&quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;</span> <span class="cm">{- betty -}</span>
+          <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;sam@example.com&quot;</span>   <span class="s">&quot;Sam&quot;</span>   <span class="s">&quot;Taylor&quot;</span> <span class="s">&quot;332532dcfaa1cbf61e2a266bd723612c&quot;</span> <span class="cm">{- sam -}</span> <span class="p">]</span>
+    <span class="n">addresses</span> <span class="ow">=</span> <span class="p">[</span> <span class="kt">Address</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="s">&quot;123 Little Street&quot;</span> <span class="kt">Nothing</span> <span class="s">&quot;Boston&quot;</span> <span class="s">&quot;MA&quot;</span> <span class="s">&quot;12345&quot;</span> <span class="p">(</span><span class="n">pk</span> <span class="n">james</span><span class="p">)</span>
+
+                <span class="p">,</span> <span class="kt">Address</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="s">&quot;222 Main Street&quot;</span> <span class="p">(</span><span class="kt">Just</span> <span class="s">&quot;Ste 1&quot;</span><span class="p">)</span> <span class="s">&quot;Houston&quot;</span> <span class="s">&quot;TX&quot;</span> <span class="s">&quot;8888&quot;</span> <span class="p">(</span><span class="n">pk</span> <span class="n">betty</span><span class="p">)</span>
+                <span class="p">,</span> <span class="kt">Address</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="s">&quot;9999 Residence Ave&quot;</span> <span class="kt">Nothing</span> <span class="s">&quot;Sugarland&quot;</span> <span class="s">&quot;TX&quot;</span> <span class="s">&quot;8989&quot;</span> <span class="p">(</span><span class="n">pk</span> <span class="n">betty</span><span class="p">)</span> <span class="p">]</span>
+
+    <span class="n">products</span> <span class="ow">=</span> <span class="p">[</span> <span class="kt">Product</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="s">&quot;Red Ball&quot;</span> <span class="s">&quot;A bright red, very spherical ball&quot;</span> <span class="mi">1000</span>
+               <span class="p">,</span> <span class="kt">Product</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="s">&quot;Math Textbook&quot;</span> <span class="s">&quot;Contains a lot of important math theorems and formulae&quot;</span> <span class="mi">2500</span>
+               <span class="p">,</span> <span class="kt">Product</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="s">&quot;Intro to Haskell&quot;</span> <span class="s">&quot;Learn the best programming language in the world&quot;</span> <span class="mi">3000</span>
+               <span class="p">,</span> <span class="kt">Product</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="s">&quot;Suitcase&quot;</span> <span class="s">&quot;A hard durable suitcase&quot;</span> <span class="mi">15000</span> <span class="p">]</span>
+
+<span class="p">(</span><span class="n">jamesAddress1</span><span class="p">,</span> <span class="n">bettyAddress1</span><span class="p">,</span> <span class="n">bettyAddress2</span><span class="p">,</span> <span class="n">redBall</span><span class="p">,</span> <span class="n">mathTextbook</span><span class="p">,</span> <span class="n">introToHaskell</span><span class="p">,</span> <span class="n">suitcase</span><span class="p">)</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">runInsert</span> <span class="o">$</span> <span class="n">insert</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span> <span class="o">$</span>
+                <span class="n">insertValues</span> <span class="n">users</span>
+
+    <span class="p">[</span><span class="n">jamesAddress1</span><span class="p">,</span> <span class="n">bettyAddress1</span><span class="p">,</span> <span class="n">bettyAddress2</span><span class="p">]</span> <span class="ow">&lt;-</span>
+      <span class="n">runInsertReturningList</span> <span class="o">$</span>
+      <span class="n">insertReturning</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUserAddresses</span><span class="p">)</span> <span class="o">$</span> <span class="n">insertValues</span> <span class="n">addresses</span>
+
+    <span class="p">[</span><span class="n">redBall</span><span class="p">,</span> <span class="n">mathTextbook</span><span class="p">,</span> <span class="n">introToHaskell</span><span class="p">,</span> <span class="n">suitcase</span><span class="p">]</span> <span class="ow">&lt;-</span>
+      <span class="n">runInsertReturningList</span> <span class="o">$</span>
+      <span class="n">insertReturning</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartProducts</span><span class="p">)</span> <span class="o">$</span> <span class="n">insertValues</span> <span class="n">products</span>
+
+    <span class="n">pure</span> <span class="p">(</span> <span class="n">jamesAddress1</span><span class="p">,</span> <span class="n">bettyAddress1</span><span class="p">,</span> <span class="n">bettyAddress2</span><span class="p">,</span> <span class="n">redBall</span><span class="p">,</span> <span class="n">mathTextbook</span><span class="p">,</span> <span class="n">introToHaskell</span><span class="p">,</span> <span class="n">suitcase</span> <span class="p">)</span>
+</pre></div>
+
+
+<p>Now, if we take a look at one of the returned addresses, like <code>jamesAddress1</code>,
+we see it has had it's <code>Auto</code> field assigned correctly.</p>
+<div class="codehilite"><pre><span></span><span class="kt">Prelude</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Sqlite</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Time</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">SQLite</span><span class="o">.</span><span class="kt">Simple</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Text</span> <span class="kt">Lens</span><span class="o">.</span><span class="kt">Micro</span><span class="o">&gt;</span> <span class="n">jamesAddress1</span>
+<span class="kt">Address</span> <span class="p">{</span><span class="n">_addressId</span> <span class="ow">=</span> <span class="kt">Auto</span> <span class="p">{</span><span class="n">unAuto</span> <span class="ow">=</span> <span class="kt">Just</span> <span class="mi">1</span><span class="p">},</span> <span class="n">_addressLine1</span> <span class="ow">=</span> <span class="s">&quot;123 Little Street&quot;</span><span class="p">,</span> <span class="n">_addressLine2</span> <span class="ow">=</span> <span class="kt">Nothing</span><span class="p">,</span> <span class="n">_addressCity</span> <span class="ow">=</span> <span class="s">&quot;Boston&quot;</span><span class="p">,</span> <span class="n">_addressState</span> <span class="ow">=</span> <span class="s">&quot;MA&quot;</span><span class="p">,</span> <span class="n">_addressZip</span> <span class="ow">=</span> <span class="s">&quot;12345&quot;</span><span class="p">,</span> <span class="n">_addressForUser</span> <span class="ow">=</span> <span class="kt">UserId</span> <span class="s">&quot;james@example.com&quot;</span><span class="p">}</span>
+</pre></div>
+
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>insertReturning</code> and <code>runInsertReturningList</code> are from the <code>beam-sqlite</code>
+package. They emulate the <code>INSERT .. RETURNING ..</code> functionatily you may
+expect in other databases. Because this emulation is backend-specific it is
+part of the backend package, rather than <code>beam-core</code>.</p>
+<p>Other backends may have similar functionality. Please refer to the backend
+package you're interested in for more information, as well as notes on the
+implementation.</p>
+</div>
+<h2 id="marshalling-a-custom-type">Marshalling a custom type</h2>
+<p>Now we can insert shipping information. Of course, the shipping information
+contains the <code>ShippingCarrier</code> enumeration.</p>
+<div class="codehilite"><pre><span></span><span class="nf">bettyShippingInfo</span> <span class="ow">&lt;-</span> 
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="p">[</span><span class="n">bettyShippingInfo</span><span class="p">]</span> <span class="ow">&lt;-</span>
+      <span class="n">runInsertReturningList</span> <span class="o">$</span>
+      <span class="n">insertReturning</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartShippingInfos</span><span class="p">)</span> <span class="o">$</span>
+      <span class="n">insertValues</span> <span class="p">[</span> <span class="kt">ShippingInfo</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="kt">USPS</span> <span class="s">&quot;12345790ABCDEFGHI&quot;</span> <span class="p">]</span>
+    <span class="n">pure</span> <span class="n">bettyShippingInfo</span>
+</pre></div>
+
+
+<p>If you run this, you'll get an error from GHCi.</p>
+<div class="codehilite"><pre><span></span><span class="o">&lt;</span><span class="kp">interactive</span><span class="o">&gt;:</span><span class="m">263</span><span class="o">:</span><span class="m">7</span><span class="o">:</span> error<span class="o">:</span>
+    <span class="o">*</span> No instance <span class="kr">for</span> <span class="p">(</span>Database.Beam.Backend.Types.FromBackendRow
+                         Sqlite ShippingCarrier<span class="p">)</span>
+        arising from a use of <span class="s">&#39;runInsertReturningList&#39;</span>
+    <span class="o">*</span> In a stmt of a <span class="s">&#39;do&#39;</span> block<span class="o">:</span>
+        <span class="p">[</span>bettyShippingInfo<span class="p">]</span> <span class="o">&lt;-</span> runInsertReturningList
+                               <span class="o">$</span> insertReturning <span class="p">(</span>shoppingCartDb <span class="o">^</span><span class="m">.</span> shoppingCartShippingInfos<span class="p">)</span>
+                                 <span class="o">$</span> insertValues
+                                     <span class="p">[</span>ShippingInfo <span class="p">(</span>Auto Nothing<span class="p">)</span> USPS <span class="s">&quot;12345790ABCDEFGHI&quot;</span><span class="p">]</span>
+      In the second argument of <span class="s">&#39;($)&#39;</span><span class="p">,</span> namely
+        <span class="s">&#39;do { [bettyShippingInfo] &lt;- runInsertReturningList</span>
+<span class="s">                                     $ insertReturning (shoppingCartDb ^. shoppingCartShippingInfos)</span>
+<span class="s">                                       $ insertValues</span>
+<span class="s">                                           [ShippingInfo (Auto Nothing) USPS &quot;12345790ABCDEFGHI&quot;];</span>
+<span class="s">              pure bettyShippingInfo }&#39;&#39;</span>
+<span class="s">      In the first argument of &#39;</span>GHC.GHCi.ghciStepIO <span class="o">::</span>
+                                  forall a. IO a <span class="o">-&gt;</span> IO a<span class="s">&#39;, namely</span>
+<span class="s">        &#39;</span>withDatabaseDebug putStrLn conn
+         <span class="o">$</span> do <span class="p">{</span> <span class="p">[</span>bettyShippingInfo<span class="p">]</span> <span class="o">&lt;-</span> runInsertReturningList
+                                       <span class="o">$</span> insertReturning
+                                           <span class="p">(</span>shoppingCartDb <span class="o">^</span><span class="m">.</span> shoppingCartShippingInfos<span class="p">)</span>
+                                         <span class="o">$</span> insertValues
+                                             <span class="p">[</span>ShippingInfo <span class="p">(</span>Auto Nothing<span class="p">)</span> USPS <span class="s">&quot;12345790ABCDEFGHI&quot;</span><span class="p">];</span>
+                pure bettyShippingInfo <span class="p">}</span><span class="s">&#39;</span>
+
+<span class="s">&lt;interactive&gt;:265:7: error:</span>
+<span class="s">    * No instance for (Database.Beam.Backend.SQL.SQL92.HasSqlValueSyntax</span>
+<span class="s">                         SqliteValueSyntax ShippingCarrier)</span>
+<span class="s">        arising from a use of &#39;</span>insertValues<span class="s">&#39;</span>
+<span class="s">    * In the second argument of &#39;</span><span class="p">(</span><span class="o">$</span><span class="p">)</span><span class="s">&#39;, namely</span>
+<span class="s">        &#39;</span>insertValues
+           <span class="p">[</span>ShippingInfo <span class="p">(</span>Auto Nothing<span class="p">)</span> USPS <span class="s">&quot;12345790ABCDEFGHI&quot;</span><span class="p">]</span><span class="s">&#39;&#39;</span>
+      In the second argument of <span class="s">&#39;($)&#39;</span><span class="p">,</span> namely
+        <span class="s">&#39;insertReturning (shoppingCartDb ^. shoppingCartShippingInfos)</span>
+<span class="s">         $ insertValues</span>
+<span class="s">             [ShippingInfo (Auto Nothing) USPS &quot;12345790ABCDEFGHI&quot;]&#39;</span>
+      In a stmt of a <span class="s">&#39;do&#39;</span> block<span class="o">:</span>
+        <span class="p">[</span>bettyShippingInfo<span class="p">]</span> <span class="o">&lt;-</span> runInsertReturningList
+                               <span class="o">$</span> insertReturning <span class="p">(</span>shoppingCartDb <span class="o">^</span><span class="m">.</span> shoppingCartShippingInfos<span class="p">)</span>
+                                 <span class="o">$</span> insertValues
+                                     <span class="p">[</span>ShippingInfo <span class="p">(</span>Auto Nothing<span class="p">)</span> USPS <span class="s">&quot;12345790ABCDEFGHI&quot;</span><span class="p">]</span>
+</pre></div>
+
+
+<p>These errors are because there's no way to express a <code>ShippingCarrier</code> in the
+backend syntax. We can fix this by writing instances for beam. We can re-use the
+functionality we already have for <code>String</code>.</p>
+<p>The <code>HasSqlValueSyntax</code> class tells us how to convert a Haskell value into a
+corresponding backend value.</p>
+<div class="codehilite"><pre><span></span><span class="kr">import</span> <span class="nn">Database.Beam.Backend.SQL</span>
+
+<span class="kt">:</span><span class="n">set</span> <span class="o">-</span><span class="kt">XUndecidableInstances</span>
+
+<span class="kr">instance</span> <span class="kt">HasSqlValueSyntax</span> <span class="n">be</span> <span class="kt">String</span> <span class="ow">=&gt;</span> <span class="kt">HasSqlValueSyntax</span> <span class="n">be</span> <span class="kt">ShippingCarrier</span> <span class="kr">where</span>
+  <span class="n">sqlValueSyntax</span> <span class="ow">=</span> <span class="n">autoSqlValueSyntax</span>
+</pre></div>
+
+
+<p>The <code>FromBackendRow</code> class tells us how to convert a value from the database
+into a corresponding Haskell value. Most often, it is enough to declare an empty
+instance, so long as there is a backend-specific instance for unmarshaling your
+data type.</p>
+<p>For example,</p>
+<div class="codehilite"><pre><span></span><span class="kt">Prelude</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Sqlite</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Time</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">SQLite</span><span class="o">.</span><span class="kt">Simple</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Text</span> <span class="kt">Lens</span><span class="o">.</span><span class="kt">Micro</span><span class="o">&gt;</span> <span class="kr">import</span> <span class="nn">Database.Beam.Backend</span>
+<span class="kt">Prelude</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Sqlite</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Time</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">SQLite</span><span class="o">.</span><span class="kt">Simple</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Text</span> <span class="kt">Lens</span><span class="o">.</span><span class="kt">Micro</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Backend</span><span class="o">&gt;</span> <span class="kt">:</span><span class="n">set</span> <span class="o">-</span><span class="kt">XMultiParamTypeClasses</span>
+<span class="kt">Prelude</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Sqlite</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Time</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">SQLite</span><span class="o">.</span><span class="kt">Simple</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Text</span> <span class="kt">Lens</span><span class="o">.</span><span class="kt">Micro</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Backend</span><span class="o">&gt;</span> <span class="kr">instance</span> <span class="kt">FromBackendRow</span> <span class="kt">Sqlite</span> <span class="kt">ShippingCarrier</span>
+
+<span class="o">&lt;</span><span class="n">interactive</span><span class="o">&gt;:</span><span class="mi">271</span><span class="kt">:</span><span class="mi">10</span><span class="kt">:</span> <span class="ne">error</span><span class="kt">:</span>
+    <span class="o">*</span> <span class="kt">No</span> <span class="kr">instance</span> <span class="n">for</span> <span class="p">(</span><span class="kt">Database</span><span class="o">.</span><span class="kt">SQLite</span><span class="o">.</span><span class="kt">Simple</span><span class="o">.</span><span class="kt">FromField</span><span class="o">.</span><span class="kt">FromField</span>
+                         <span class="kt">ShippingCarrier</span><span class="p">)</span>
+        <span class="n">arising</span> <span class="n">from</span> <span class="n">a</span> <span class="n">use</span> <span class="kr">of</span> <span class="kt">&#39;Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Backend</span><span class="o">.</span><span class="kt">Types</span><span class="o">.$</span><span class="n">dmfromBackendRow&#39;</span>
+    <span class="o">*</span> <span class="kt">In</span> <span class="n">the</span> <span class="n">expression</span><span class="kt">:</span>
+        <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Backend</span><span class="o">.</span><span class="kt">Types</span><span class="o">.$</span><span class="n">dmfromBackendRow</span>
+          <span class="o">@</span><span class="kt">Sqlite</span> <span class="o">@</span><span class="kt">ShippingCarrier</span>
+      <span class="kt">In</span> <span class="n">an</span> <span class="n">equation</span> <span class="n">for</span> <span class="n">&#39;fromBackendRow&#39;</span><span class="kt">:</span>
+          <span class="n">fromBackendRow</span>
+            <span class="ow">=</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Backend</span><span class="o">.</span><span class="kt">Types</span><span class="o">.$</span><span class="n">dmfromBackendRow</span>
+                <span class="o">@</span><span class="kt">Sqlite</span> <span class="o">@</span><span class="kt">ShippingCarrier</span>
+      <span class="kt">In</span> <span class="n">the</span> <span class="kr">instance</span> <span class="n">declaration</span> <span class="n">for</span>
+        <span class="kt">&#39;FromBackendRow</span> <span class="kt">Sqlite</span> <span class="kt">ShippingCarrier&#39;</span>
+</pre></div>
+
+
+<p>Let's see if we can write <code>Database.SQLite.Simple.FromField.FromField</code> instance
+for <code>ShippingCarrier</code> and then let's try re-instantiating <code>FromBackendRow</code>.</p>
+<div class="codehilite"><pre><span></span><span class="kr">import</span> <span class="nn">Database.SQLite.Simple.FromField</span>
+<span class="kr">import</span> <span class="nn">Text.Read</span>
+
+<span class="kr">instance</span> <span class="kt">FromField</span> <span class="kt">ShippingCarrier</span> <span class="kr">where</span>
+  <span class="n">fromField</span> <span class="n">f</span> <span class="ow">=</span> <span class="kr">do</span> <span class="n">x</span> <span class="ow">&lt;-</span> <span class="n">readMaybe</span> <span class="o">&lt;$&gt;</span> <span class="n">fromField</span> <span class="n">f</span>
+                   <span class="kr">case</span> <span class="n">x</span> <span class="kr">of</span>
+                     <span class="kt">Nothing</span> <span class="ow">-&gt;</span> <span class="n">returnError</span> <span class="kt">ConversionFailed</span> <span class="n">f</span> <span class="s">&quot;Could not &#39;read&#39; value for &#39;ShippingCarrier&#39;&quot;</span>
+                     <span class="kt">Just</span> <span class="n">x</span> <span class="ow">-&gt;</span> <span class="n">pure</span> <span class="n">x</span>
+<span class="kr">instance</span> <span class="kt">FromBackendRow</span> <span class="n">be</span> <span class="kt">ShippingCarrier</span>
+</pre></div>
+
+
+<p>Now, if we try to insert the shipping info again, it works.</p>
+<div class="codehilite"><pre><span></span><span class="nf">bettyShippingInfo</span> <span class="ow">&lt;-</span> 
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="p">[</span><span class="n">bettyShippingInfo</span><span class="p">]</span> <span class="ow">&lt;-</span>
+      <span class="n">runInsertReturningList</span> <span class="o">$</span>
+      <span class="n">insertReturning</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartShippingInfos</span><span class="p">)</span> <span class="o">$</span>
+      <span class="n">insertValues</span> <span class="p">[</span> <span class="kt">ShippingInfo</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">)</span> <span class="kt">USPS</span> <span class="s">&quot;12345790ABCDEFGHI&quot;</span> <span class="p">]</span>
+    <span class="n">pure</span> <span class="n">bettyShippingInfo</span>
+</pre></div>
+
+
+<p>And if we look at the value of <code>bettyShippingInfo</code>, <code>ShippingCarrier</code> has been
+stored correctly.</p>
+<div class="codehilite"><pre><span></span><span class="o">&gt;</span> <span class="n">bettyShippingInfo</span>
+<span class="kt">ShippingInfo</span> <span class="p">{</span><span class="n">_shippingInfoId</span> <span class="ow">=</span> <span class="kt">Auto</span> <span class="p">{</span><span class="n">unAuto</span> <span class="ow">=</span> <span class="kt">Just</span> <span class="mi">1</span><span class="p">},</span> <span class="n">_shippingInfoCarrier</span> <span class="ow">=</span> <span class="kt">USPS</span><span class="p">,</span> <span class="n">_shippingInfoTrackingNumber</span> <span class="ow">=</span> <span class="s">&quot;12345790ABCDEFGHI&quot;</span><span class="p">}</span>
+</pre></div>
+
+
+<p>Now, let's insert some orders that just came in. In the previous <code>INSERT</code>
+examples, we used <code>insertValues</code> to insert arbitrary values into the database.
+Now, we want to insert transactions with the current database timestamp (i.e.,
+<code>CURRENT_TIMESTAMP</code> in SQL). We can insert rows containing arbitrary expressions
+using the <code>insertExpressions</code> function. As you can see, the resulting rows have
+a timestamp set by the database.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-sql" aria-controls="tab-0-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-console" aria-controls="tab-0-console" role="tab" data-toggle="tab" data-lang="console">Console</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <div class="codehilite"><pre><span></span><span class="p">[</span> <span class="n">jamesOrder1</span><span class="p">,</span> <span class="n">bettyOrder1</span><span class="p">,</span> <span class="n">jamesOrder2</span> <span class="p">]</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+    <span class="n">runInsertReturningList</span> <span class="o">$</span>
+      <span class="n">insertReturning</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">)</span> <span class="o">$</span>
+      <span class="n">insertExpressions</span> <span class="o">$</span>
+      <span class="p">[</span> <span class="kt">Order</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">))</span> <span class="n">currentTimestamp_</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="n">pk</span> <span class="n">james</span><span class="p">))</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="n">pk</span> <span class="n">jamesAddress1</span><span class="p">))</span> <span class="n">nothing_</span> 
+      <span class="p">,</span> <span class="kt">Order</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">))</span> <span class="n">currentTimestamp_</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="n">pk</span> <span class="n">betty</span><span class="p">))</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="n">pk</span> <span class="n">bettyAddress1</span><span class="p">))</span> <span class="p">(</span><span class="n">just_</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="n">pk</span> <span class="n">bettyShippingInfo</span><span class="p">)))</span> 
+      <span class="p">,</span> <span class="kt">Order</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="kt">Auto</span> <span class="kt">Nothing</span><span class="p">))</span> <span class="n">currentTimestamp_</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="n">pk</span> <span class="n">james</span><span class="p">))</span> <span class="p">(</span><span class="n">val_</span> <span class="p">(</span><span class="n">pk</span> <span class="n">jamesAddress1</span><span class="p">))</span> <span class="n">nothing_</span> <span class="p">]</span>
+
+<span class="nf">print</span> <span class="n">jamesOrder1</span>
+<span class="nf">print</span> <span class="n">bettyOrder1</span>
+<span class="nf">print</span> <span class="n">jamesOrder2</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-sql">
+            <div class="codehilite"><pre><span></span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="ss">&quot;orders&quot;</span><span class="p">(</span><span class="ss">&quot;id&quot;</span><span class="p">,</span>
+                     <span class="ss">&quot;date&quot;</span><span class="p">,</span>
+                     <span class="ss">&quot;for_user__email&quot;</span><span class="p">,</span>
+                     <span class="ss">&quot;ship_to_address__id&quot;</span><span class="p">,</span>
+                     <span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span>
+<span class="k">VALUES</span> <span class="p">(</span><span class="k">NULL</span><span class="p">,</span>
+        <span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+        <span class="o">?</span><span class="p">,</span>
+        <span class="o">?</span><span class="p">,</span>
+        <span class="k">NULL</span><span class="p">),</span> <span class="p">(</span><span class="k">NULL</span><span class="p">,</span>
+                <span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+                <span class="o">?</span><span class="p">,</span>
+                <span class="o">?</span><span class="p">,</span>
+                <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="k">NULL</span><span class="p">,</span>
+                     <span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
+                     <span class="o">?</span><span class="p">,</span>
+                     <span class="o">?</span><span class="p">,</span>
+                     <span class="k">NULL</span><span class="p">)</span> <span class="c1">-- With values: [SQLText &quot;james@example.com&quot;,SQLInteger 1,SQLText &quot;betty@example.com&quot;,SQLInteger 2,SQLInteger 1,SQLText &quot;james@example.com&quot;,SQLInteger 1]</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-console">
+            <div class="codehilite"><pre><span></span><span class="go">Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:27,</span>
+<span class="go">                                                                        _orderForUser = UserId &quot;james@example.com&quot;,</span>
+<span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),</span>
+<span class="go">                                                                        _orderShippingInfo = ShippingInfoId Nothing} --</span>
+<span class="go">Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-09 21:37:27,</span>
+<span class="go">                                                                        _orderForUser = UserId &quot;betty@example.com&quot;,</span>
+<span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 2}),</span>
+<span class="go">                                                                        _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))} --</span>
+<span class="go">Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:27,</span>
+<span class="go">                                                                        _orderForUser = UserId &quot;james@example.com&quot;,</span>
+<span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),</span>
+<span class="go">                                                                        _orderShippingInfo = ShippingInfoId Nothing} --</span>
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Finally, let's add some line items</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-sql" aria-controls="tab-1-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">let</span> <span class="n">lineItems</span> <span class="ow">=</span> <span class="p">[</span> <span class="kt">LineItem</span> <span class="p">(</span><span class="n">pk</span> <span class="n">jamesOrder1</span><span class="p">)</span> <span class="p">(</span><span class="n">pk</span> <span class="n">redBall</span><span class="p">)</span> <span class="mi">10</span>
+                <span class="p">,</span> <span class="kt">LineItem</span> <span class="p">(</span><span class="n">pk</span> <span class="n">jamesOrder1</span><span class="p">)</span> <span class="p">(</span><span class="n">pk</span> <span class="n">mathTextbook</span><span class="p">)</span> <span class="mi">1</span>
+                <span class="p">,</span> <span class="kt">LineItem</span> <span class="p">(</span><span class="n">pk</span> <span class="n">jamesOrder1</span><span class="p">)</span> <span class="p">(</span><span class="n">pk</span> <span class="n">introToHaskell</span><span class="p">)</span> <span class="mi">4</span>
+
+                <span class="p">,</span> <span class="kt">LineItem</span> <span class="p">(</span><span class="n">pk</span> <span class="n">bettyOrder1</span><span class="p">)</span> <span class="p">(</span><span class="n">pk</span> <span class="n">mathTextbook</span><span class="p">)</span> <span class="mi">3</span>
+                <span class="p">,</span> <span class="kt">LineItem</span> <span class="p">(</span><span class="n">pk</span> <span class="n">bettyOrder1</span><span class="p">)</span> <span class="p">(</span><span class="n">pk</span> <span class="n">introToHaskell</span><span class="p">)</span> <span class="mi">3</span>
+
+                <span class="p">,</span> <span class="kt">LineItem</span> <span class="p">(</span><span class="n">pk</span> <span class="n">jamesOrder2</span><span class="p">)</span> <span class="p">(</span><span class="n">pk</span> <span class="n">mathTextbook</span><span class="p">)</span> <span class="mi">1</span> <span class="p">]</span>
+
+<span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="n">runInsert</span> <span class="o">$</span> <span class="n">insert</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartLineItems</span><span class="p">)</span> <span class="o">$</span>
+    <span class="n">insertValues</span> <span class="n">lineItems</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-sql">
+            <div class="codehilite"><pre><span></span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="ss">&quot;line_items&quot;</span><span class="p">(</span><span class="ss">&quot;item_in_order__id&quot;</span><span class="p">,</span>
+                         <span class="ss">&quot;item_for_product__id&quot;</span><span class="p">,</span>
+                         <span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span>
+<span class="k">VALUES</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+        <span class="o">?</span><span class="p">,</span>
+        <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+             <span class="o">?</span><span class="p">,</span>
+             <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+                  <span class="o">?</span><span class="p">,</span>
+                  <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+                       <span class="o">?</span><span class="p">,</span>
+                       <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+                            <span class="o">?</span><span class="p">,</span>
+                            <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+                                 <span class="o">?</span><span class="p">,</span>
+                                 <span class="o">?</span><span class="p">)</span> <span class="c1">-- With values: [SQLInteger 1,SQLInteger 1,SQLInteger 10,SQLInteger 1,SQLInteger 2,SQLInteger 1,SQLInteger 1,SQLInteger 3,SQLInteger 4,SQLInteger 2,SQLInteger 2,SQLInteger 3,SQLInteger 2,SQLInteger 3,SQLInteger 3,SQLInteger 3,SQLInteger 2,SQLInteger 1]</span>
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Phew! Let's write some queries on this data!</p>
+<h1 id="would-you-like-some-left-joins-with-that">Would you like some left joins with that?</h1>
+<p>Suppose we want to do some analytics on our users, and so we want to know how many orders each user
+has made in our system. We can write a query to list every user along with the orders they've
+made. We can use <code>leftJoin_</code> to include all users in our result set, even those who have no
+orders.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-sql" aria-controls="tab-2-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-out" aria-controls="tab-2-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">usersAndOrders</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span> <span class="kr">do</span>
+      <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+      <span class="n">order</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span> <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+      <span class="n">pure</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">usersAndOrders</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res6&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res7&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res8&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-out">
+            <div class="codehilite"><pre><span></span>(User {_userEmail = &quot;james@example.com&quot;,
+       _userFirstName = &quot;James&quot;,
+       _userLastName = &quot;Smith&quot;,
+       _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},Just (
+                                                                 Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:34, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
+(User {_userEmail = &quot;james@example.com&quot;,
+       _userFirstName = &quot;James&quot;,
+       _userLastName = &quot;Smith&quot;,
+       _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},Just (
+                                                                 Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:34, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
+(User {_userEmail = &quot;betty@example.com&quot;,
+       _userFirstName = &quot;Betty&quot;,
+       _userLastName = &quot;Jones&quot;,
+       _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;},Just (
+                                                                 Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-09 21:37:34, _orderForUser = UserId &quot;betty@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 2}), _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))})) --
+(User {_userEmail = &quot;sam@example.com&quot;,
+       _userFirstName = &quot;Sam&quot;,
+       _userLastName = &quot;Taylor&quot;,
+       _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;},Nothing) --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Notice that sam is included in the result set, even though he doesn't have any
+associated orders. Instead of a <code>Just (Order ..)</code>, <code>Nothing</code> is returned
+instead.</p>
+<p>Next, perhaps our marketing team wanted to send e-mails out to all users with no
+orders. We can use <code>isNothing_</code> or <code>isJust_</code> to determine the status if a
+nullable table or <code>QExpr s (Maybe x)</code>. The following query uses <code>isNothing_</code> to
+find users who have no associated orders.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-3-haskell" aria-controls="tab-3-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-sql" aria-controls="tab-3-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-out" aria-controls="tab-3-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-3-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">usersWithNoOrders</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span> <span class="kr">do</span>
+      <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+      <span class="n">order</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span> <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+      <span class="n">guard_</span> <span class="p">(</span><span class="n">isNothing_</span> <span class="n">order</span><span class="p">)</span>
+      <span class="n">pure</span> <span class="n">user</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">usersWithNoOrders</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span>
+<span class="k">WHERE</span> <span class="p">(((((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">)</span>
+         <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">))</span>
+        <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">))</span>
+       <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">))</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">)</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-out">
+            <div class="codehilite"><pre><span></span>User {_userEmail = &quot;sam@example.com&quot;,
+      _userFirstName = &quot;Sam&quot;,
+      _userLastName = &quot;Taylor&quot;,
+      _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;} --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>We see that beam generates a sensible SQL <code>SELECT</code> and <code>WHERE</code> clause.</p>
+<p>We can also use the <code>exists_</code> combinator to utilize the SQL <code>EXISTS</code> clause.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-4-haskell" aria-controls="tab-4-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-4-sql" aria-controls="tab-4-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-4-out" aria-controls="tab-4-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-4-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">usersWithNoOrders</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span> <span class="kr">do</span>
+      <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+      <span class="n">guard_</span> <span class="p">(</span><span class="n">not_</span> <span class="p">(</span><span class="n">exists_</span> <span class="p">(</span><span class="n">filter_</span> <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">)))))</span>
+      <span class="n">pure</span> <span class="n">user</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">usersWithNoOrders</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-4-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">WHERE</span> <span class="k">NOT</span><span class="p">(</span><span class="k">EXISTS</span>
+            <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span>
+             <span class="k">FROM</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+             <span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)))</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-4-out">
+            <div class="codehilite"><pre><span></span>User {_userEmail = &quot;sam@example.com&quot;,
+      _userFirstName = &quot;Sam&quot;,
+      _userLastName = &quot;Taylor&quot;,
+      _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;} --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Now suppose we wanted to do some analysis on the orders themselves. To start, we
+want to get the orders sorted by their portion of revenue. We can use
+<code>aggregate_</code> to list every order and the total amount of all products in that
+order.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-5-haskell" aria-controls="tab-5-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-5-sql" aria-controls="tab-5-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-5-out" aria-controls="tab-5-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-5-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">ordersWithCostOrdered</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span>
+    <span class="n">orderBy_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">desc_</span> <span class="n">total</span><span class="p">)</span> <span class="o">$</span>
+    <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">lineItem</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span> <span class="ow">-&gt;</span>
+                   <span class="p">(</span><span class="n">group_</span> <span class="n">order</span><span class="p">,</span> <span class="n">sum_</span> <span class="p">(</span><span class="n">lineItem</span> <span class="o">^.</span> <span class="n">lineItemQuantity</span> <span class="o">*</span> <span class="n">product</span> <span class="o">^.</span> <span class="n">productPrice</span><span class="p">)))</span> <span class="o">$</span>
+    <span class="kr">do</span> <span class="n">lineItem</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartLineItems</span><span class="p">)</span>
+       <span class="n">order</span>    <span class="ow">&lt;-</span> <span class="n">related_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">)</span> <span class="p">(</span><span class="n">_lineItemInOrder</span> <span class="n">lineItem</span><span class="p">)</span>
+       <span class="n">product</span>  <span class="ow">&lt;-</span> <span class="n">related_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartProducts</span><span class="p">)</span> <span class="p">(</span><span class="n">_lineItemForProduct</span> <span class="n">lineItem</span><span class="p">)</span>
+       <span class="n">pure</span> <span class="p">(</span><span class="n">order</span><span class="p">,</span> <span class="n">lineItem</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">ordersWithCostOrdered</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-5-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="k">SUM</span><span class="p">((</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span><span class="p">))</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;line_items&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;item_in_order__id&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">)</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;products&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t2&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;item_for_product__id&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">)</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">SUM</span><span class="p">((</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span><span class="p">))</span> <span class="k">DESC</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-5-out">
+            <div class="codehilite"><pre><span></span>(
+ Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:49,
+                                                                         _orderForUser = UserId &quot;james@example.com&quot;,
+                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
+                                                                         _orderShippingInfo = ShippingInfoId Nothing},24500) --
+(
+                                                                                                                                Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-09 21:37:49,
+                                                                                                                                                                                                        _orderForUser = UserId &quot;betty@example.com&quot;,
+                                                                                                                                                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 2}),
+                                                                                                                                                                                                        _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))},16500) --
+(
+                                                                                                                                                                                                                                                                                       Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:49,
+                                                                                                                                                                                                                                                                                                                                                               _orderForUser = UserId &quot;james@example.com&quot;,
+                                                                                                                                                                                                                                                                                                                                                               _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
+                                                                                                                                                                                                                                                                                                                                                               _orderShippingInfo = ShippingInfoId Nothing},2500) --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>We can also get the total amount spent by each user, even including users with no orders. Notice
+that we have to use <code>maybe_</code> below in order to handle the fact that some tables have been introduced
+into our query with a left join. <code>maybe_</code> is to <code>QExpr</code> what <code>maybe</code> is to normal Haskell
+values. <code>maybe_</code> is polymorphic to either <code>QExpr</code>s or full on tables of <code>QExpr</code>s. For our purposes,
+the type of <code>maybe_</code> is</p>
+<div class="codehilite"><pre><span></span><span class="nf">maybe_</span> <span class="ow">::</span> <span class="kt">QExpr</span> <span class="n">s</span> <span class="n">a</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="kt">QExpr</span> <span class="n">s</span> <span class="n">b</span> <span class="ow">-&gt;</span> <span class="kt">QExpr</span> <span class="n">s</span> <span class="n">a</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="kt">QExpr</span> <span class="n">s</span> <span class="p">(</span><span class="kt">Maybe</span> <span class="n">b</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="kt">QExpr</span> <span class="n">s</span> <span class="n">a</span>
+</pre></div>
+
+
+<p>With that in mind, we can write the query to get the total spent by user</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-6-haskell" aria-controls="tab-6-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-6-sql" aria-controls="tab-6-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-6-out" aria-controls="tab-6-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-6-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">allUsersAndTotals</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span>
+    <span class="n">orderBy_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">total</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">desc_</span> <span class="n">total</span><span class="p">)</span> <span class="o">$</span>
+    <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">lineItem</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span> <span class="ow">-&gt;</span>
+                   <span class="p">(</span><span class="n">group_</span> <span class="n">user</span><span class="p">,</span> <span class="n">sum_</span> <span class="p">(</span><span class="n">maybe_</span> <span class="mi">0</span> <span class="n">id</span> <span class="p">(</span><span class="n">_lineItemQuantity</span> <span class="n">lineItem</span><span class="p">)</span> <span class="o">*</span> <span class="n">maybe_</span> <span class="mi">0</span> <span class="n">id</span> <span class="p">(</span><span class="n">product</span> <span class="o">^.</span> <span class="n">productPrice</span><span class="p">))))</span> <span class="o">$</span>
+    <span class="kr">do</span> <span class="n">user</span>     <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+       <span class="n">order</span>    <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span>
+                             <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+       <span class="n">lineItem</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartLineItems</span><span class="p">))</span>
+                             <span class="p">(</span><span class="nf">\</span><span class="n">lineItem</span> <span class="ow">-&gt;</span> <span class="n">maybe_</span> <span class="p">(</span><span class="n">val_</span> <span class="kt">False</span><span class="p">)</span> <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_lineItemInOrder</span> <span class="n">lineItem</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">order</span><span class="p">)</span> <span class="n">order</span><span class="p">)</span>
+       <span class="n">product</span>  <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartProducts</span><span class="p">))</span>
+                             <span class="p">(</span><span class="nf">\</span><span class="n">product</span> <span class="ow">-&gt;</span> <span class="n">maybe_</span> <span class="p">(</span><span class="n">val_</span> <span class="kt">False</span><span class="p">)</span> <span class="p">(</span><span class="nf">\</span><span class="n">lineItem</span> <span class="ow">-&gt;</span> <span class="n">_lineItemForProduct</span> <span class="n">lineItem</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">product</span><span class="p">)</span> <span class="n">lineItem</span><span class="p">)</span>
+       <span class="n">pure</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">lineItem</span><span class="p">,</span> <span class="n">product</span><span class="p">)</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">allUsersAndTotals</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-6-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="k">SUM</span><span class="p">((</span><span class="k">CASE</span>
+                <span class="k">WHEN</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">THEN</span> <span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span>
+                <span class="k">ELSE</span> <span class="o">?</span>
+            <span class="k">END</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="k">CASE</span>
+                        <span class="k">WHEN</span> <span class="p">(</span><span class="ss">&quot;t3&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">THEN</span> <span class="ss">&quot;t3&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span>
+                        <span class="k">ELSE</span> <span class="o">?</span>
+                    <span class="k">END</span><span class="p">))</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;line_items&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t2&quot;</span> <span class="k">ON</span> <span class="k">CASE</span>
+                                      <span class="k">WHEN</span> <span class="p">(((((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span>
+                                              <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">))</span>
+                                             <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">))</span>
+                                            <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">))</span>
+                                           <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span> <span class="k">THEN</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_in_order__id&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">)</span>
+                                      <span class="k">ELSE</span> <span class="o">?</span>
+                                  <span class="k">END</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;products&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t3&quot;</span> <span class="k">ON</span> <span class="k">CASE</span>
+                                    <span class="k">WHEN</span> <span class="p">(((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_in_order__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span>
+                                          <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_for_product__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">))</span>
+                                         <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span> <span class="k">THEN</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_for_product__id&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t3&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span><span class="p">)</span>
+                                    <span class="k">ELSE</span> <span class="o">?</span>
+                                <span class="k">END</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">SUM</span><span class="p">((</span><span class="k">CASE</span>
+                  <span class="k">WHEN</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">THEN</span> <span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span>
+                  <span class="k">ELSE</span> <span class="o">?</span>
+              <span class="k">END</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="k">CASE</span>
+                          <span class="k">WHEN</span> <span class="p">(</span><span class="ss">&quot;t3&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">THEN</span> <span class="ss">&quot;t3&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span>
+                          <span class="k">ELSE</span> <span class="o">?</span>
+                      <span class="k">END</span><span class="p">))</span> <span class="k">DESC</span> <span class="c1">-- With values: [SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0]</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-6-out">
+            <div class="codehilite"><pre><span></span>(User {_userEmail = &quot;betty@example.com&quot;,
+       _userFirstName = &quot;Betty&quot;,
+       _userLastName = &quot;Jones&quot;,
+       _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;},16500) --
+(User {_userEmail = &quot;james@example.com&quot;,
+       _userFirstName = &quot;James&quot;,
+       _userLastName = &quot;Smith&quot;,
+       _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},0) --
+(User {_userEmail = &quot;sam@example.com&quot;,
+       _userFirstName = &quot;Sam&quot;,
+       _userLastName = &quot;Taylor&quot;,
+       _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;},0) --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<h1 id="queries-with-nullable-foreign-keys">Queries with nullable foreign keys</h1>
+<p>Recall that our schema contains a nullable foreign key from <code>OrderT</code> to <code>ShippingInfoT</code>. Above,
+we've seen how <code>leftJoin_</code> introduces nullable tables into our queries. Below, we'll see how to use
+nullable primary keys to optionally include information.</p>
+<p>Suppose we want to find all orders who have not been shipped. We can do this by simply writing a query over the orders.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-7-haskell" aria-controls="tab-7-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-7-sql" aria-controls="tab-7-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-7-out" aria-controls="tab-7-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-7-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">allUnshippedOrders</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span>
+    <span class="n">filter_</span> <span class="p">(</span><span class="n">isNothing_</span> <span class="o">.</span> <span class="n">_orderShippingInfo</span><span class="p">)</span> <span class="o">$</span>
+    <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">)</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">allUnshippedOrders</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-7-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-7-out">
+            <div class="codehilite"><pre><span></span>Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:59,
+                                                                        _orderForUser = UserId &quot;james@example.com&quot;,
+                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
+                                                                        _orderShippingInfo = ShippingInfoId Nothing} --
+Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:59,
+                                                                        _orderForUser = UserId &quot;james@example.com&quot;,
+                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
+                                                                        _orderShippingInfo = ShippingInfoId Nothing} --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Let's count up all shipped and unshipped orders by user, including users who have no orders.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-8-haskell" aria-controls="tab-8-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-8-sql" aria-controls="tab-8-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-8-out" aria-controls="tab-8-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-8-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">shippingInformationByUser</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span>
+    <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span> <span class="ow">-&gt;</span>
+                   <span class="kr">let</span> <span class="kt">ShippingInfoId</span> <span class="n">shippingInfoId</span> <span class="ow">=</span> <span class="n">_orderShippingInfo</span> <span class="n">order</span>
+                   <span class="kr">in</span> <span class="p">(</span> <span class="n">group_</span> <span class="n">user</span>
+                      <span class="p">,</span> <span class="n">as_</span> <span class="o">@</span><span class="kt">Int</span> <span class="o">$</span> <span class="n">count_</span> <span class="p">(</span><span class="n">as_</span> <span class="o">@</span><span class="p">(</span><span class="kt">Maybe</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">(</span><span class="n">maybe_</span> <span class="p">(</span><span class="n">just_</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nf">\</span><span class="kr">_</span> <span class="ow">-&gt;</span> <span class="n">nothing_</span><span class="p">)</span> <span class="n">shippingInfoId</span><span class="p">))</span>
+                      <span class="p">,</span> <span class="n">as_</span> <span class="o">@</span><span class="kt">Int</span> <span class="o">$</span> <span class="n">count_</span> <span class="n">shippingInfoId</span> <span class="p">)</span> <span class="p">)</span> <span class="o">$</span>
+    <span class="kr">do</span> <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+       <span class="n">order</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span> <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+       <span class="n">pure</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">shippingInformationByUser</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-8-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="k">COUNT</span><span class="p">(</span><span class="k">CASE</span>
+                 <span class="k">WHEN</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">THEN</span> <span class="k">NULL</span>
+                 <span class="k">ELSE</span> <span class="o">?</span>
+             <span class="k">END</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="k">COUNT</span><span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span><span class="p">,</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="c1">-- With values: [SQLInteger 1]</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-8-out">
+            <div class="codehilite"><pre><span></span>(User {_userEmail = &quot;betty@example.com&quot;,
+       _userFirstName = &quot;Betty&quot;,
+       _userLastName = &quot;Jones&quot;,
+       _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;},0,
+                                                           1) --
+(User {_userEmail = &quot;james@example.com&quot;,
+       _userFirstName = &quot;James&quot;,
+       _userLastName = &quot;Smith&quot;,
+       _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},2,
+                                                           0) --
+(User {_userEmail = &quot;sam@example.com&quot;,
+       _userFirstName = &quot;Sam&quot;,
+       _userLastName = &quot;Taylor&quot;,
+       _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;},1,
+                                                           0) --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Uh-oh! There's an error in the result set! Sam is reported as having one
+unshipped order, instead of zero.</p>
+<p>Here we hit one of the limitations of beam's mapping to SQL, and really one of
+the limitations of SQL itself. Namely, the NULL in the result rows for Sam is
+not distinguished from the NULL in the shipping info key itself. Beam however
+does make the distinction.</p>
+<p>When beam deserializes a <code>NULL</code> in a <code>Maybe</code> field, the outermost <code>Maybe</code> is the
+one populated with <code>Nothing</code>. Thus it is impossible to retrieve a value like
+<code>Just Nothing</code> from the database using the default serializers and
+deserializers. In general, it's best to avoid highly nested <code>Maybe</code>s in your
+queries because it makes them more difficult to understand.</p>
+<p>One way to work around this issue in the above query is to use subselects.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-9-haskell" aria-controls="tab-9-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-9-sql" aria-controls="tab-9-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-9-out" aria-controls="tab-9-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-9-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">shippingInformationByUser</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span>
+    <span class="kr">do</span> <span class="n">user</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+
+       <span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">unshippedCount</span><span class="p">)</span> <span class="ow">&lt;-</span>
+         <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">group_</span> <span class="n">userEmail</span><span class="p">,</span> <span class="n">countAll_</span><span class="p">))</span> <span class="o">$</span>
+         <span class="kr">do</span> <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+            <span class="n">order</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span>
+                               <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span> <span class="o">&amp;&amp;.</span> <span class="n">isNothing_</span> <span class="p">(</span><span class="n">_orderShippingInfo</span> <span class="n">order</span><span class="p">))</span>
+            <span class="n">pure</span> <span class="p">(</span><span class="n">pk</span> <span class="n">user</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+
+       <span class="n">guard_</span> <span class="p">(</span><span class="n">userEmail</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+
+       <span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">shippedCount</span><span class="p">)</span> <span class="ow">&lt;-</span>
+         <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">group_</span> <span class="n">userEmail</span><span class="p">,</span> <span class="n">countAll_</span><span class="p">))</span> <span class="o">$</span>
+         <span class="kr">do</span> <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+            <span class="n">order</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span>
+                               <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span> <span class="o">&amp;&amp;.</span> <span class="n">isJust_</span> <span class="p">(</span><span class="n">_orderShippingInfo</span> <span class="n">order</span><span class="p">))</span>
+            <span class="n">pure</span> <span class="p">(</span><span class="n">pk</span> <span class="n">user</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+       <span class="n">guard_</span> <span class="p">(</span><span class="n">userEmail</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+
+       <span class="n">pure</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">unshippedCount</span><span class="p">,</span> <span class="n">shippedCount</span><span class="p">)</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">shippingInformationByUser</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-9-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;res1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">INNER</span> <span class="k">JOIN</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+          <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
+   <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+   <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
+   <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">)</span>
+   <span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span>
+<span class="k">INNER</span> <span class="k">JOIN</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+          <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
+   <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+   <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
+   <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span>
+   <span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t2&quot;</span>
+<span class="k">WHERE</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-9-out">
+            <div class="codehilite"><pre><span></span>(User {_userEmail = &quot;betty@example.com&quot;,
+       _userFirstName = &quot;Betty&quot;,
+       _userLastName = &quot;Jones&quot;,
+       _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;},1,
+                                                           1) --
+(User {_userEmail = &quot;james@example.com&quot;,
+       _userFirstName = &quot;James&quot;,
+       _userLastName = &quot;Smith&quot;,
+       _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},2,
+                                                           1) --
+(User {_userEmail = &quot;sam@example.com&quot;,
+       _userFirstName = &quot;Sam&quot;,
+       _userLastName = &quot;Taylor&quot;,
+       _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;},1,
+                                                           1) --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Notice that the <code>aggregate_</code>s embedded in the <code>Q</code> monad were automatically
+converted into sub <code>SELECT</code>s. This is because beam queries are composable -- you
+can use them wherever they type check and sensible SQL will result. Of course,
+if you want more control, you can also use the <code>subselect_</code> combinator to force
+generation of a sub <code>SELECT</code>.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-10-haskell" aria-controls="tab-10-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-10-sql" aria-controls="tab-10-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-10-out" aria-controls="tab-10-out" role="tab" data-toggle="tab" data-lang="out">Out</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-10-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">shippingInformationByUser</span> <span class="ow">&lt;-</span>
+  <span class="n">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+    <span class="n">runSelectReturningList</span> <span class="o">$</span>
+    <span class="n">select</span> <span class="o">$</span>
+    <span class="kr">do</span> <span class="n">user</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+
+       <span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">unshippedCount</span><span class="p">)</span> <span class="ow">&lt;-</span>
+         <span class="n">subselect_</span> <span class="o">$</span>
+         <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">group_</span> <span class="n">userEmail</span><span class="p">,</span> <span class="n">countAll_</span><span class="p">))</span> <span class="o">$</span>
+         <span class="kr">do</span> <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+            <span class="n">order</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span>
+                               <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span> <span class="o">&amp;&amp;.</span> <span class="n">isNothing_</span> <span class="p">(</span><span class="n">_orderShippingInfo</span> <span class="n">order</span><span class="p">))</span>
+            <span class="n">pure</span> <span class="p">(</span><span class="n">pk</span> <span class="n">user</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+
+       <span class="n">guard_</span> <span class="p">(</span><span class="n">userEmail</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+
+       <span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">shippedCount</span><span class="p">)</span> <span class="ow">&lt;-</span>
+         <span class="n">subselect_</span> <span class="o">$</span>
+         <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">userEmail</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">group_</span> <span class="n">userEmail</span><span class="p">,</span> <span class="n">countAll_</span><span class="p">))</span> <span class="o">$</span>
+         <span class="kr">do</span> <span class="n">user</span>  <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartUsers</span><span class="p">)</span>
+            <span class="n">order</span> <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">shoppingCartDb</span> <span class="o">^.</span> <span class="n">shoppingCartOrders</span><span class="p">))</span>
+                               <span class="p">(</span><span class="nf">\</span><span class="n">order</span> <span class="ow">-&gt;</span> <span class="n">_orderForUser</span> <span class="n">order</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span> <span class="o">&amp;&amp;.</span> <span class="n">isJust_</span> <span class="p">(</span><span class="n">_orderShippingInfo</span> <span class="n">order</span><span class="p">))</span>
+            <span class="n">pure</span> <span class="p">(</span><span class="n">pk</span> <span class="n">user</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+       <span class="n">guard_</span> <span class="p">(</span><span class="n">userEmail</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">user</span><span class="p">)</span>
+
+       <span class="n">pure</span> <span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">unshippedCount</span><span class="p">,</span> <span class="n">shippedCount</span><span class="p">)</span>
+
+<span class="nf">mapM_</span> <span class="n">print</span> <span class="n">shippingInformationByUser</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-10-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;res1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">INNER</span> <span class="k">JOIN</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;res1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
+   <span class="k">FROM</span>
+     <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+             <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
+      <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+      <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
+      <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">)</span>
+      <span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span>
+<span class="k">INNER</span> <span class="k">JOIN</span>
+  <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+          <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;res1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
+   <span class="k">FROM</span>
+     <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+             <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
+      <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+      <span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
+      <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span>
+      <span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t2&quot;</span>
+<span class="k">WHERE</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-10-out">
+            <div class="codehilite"><pre><span></span>(User {_userEmail = &quot;betty@example.com&quot;,
+       _userFirstName = &quot;Betty&quot;,
+       _userLastName = &quot;Jones&quot;,
+       _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;},1,
+                                                           1) --
+(User {_userEmail = &quot;james@example.com&quot;,
+       _userFirstName = &quot;James&quot;,
+       _userLastName = &quot;Smith&quot;,
+       _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},2,
+                                                           1) --
+(User {_userEmail = &quot;sam@example.com&quot;,
+       _userFirstName = &quot;Sam&quot;,
+       _userLastName = &quot;Taylor&quot;,
+       _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;},1,
+                                                           1) --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<h1 id="conclusion">Conclusion</h1>
+<p>This tutorial completes our sequence on creating a shopping cart. Throughout the
+tutorials, we saw how to create tables using regular Haskell data types, how to
+link those tables up using relations, how to query tables using both the monadic
+interface and the list-like functions on queries. We saw ha few examples of
+using beam to generate advanced queries. More information on the Beam API is
+havailable on <a href="http://hackage.haskell.org/package/beam">hackage</a>. Happy beaming!</p>
+<p>Beam is a work in progress. Please submit bugs and patches
+on <a href="https://github.com/tathougies/beam">GitHub</a>.</p>
                 
                   
                 
@@ -750,13 +2103,13 @@
           </a>
         
         
-          <a href="../../user-guide/getting-started/" title="Getting Started" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../user-guide/models/" title="Models" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Getting Started
+                Models
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

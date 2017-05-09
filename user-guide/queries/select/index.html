@@ -83,6 +83,10 @@
                   User Guide
                 </span>
               
+                <span class="md-header-nav__parent">
+                  Queries
+                </span>
+              
             
             More complex SELECTs
           
@@ -298,18 +302,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../../getting-started/" title="Getting Started" class="md-nav__link">
-      Getting Started
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../models/" title="Models" class="md-nav__link">
       Models
     </a>
@@ -327,6 +319,39 @@
     </a>
   </li>
 
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../backends/" title="Backends" class="md-nav__link">
+      Backends
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-4" type="checkbox" id="nav-4-4" checked>
+    
+    <label class="md-nav__link" for="nav-4-4">
+      Queries
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-4">
+        Queries
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -467,6 +492,83 @@
     </nav>
   </li>
 
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../extensibility/" title="Custom queries" class="md-nav__link">
+      Custom queries
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-6" type="checkbox" id="nav-4-6">
+    
+    <label class="md-nav__link" for="nav-4-6">
+      Data Manipulation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-6">
+        Data Manipulation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manipulation/insert/" title="INSERT" class="md-nav__link">
+      INSERT
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manipulation/update/" title="UPDATE" class="md-nav__link">
+      UPDATE
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manipulation/delete/" title="DELETE" class="md-nav__link">
+      DELETE
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
     
       
       
@@ -598,82 +700,10 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      Reference
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        Reference
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/models/" title="Models" class="md-nav__link">
-      Models
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/expression/" title="Expressions" class="md-nav__link">
-      Expressions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/queries/" title="Queries" class="md-nav__link">
-      Queries
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/extensibility/" title="Extending" class="md-nav__link">
-      Extending
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
-    
-    <label class="md-nav__link" for="nav-8">
       About
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
+      <label class="md-nav__title" for="nav-7">
         About
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -843,7 +873,7 @@ sqlite and postgres.</p>
 <span class="go">       &quot;t0&quot;.&quot;Milliseconds&quot; AS &quot;res6&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;Bytes&quot; AS &quot;res7&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;UnitPrice&quot; AS &quot;res8&quot;</span>
-<span class="go">FROM &quot;Track&quot; AS &quot;t0&quot;</span>
+<span class="go">FROM &quot;Track&quot; AS &quot;t0&quot; -- With values: []</span>
 </pre></div>
 
         </div>
@@ -915,7 +945,7 @@ can filter over results using the <code>filter_</code> function.</p>
 <span class="go">       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;</span>
 <span class="go">FROM &quot;Customer&quot; AS &quot;t0&quot;</span>
-<span class="go">WHERE (&quot;t0&quot;.&quot;FirstName&quot;) LIKE (?)</span>
+<span class="go">WHERE (&quot;t0&quot;.&quot;FirstName&quot;) LIKE (?) -- With values: [SQLText &quot;Jo%&quot;]</span>
 </pre></div>
 
         </div>
@@ -994,7 +1024,7 @@ name begins with "S", and who live in either California or Washington:</p>
 <span class="go">WHERE (((&quot;t0&quot;.&quot;FirstName&quot;) LIKE (?))</span>
 <span class="go">       AND ((&quot;t0&quot;.&quot;LastName&quot;) LIKE (?)))</span>
 <span class="go">  AND (((&quot;t0&quot;.&quot;State&quot;)=(?))</span>
-<span class="go">       OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))</span>
+<span class="go">       OR ((&quot;t0&quot;.&quot;State&quot;)=(?))) -- With values: [SQLText &quot;Jo%&quot;,SQLText &quot;S%&quot;,SQLText &quot;CA&quot;,SQLText &quot;WA&quot;]</span>
 </pre></div>
 
         </div>
@@ -1088,7 +1118,7 @@ the <code>LIMIT</code> and <code>OFFSET</code> SQL constructs.</p>
 <span class="go">  AND (((&quot;t0&quot;.&quot;State&quot;)=(?))</span>
 <span class="go">       OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))</span>
 <span class="go">LIMIT 10</span>
-<span class="go">OFFSET 100</span>
+<span class="go">OFFSET 100 -- With values: [SQLText &quot;Jo%&quot;,SQLText &quot;S%&quot;,SQLText &quot;CA&quot;,SQLText &quot;WA&quot;]</span>
 </pre></div>
 
         </div>
@@ -1188,7 +1218,7 @@ that returns no results.</p>
 <span class="go">  AND (((&quot;t0&quot;.&quot;State&quot;)=(?))</span>
 <span class="go">       OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))</span>
 <span class="go">LIMIT 0</span>
-<span class="go">OFFSET 100</span>
+<span class="go">OFFSET 100 -- With values: [SQLText &quot;Jo%&quot;,SQLText &quot;S%&quot;,SQLText &quot;CA&quot;,SQLText &quot;WA&quot;]</span>
 </pre></div>
 
         </div>

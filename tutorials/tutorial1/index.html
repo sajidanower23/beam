@@ -379,18 +379,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/getting-started/" title="Getting Started" class="md-nav__link">
-      Getting Started
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../user-guide/models/" title="Models" class="md-nav__link">
       Models
     </a>
@@ -408,6 +396,37 @@
     </a>
   </li>
 
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/backends/" title="Backends" class="md-nav__link">
+      Backends
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-4" type="checkbox" id="nav-4-4">
+    
+    <label class="md-nav__link" for="nav-4-4">
+      Queries
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-4">
+        Queries
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -502,6 +521,83 @@
     <a href="../../user-guide/queries/advanced-features/" title="Advanced features" class="md-nav__link">
       Advanced features
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/extensibility/" title="Custom queries" class="md-nav__link">
+      Custom queries
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-6" type="checkbox" id="nav-4-6">
+    
+    <label class="md-nav__link" for="nav-4-6">
+      Data Manipulation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-6">
+        Data Manipulation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/manipulation/insert/" title="INSERT" class="md-nav__link">
+      INSERT
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/manipulation/update/" title="UPDATE" class="md-nav__link">
+      UPDATE
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../user-guide/manipulation/delete/" title="DELETE" class="md-nav__link">
+      DELETE
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -640,82 +736,10 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      Reference
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        Reference
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/models/" title="Models" class="md-nav__link">
-      Models
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/expression/" title="Expressions" class="md-nav__link">
-      Expressions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/queries/" title="Queries" class="md-nav__link">
-      Queries
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../reference/extensibility/" title="Extending" class="md-nav__link">
-      Extending
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
-    
-    <label class="md-nav__link" for="nav-8">
       About
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
+      <label class="md-nav__title" for="nav-7">
         About
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -860,15 +884,26 @@ demonstrate how beam lets us declare type-safe and composable queries.</p>
 <h2 id="beam-module-structure">Beam Module Structure</h2>
 <p>Beam makes extensive use of GHC's Generics mechanism. This extension means beam does not need to
 rely on template haskell.</p>
-<div class="codehilite"><pre><span></span><span class="cm">{-# LANGUAGE StandaloneDeriving, TypeSynonymInstances, FlexibleInstances, TypeFamilies, DeriveGeneric, OverloadedStrings #-}</span>
-<span class="kr">module</span> <span class="nn">Main</span> <span class="kr">where</span>
-</pre></div>
-
-
 <p>To start defining beam schemas and queries, you only need to import the
 <code>Database.Beam</code> module. To interface with an actual database, you'll need to
 import one of the database backends. We'll see how to use the Sqlite backend
-here (found in the <code>beam-sqlite</code> package).</p>
+here (found in the <code>beam-sqlite</code> package). Now, open up a GHCi prompt for us to
+use. Make sure to get the <code>beam-core</code> and <code>beam-sqlite</code> packages.</p>
+<div class="codehilite"><pre><span></span><span class="gp">$</span> stack repl --package beam-core --package beam-sqlite --package sqlite-simple
+</pre></div>
+
+
+<p>This will put you into a GHCi prompt with the <code>beam-core</code> and <code>beam-sqlite</code>
+packages available. We also include the <code>sqlite-simple</code> package. Beam mainly
+manages querying and data marshalling. Connections to the backends are done via
+backend specific packages. In this case, <code>beam-sqlite</code> uses the <code>sqlite-simple</code>
+backend.</p>
+<p>Before starting, we'll need to enable some extensions.</p>
+<div class="codehilite"><pre><span></span>&gt; :set -XDeriveGeneric -XGADTs -XOverloadedStrings -XFlexibleContexts -XFlexibleInstances -XTypeFamilies -XTypeApplications
+</pre></div>
+
+
+<p>And import some modules...</p>
 <div class="codehilite"><pre><span></span><span class="kr">import</span> <span class="nn">Database.Beam</span>
 <span class="kr">import</span> <span class="nn">Database.Beam.Sqlite</span>
 
@@ -888,28 +923,29 @@ for this convention.</p>
 preference. One reason for the prefix is that it plays nicely with the <code>lens</code> library. Beam does not
 necessitate the use of <code>lens</code> (in fact Beam includes its own mechanism to generically derive van
 Laarhoven lenses), but I recognize that some programmers use <code>lens</code> quite a lot.</p>
-<div class="codehilite"><pre><span></span><span class="kr">data</span> <span class="kt">UserT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">User</span>
-             <span class="p">{</span> <span class="n">_userEmail</span>     <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span>
-             <span class="p">,</span> <span class="n">_userFirstName</span> <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span>
-             <span class="p">,</span> <span class="n">_userLastName</span>  <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span>
-             <span class="p">,</span> <span class="n">_userPassword</span>  <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span> <span class="p">}</span>
-              <span class="kr">deriving</span> <span class="kt">Generic</span>
+<div class="codehilite"><pre><span></span><span class="kr">data</span> <span class="kt">UserT</span> <span class="n">f</span>
+    <span class="ow">=</span> <span class="kt">User</span>
+    <span class="p">{</span> <span class="n">_userEmail</span>     <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span>
+    <span class="p">,</span> <span class="n">_userFirstName</span> <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span>
+    <span class="p">,</span> <span class="n">_userLastName</span>  <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span>
+    <span class="p">,</span> <span class="n">_userPassword</span>  <span class="ow">::</span> <span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span> <span class="p">}</span>
+    <span class="kr">deriving</span> <span class="kt">Generic</span>
 </pre></div>
 
 
 <p>This data type might look very complicated, so I'd like to show you that it's not that scary. Let's
 see if we can use GHCi to help us.</p>
-<div class="codehilite"><pre><span></span>*BasicTutorial&gt; :t User
+<div class="codehilite"><pre><span></span>Prelude Database.Beam.Sqlite Database.Beam Data.Text&gt; :t User
 User
- :: Columnar f Text
-    -&gt; Columnar f Text -&gt; Columnar f Text -&gt; Columnar f Text -&gt; UserT f
+  :: Columnar f Text
+     -&gt; Columnar f Text -&gt; Columnar f Text -&gt; Columnar f Text -&gt; UserT f
 </pre></div>
 
 
 <p>Hmm... That did not help much. However, consider the type of the following:</p>
-<div class="codehilite"><pre><span></span>*BasicTutorial&gt; :t (\email firstName lastName password -&gt; User email firstName lastName password :: UserT Identity)
- (\email firstName lastName password -&gt; User email firstName lastName password :: UserT Identity)
- :: Text -&gt; Text -&gt; Text -&gt; Text -&gt; UserT Identity
+<div class="codehilite"><pre><span></span>Prelude Database.Beam.Sqlite Database.Beam Data.Text&gt; :t (\email firstName lastName password -&gt; User email firstName lastName password :: UserT Identity)
+(\email firstName lastName password -&gt; User email firstName lastName password :: UserT Identity)
+  :: Text -&gt; Text -&gt; Text -&gt; Text -&gt; UserT Identity
 </pre></div>
 
 
@@ -922,55 +958,93 @@ User
 </pre></div>
 
 
-<p>This functionality is due to the fact that <code>Columnar</code> is a type family defined such that for any
-<code>x</code>, <code>Columnar Identity x = x</code>. Knowing this, let's define a type synonym to make our life easier.</p>
+<p>This functionality is due to the fact that <code>Columnar</code> is a type family defined
+such that for any <code>x</code>, <code>Columnar Identity x = x</code>. This strategy is known as
+<em>defunctionalization</em> <sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>.</p>
+<p>Knowing this, let's define a type synonym to make our life easier.</p>
 <div class="codehilite"><pre><span></span><span class="kr">type</span> <span class="kt">User</span> <span class="ow">=</span> <span class="kt">UserT</span> <span class="kt">Identity</span>
+<span class="kr">type</span> <span class="kt">UserId</span> <span class="ow">=</span> <span class="kt">PrimaryKey</span> <span class="kt">UserT</span> <span class="kt">Identity</span>
 </pre></div>
 
 
-<p>Now you can see why we named the type of the table <code>UserT</code> and its constructor <code>User</code>. This allows
-us to use the "regular" <code>User</code> constructor to construct values of type <code>User</code>. We can use the
-<code>StandaloneDeriving</code> extension to derive an instance of <code>Show</code> and <code>Eq</code> for the 'regular' datatype.</p>
+<p>Now you can see why we named the type of the table <code>UserT</code> and its constructor
+<code>User</code>. This allows us to use the "regular" <code>User</code> constructor to construct
+values of type <code>User</code>. We can use the <code>StandaloneDeriving</code> and
+<code>TypeSynonymInstances</code> extensions to derive instances of <code>Show</code> and <code>Eq</code> for the
+'regular' datatype.</p>
+<div class="codehilite"><pre><span></span>&gt; :set -XStandaloneDeriving -XTypeSynonymInstances
+</pre></div>
+
+
+<p>Now we can derive <code>Show</code> and <code>Eq</code> instances.</p>
 <div class="codehilite"><pre><span></span><span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="kt">User</span>
 <span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Eq</span> <span class="kt">User</span>
 </pre></div>
 
 
+<p>Note that this does require us to use an explicit type signature where we
+otherwise wouldn't. For example,</p>
+<div class="codehilite"><pre><span></span><span class="kt">Prelude</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span><span class="o">.</span><span class="kt">Sqlite</span> <span class="kt">Database</span><span class="o">.</span><span class="kt">Beam</span> <span class="kt">Data</span><span class="o">.</span><span class="kt">Text</span><span class="o">&gt;</span> <span class="kt">User</span> <span class="s">&quot;john@example.com&quot;</span> <span class="s">&quot;John&quot;</span> <span class="s">&quot;Smith&quot;</span> <span class="s">&quot;password!&quot;</span>
+
+<span class="o">&lt;</span><span class="n">interactive</span><span class="o">&gt;:</span><span class="mi">46</span><span class="kt">:</span><span class="mi">2</span><span class="kt">:</span> <span class="ne">error</span><span class="kt">:</span>
+    <span class="o">*</span> <span class="kt">No</span> <span class="kr">instance</span> <span class="n">for</span> <span class="p">(</span><span class="kt">Show</span> <span class="p">(</span><span class="kt">UserT</span> <span class="n">f0</span><span class="p">))</span> <span class="n">arising</span> <span class="n">from</span> <span class="n">a</span> <span class="n">use</span> <span class="kr">of</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">print</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span>
+    <span class="o">*</span> <span class="kt">In</span> <span class="n">a</span> <span class="n">stmt</span> <span class="kr">of</span> <span class="n">an</span> <span class="n">interactive</span> <span class="kt">GHCi</span> <span class="n">command</span><span class="kt">:</span> <span class="n">print</span> <span class="n">it</span>
+</pre></div>
+
+
+<p>Here, GHC is complaining that it cannot infer the type of the <code>f</code> parameter
+based on the values we've supplied. This is because the <code>Columnar</code> type family
+is non-injective. However, an explicit type annotation fixes it all up.</p>
+<div class="codehilite"><pre><span></span>Prelude Database.Beam.Sqlite Database.Beam Data.Text&gt; User &quot;john@example.com&quot; &quot;John&quot; &quot;Smith&quot; &quot;password!&quot; :: User
+User {_userEmail = &quot;john@example.com&quot;, _userFirstName = &quot;John&quot;, _userLastName = &quot;Smith&quot;, _userPassword = &quot;password!&quot;}
+</pre></div>
+
+
+<p>Usually, you won't need to deal with this, as you'll explicitly annotate your
+top-level functions to use the <code>User</code> type.</p>
 <h2 id="teaching-beam-about-our-table">Teaching Beam about our table</h2>
-<p>We've defined a type that can represent our the data in our table. Now, let's inform beam that we'd like to
-use `UserT' as a table.</p>
+<p>We've defined a type that can represent our the data in our table. Now, let's
+inform beam that we'd like to use <code>UserT</code> as a table.</p>
+<p>All beam tables need to implement the <code>Beamable</code> type class. Due to GHC's
+DeriveGeneric and DefaultSignatures extensions, all these methods can be written
+for us by the compiler at compile-time!</p>
+<div class="codehilite"><pre><span></span><span class="kr">instance</span> <span class="kt">Beamable</span> <span class="kt">UserT</span>
+</pre></div>
+
+
+<p>Additionally, all beam tables must implement the <code>Table</code> type class, which we
+can use to declare a primary key.</p>
 <div class="codehilite"><pre><span></span><span class="kr">instance</span> <span class="kt">Table</span> <span class="kt">UserT</span> <span class="kr">where</span>
 </pre></div>
 
 
-<p>All beam tables need to implement the <code>Table</code> type class. The <code>Table</code> type class contains functions
-for marshalling values between SQL and Haskell and for allowing the table to be queried. Due to
-GHC's DeriveGeneric and DefaultSignatures extensions, all these methods can be written for us by the
-compiler at compile-time!</p>
-<p>The only thing we need to provide is the type of the primary keys for users, and a function that can
-extract the primary key from any <code>UserT f</code> object. To do this, we just add the following lines to
-the instance declaration.</p>
+<p>The only thing we need to provide is the type of the primary keys for users, and
+a function that can extract the primary key from any <code>UserT f</code> object. To do
+this, we just add the following lines to the instance declaration.</p>
 <div class="codehilite"><pre><span></span>    <span class="kr">data</span> <span class="kt">PrimaryKey</span> <span class="kt">UserT</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">UserId</span> <span class="p">(</span><span class="kt">Columnar</span> <span class="n">f</span> <span class="kt">Text</span><span class="p">)</span> <span class="kr">deriving</span> <span class="kt">Generic</span>
-    <span class="n">primaryKey</span> <span class="ow">=</span> <span class="kt">UserId</span> <span class="o">&lt;$&gt;</span> <span class="n">_userEmail</span>
+    <span class="n">primaryKey</span> <span class="ow">=</span> <span class="kt">UserId</span> <span class="o">.</span> <span class="n">_userEmail</span>
+<span class="kr">instance</span> <span class="kt">Beamable</span> <span class="p">(</span><span class="kt">PrimaryKey</span> <span class="kt">UserT</span><span class="p">)</span>
 </pre></div>
 
 
-<p>We use the applicative <code>&lt;$&gt;</code> operator to simplify our definiton for
-<code>primaryKey</code>, relying on the applicative instance for <code>(a -&gt;)</code>.</p>
-<div class="codehilite"><pre><span></span><span class="kr">type</span> <span class="kt">UserId</span> <span class="ow">=</span> <span class="kt">PrimaryKey</span> <span class="kt">UserT</span> <span class="kt">Identity</span>
-<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Show</span> <span class="kt">UserId</span>
-<span class="kr">deriving</span> <span class="kr">instance</span> <span class="kt">Eq</span> <span class="kt">UserId</span>
-</pre></div>
-
-
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The standalone <code>Beamable</code> instances are quite ugly. Luckily, the new
+deriving strategies extension in GHC 8.2 will allow us to write the
+<code>Beamable</code> instance 'in-line', so we can write <code>deriving (Generic,
+Beamable)</code> instead.</p>
+</div>
 <h2 id="defining-our-database">Defining our database</h2>
 <p>Now that we have our table, we're going to define a type to hold information about our
 database. Defining our database is going to follow the same pattern as defining a table. We'll
 define a higher-kinded datatype and then declare an instance of <code>Database</code>, and let the compiler
 figure most of it out.</p>
-<p>A database is made up of a collection of 'entities', of which tables are just one type.</p>
+<p>Tables are a collection of <code>Columnar</code> values. Databases are a collection of
+entities, such as tables. Many database systems can also hold other entities
+(such as views, domain types, etc). Beam allows you to declare these as well <sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup>.</p>
+<p>Our database consists of only one table.</p>
 <div class="codehilite"><pre><span></span><span class="kr">data</span> <span class="kt">ShoppingCartDb</span> <span class="n">f</span> <span class="ow">=</span> <span class="kt">ShoppingCartDb</span>
-                      <span class="p">{</span> <span class="n">_shoppingCartUsers</span> <span class="ow">::</span> <span class="n">f</span> <span class="kt">UserT</span> <span class="p">}</span>
+                      <span class="p">{</span> <span class="n">_shoppingCartUsers</span> <span class="ow">::</span> <span class="n">f</span> <span class="p">(</span><span class="kt">TableEntity</span> <span class="kt">UserT</span><span class="p">)</span> <span class="p">}</span>
                         <span class="kr">deriving</span> <span class="kt">Generic</span>
 
 <span class="kr">instance</span> <span class="kt">Database</span> <span class="kt">ShoppingCartDb</span>
@@ -981,178 +1055,487 @@ figure most of it out.</p>
 involves giving each of the tables in our database a name. If you've named all your database
 selectors using camel case, beam can automatically figure out what all the table names should be. If
 you haven't, or you have multiple tables holding the same type in your database, you might have to
-manually name your tables. For now, we'll let beam do the hard work.</p>
-<div class="codehilite"><pre><span></span><span class="nf">shoppingCartDb</span> <span class="ow">::</span> <span class="kt">DatabaseSettings</span> <span class="kt">ShoppingCartDb</span>
-<span class="nf">shoppingCartDb</span> <span class="ow">=</span> <span class="n">autoDbSettings</span>
+manually name your tables. For now, we'll let beam do the hard work <sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup>.</p>
+<div class="codehilite"><pre><span></span><span class="nf">shoppingCartDb</span> <span class="ow">::</span> <span class="kt">DatabaseSettings</span> <span class="n">be</span> <span class="kt">ShoppingCartDb</span>
+<span class="nf">shoppingCartDb</span> <span class="ow">=</span> <span class="n">defaultDbSettings</span>
 </pre></div>
 
 
 <h2 id="adding-users-to-our-database">Adding users to our database</h2>
-<p>Let's add some users to our database. First, we'll open a connection to a SQLite3 database using
-beam.  The <code>openDatabase</code> function will open the database and optionally attempt to make the
-schema of the opened database match the schema implied by the data types. Below we use the
-<code>openDatabaseDebug</code> function to put beam into debug mode. This will cause beam to log every sql
-statement executed. <code>openDatabaseDebug</code> and <code>openDatabase</code> have the same type signature, so they can
-be used interchangeably. In the call below, we pass in <code>AutoMigrate</code> to have beam automatically
-attempt to match up the real database schema with what it would expect based on the Haskell types.</p>
-<div class="codehilite"><pre><span></span><span class="nf">main</span> <span class="ow">::</span> <span class="kt">IO</span> <span class="nb">()</span>
-<span class="nf">main</span> <span class="ow">=</span> <span class="kr">do</span> <span class="n">beam</span> <span class="ow">&lt;-</span> <span class="n">openDatabaseDebug</span> <span class="n">shoppingCartDb</span> <span class="kt">AutoMigrate</span> <span class="p">(</span><span class="kt">Sqlite3Settings</span> <span class="s">&quot;shoppingcart1.db&quot;</span><span class="p">)</span>
+<p>Let's add some users to our database. As we said above, beam is
+backend-agnostic. However, backend integration libraries are maintained in the
+official beam repository. The <code>beam-sqlite</code> package offers straightforwards
+integration with the <code>sqlite-simple</code> library.</p>
+<p>First, let's create a sqlite3 database with the right schema. Open up terminal, and do</p>
+<div class="codehilite"><pre><span></span><span class="gp">$</span> sqlite3 shoppingcart1.db
+<span class="go">SQLite version 3.14.0 2016-07-26 15:17:14</span>
+<span class="go">Enter &quot;.help&quot; for usage hints.</span>
+<span class="go">sqlite&gt; CREATE TABLE cart_users (email VARCHAR NOT NULL, first_name VARCHAR NOT NULL, last_name VARCHAR NOT NULL, password VARCHAR NOT NULL, PRIMARY KEY( email ));</span>
+<span class="go">sqlite&gt;</span>
 </pre></div>
 
 
-<p>To make sure that beam correctly inferred the database schema, let's dump it.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">dumpSchema</span> <span class="n">shoppingCartDb</span>
+<p>Now, let's open the database in Haskell.</p>
+<div class="codehilite"><pre><span></span><span class="kr">import</span> <span class="nn">Database.SQLite.Simple</span>
+
+<span class="nf">conn</span> <span class="ow">&lt;-</span> <span class="n">open</span> <span class="s">&quot;shoppingcart1.db&quot;</span>
 </pre></div>
 
 
-<p>This will dump the SQL CREATE TABLE statements to the console.</p>
-<div class="codehilite"><pre><span></span>Dumping database schema ...
-CREATE TABLE cart_users (email VARCHAR NOT NULL, first_name VARCHAR NOT NULL, last_name VARCHAR NOT NULL, password VARCHAR NOT NULL, PRIMARY KEY( email ))
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Previous versions of beam would attempt automatic schema migration. This is
+dangerous and not required for many use cases. A more powerful
+implementation of this functionality has been moved into the optional
+<code>beam-migrate</code> package.
+See <a href="../../schema-guide/migrations/">the appropriate documentation</a></p>
+</div>
+<p>Now let's add a few users. We'll give each user an MD5 encoded password too.
+We'll use the <code>withDatabaseDebug</code> function (supplied by beam) to output the
+statements that beam would normally run. In production, you'd use the
+<code>withDatabase</code> function, or use the backend integration packages to directly use
+the underlying backend library.</p>
+<div class="codehilite"><pre><span></span><span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="cm">{- for debug output -}</span> <span class="n">conn</span> <span class="o">$</span> <span class="n">runInsert</span> <span class="o">$</span>
+<span class="nf">insert</span> <span class="p">(</span><span class="n">_shoppingCartUsers</span> <span class="n">shoppingCartDb</span><span class="p">)</span> <span class="o">$</span>
+<span class="nf">insertValues</span> <span class="p">[</span> <span class="kt">User</span> <span class="s">&quot;james@example.com&quot;</span> <span class="s">&quot;James&quot;</span> <span class="s">&quot;Smith&quot;</span> <span class="s">&quot;b4cc344d25a2efe540adbf2678e2304c&quot;</span> <span class="cm">{- james -}</span>
+             <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;betty@example.com&quot;</span> <span class="s">&quot;Betty&quot;</span> <span class="s">&quot;Jones&quot;</span> <span class="s">&quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;</span> <span class="cm">{- betty -}</span>
+             <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;sam@example.com&quot;</span> <span class="s">&quot;Sam&quot;</span> <span class="s">&quot;Taylor&quot;</span> <span class="s">&quot;332532dcfaa1cbf61e2a266bd723612c&quot;</span> <span class="cm">{- sam -}</span> <span class="p">]</span>
 </pre></div>
 
 
-<p>Beam automatically converted our <code>UserT</code> table in the <code>_shoppingCartUsers</code> selector to a table named
-<code>cart_users</code>. As we stated above, this comes from un-CamelCase-ing the selector name and dropping
-the first component. Beam followed the same rule to derive the column names.</p>
-<p>Now let's add a few users. We'll give each user an MD5 encoded password too.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-           <span class="kr">do</span> <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;james@example.com&quot;</span> <span class="s">&quot;James&quot;</span> <span class="s">&quot;Smith&quot;</span> <span class="s">&quot;b4cc344d25a2efe540adbf2678e2304c&quot;</span> <span class="cm">{- james -}</span><span class="p">)</span>
-              <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;betty@example.com&quot;</span> <span class="s">&quot;Betty&quot;</span> <span class="s">&quot;Jones&quot;</span> <span class="s">&quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;</span> <span class="cm">{- betty -}</span><span class="p">)</span>
-              <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;sam@example.com&quot;</span> <span class="s">&quot;Sam&quot;</span> <span class="s">&quot;Taylor&quot;</span> <span class="s">&quot;332532dcfaa1cbf61e2a266bd723612c&quot;</span> <span class="cm">{- sam -}</span><span class="p">)</span>
-</pre></div>
-
-
-<p>The <code>insertInto</code> function inserts a value into a table that can hold that type.</p>
+<p>The <code>runInsert</code> function runs an insert statement, which we construct using the
+<code>insert</code> function. Since we're inserting concrete values, we use the
+<code>insertValues</code> function to supply the values. We can also use the
+<code>insertExpressions</code> function to insert arbitrary SQL expressions, or the
+<code>insertFrom</code> to insert the results of an arbitrary select (the <code>INSERT INTO ..
+SELECT ..</code> syntax).</p>
 <p>Because we're in debug mode, we'll see the SQL that beam is running:</p>
-<div class="codehilite"><pre><span></span>Will execute INSERT INTO cart_users VALUES (?, ?, ?, ?) with [SqlString &quot;james@example.com&quot;,SqlString &quot;James&quot;,SqlString &quot;Smith&quot;,SqlString &quot;b4cc344d25a2efe540adbf2678e2304c&quot;]
-Will execute INSERT INTO cart_users VALUES (?, ?, ?, ?) with [SqlString &quot;betty@example.com&quot;,SqlString &quot;Betty&quot;,SqlString &quot;Jones&quot;,SqlString &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;]
-Will execute INSERT INTO cart_users VALUES (?, ?, ?, ?) with [SqlString &quot;sam@example.com&quot;,SqlString &quot;Sam&quot;,SqlString &quot;Taylor&quot;,SqlString &quot;332532dcfaa1cbf61e2a266bd723612c&quot;]
+<div class="codehilite"><pre><span></span>INSERT INTO &quot;cart_users&quot;(&quot;email&quot;, &quot;first_name&quot;, &quot;last_name&quot;, &quot;password&quot;) VALUES (?, ?, ?, ?), (?, ?, ?, ?), (?, ?, ?, ?)
+-- With values: [SQLText &quot;james@example.com&quot;,SQLText &quot;James&quot;,SQLText &quot;Smith&quot;,SQLText &quot;b4cc344d25a2efe540adbf2678e2304c&quot;,SQLText &quot;betty@example.com&quot;,SQLText &quot;Betty&quot;,SQLText &quot;Jones&quot;,SQLText &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;,SQLText &quot;sam@example.com&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Taylor&quot;,SQLText &quot;332532dcfaa1cbf61e2a266bd723612c&quot;]
 </pre></div>
 
 
+<p>The <code>?</code> represent the values passed to the database (beam uses the backend's
+value interpolation to avoid SQL injection attacks).</p>
 <h2 id="querying-the-database">Querying the database</h2>
-<p>Now let's write some queries for the database. You can think of queries in Beam as similar to lists.
-Like lists you can filter them (SQL WHERE clauses), take only a certain number of items from them
-(SQL LIMIT clauses), and drop a certain number of items from them (SQL OFFSET clauses).</p>
-<p>Let's look at a simple example. Let's get all users.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">putStrLn</span> <span class="s">&quot;all users: &quot;</span>
-          <span class="kt">Success</span> <span class="n">allUsers</span> <span class="ow">&lt;-</span> <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-                              <span class="n">queryList</span> <span class="p">(</span><span class="n">all_</span> <span class="n">usersT</span><span class="p">)</span>
-          <span class="n">mapM_</span> <span class="p">(</span><span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">allUsers</span>
-          <span class="n">putStrLn</span> <span class="s">&quot;----</span><span class="se">\n\n</span><span class="s">&quot;</span>
+<p>Now let's write some queries for the database. Let's get all the users we just
+added. Click between the tabs to see the SQL and console output generated</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-sql" aria-controls="tab-0-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-output" aria-controls="tab-0-output" role="tab" data-toggle="tab" data-lang="output">Output</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">let</span> <span class="n">allUsers</span> <span class="ow">=</span> <span class="n">all_</span> <span class="p">(</span><span class="n">_shoppingCartUsers</span> <span class="n">shoppingCartDb</span><span class="p">)</span>
+
+<span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="n">users</span> <span class="ow">&lt;-</span> <span class="n">runSelectReturningList</span> <span class="o">$</span> <span class="n">select</span> <span class="n">allUsers</span>
+  <span class="n">mapM_</span> <span class="p">(</span><span class="n">liftIO</span> <span class="o">.</span> <span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">users</span>
 </pre></div>
 
-
-<p>When run, you should get output like the following:</p>
-<div class="codehilite"><pre><span></span>Will execute SELECT `t0`.`email`, `t0`.`first_name`, `t0`.`last_name`, `t0`.`password` FROM  cart_users AS t0 with []
-User {_userEmail = &quot;james@example.com&quot;, _userFirstName = &quot;James&quot;, _userLastName = &quot;Smith&quot;, _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;}
-User {_userEmail = &quot;betty@example.com&quot;, _userFirstName = &quot;Betty&quot;, _userLastName = &quot;Jones&quot;, _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;}
-User {_userEmail = &quot;sam@example.com&quot;, _userFirstName = &quot;Sam&quot;, _userLastName = &quot;Taylor&quot;, _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;}
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span> <span class="c1">-- With values: []</span>
 </pre></div>
 
-
-<p>Next let's suppose you wanted to sort the users into order by their first name. We can use the
-<code>orderBy</code> function to order the query results. This is similar to the <code>sortBy</code> function for lists.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">putStrLn</span> <span class="s">&quot;users sorted by first name:&quot;</span>
-          <span class="kt">Success</span> <span class="n">sortedUsersByFirstName</span> <span class="ow">&lt;-</span> <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-                                            <span class="n">queryList</span> <span class="o">$</span> <span class="n">orderBy</span> <span class="p">(</span><span class="n">asc_</span> <span class="o">.</span> <span class="n">_userFirstName</span><span class="p">)</span> <span class="p">(</span><span class="n">all_</span> <span class="n">usersT</span><span class="p">)</span>
-          <span class="n">mapM_</span> <span class="p">(</span><span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">sortedUsersByFirstName</span>
-          <span class="n">putStrLn</span> <span class="s">&quot;----</span><span class="se">\n\n</span><span class="s">&quot;</span>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-output">
+            <div class="codehilite"><pre><span></span>User {_userEmail = &quot;james@example.com&quot;,
+      _userFirstName = &quot;James&quot;,
+      _userLastName = &quot;Smith&quot;,
+      _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;} --
+User {_userEmail = &quot;betty@example.com&quot;,
+      _userFirstName = &quot;Betty&quot;,
+      _userLastName = &quot;Jones&quot;,
+      _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;} --
+User {_userEmail = &quot;sam@example.com&quot;,
+      _userFirstName = &quot;Sam&quot;,
+      _userLastName = &quot;Taylor&quot;,
+      _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;} --
 </pre></div>
 
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code>--</code> at the ends of the console output lines are an artifact of the
+documentation build process. They won't appear in your console.</p>
+</div>
+<p>Next let's suppose you wanted to sort the users into order by their first name,
+and then descending by their last name. We can use the <code>orderBy_</code> function to
+order the query results. This is similar to the <code>sortBy</code> function for lists.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-sql" aria-controls="tab-1-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-output" aria-controls="tab-1-output" role="tab" data-toggle="tab" data-lang="output">Output</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">let</span> <span class="n">sortUsersByFirstName</span> <span class="ow">=</span> <span class="n">orderBy_</span> <span class="p">(</span><span class="nf">\</span><span class="n">u</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">asc_</span> <span class="p">(</span><span class="n">_userFirstName</span> <span class="n">u</span><span class="p">),</span> <span class="n">desc_</span> <span class="p">(</span><span class="n">_userLastName</span> <span class="n">u</span><span class="p">)))</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">_shoppingCartUsers</span> <span class="n">shoppingCartDb</span><span class="p">))</span>
 
-<p>The corresponding output:</p>
-<div class="codehilite"><pre><span></span>Will execute SELECT `t0`.`email`, `t0`.`first_name`, `t0`.`last_name`, `t0`.`password` FROM  cart_users AS t0 ORDER BY `t0`.`first_name` ASC with []
-User {_userEmail = &quot;betty@example.com&quot;, _userFirstName = &quot;Betty&quot;, _userLastName = &quot;Jones&quot;, _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;}
-User {_userEmail = &quot;james@example.com&quot;, _userFirstName = &quot;James&quot;, _userLastName = &quot;Smith&quot;, _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;}
-User {_userEmail = &quot;sam@example.com&quot;, _userFirstName = &quot;Sam&quot;, _userLastName = &quot;Taylor&quot;, _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;}
+<span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="n">users</span> <span class="ow">&lt;-</span> <span class="n">runSelectReturningList</span> <span class="o">$</span> <span class="n">select</span> <span class="n">sortUsersByFirstName</span>
+  <span class="n">mapM_</span> <span class="p">(</span><span class="n">liftIO</span> <span class="o">.</span> <span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">users</span>
 </pre></div>
 
-
-<p>We can also sort by more than one column.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">putStrLn</span> <span class="s">&quot;users sorted by first and last name:&quot;</span>
-          <span class="kt">Success</span> <span class="n">sortedUsersByFirstAndLastName</span> <span class="ow">&lt;-</span> <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-                                                   <span class="n">queryList</span> <span class="o">$</span> <span class="n">orderBy</span> <span class="p">(</span><span class="nf">\</span><span class="n">user</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">asc_</span> <span class="p">(</span><span class="n">_userFirstName</span> <span class="n">user</span><span class="p">),</span> <span class="n">asc_</span> <span class="p">(</span><span class="n">_userLastName</span> <span class="n">user</span><span class="p">)))</span> <span class="p">(</span><span class="n">all_</span> <span class="n">usersT</span><span class="p">)</span>
-          <span class="n">mapM_</span> <span class="p">(</span><span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">sortedUsersByFirstAndLastName</span>
-          <span class="n">putStrLn</span> <span class="s">&quot;----</span><span class="se">\n\n</span><span class="s">&quot;</span>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">ASC</span><span class="p">,</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">DESC</span> <span class="c1">-- With values: []</span>
 </pre></div>
 
-
-<p>Again, the output for convenience:</p>
-<div class="codehilite"><pre><span></span>Will execute SELECT `t0`.`email`, `t0`.`first_name`, `t0`.`last_name`, `t0`.`password` FROM  cart_users AS t0 ORDER BY `t0`.`first_name` ASC, `t0`.`last_name` ASC with []
-User {_userEmail = &quot;betty@example.com&quot;, _userFirstName = &quot;Betty&quot;, _userLastName = &quot;Jones&quot;, _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;}
-User {_userEmail = &quot;james@example.com&quot;, _userFirstName = &quot;James&quot;, _userLastName = &quot;Smith&quot;, _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;}
-User {_userEmail = &quot;sam@example.com&quot;, _userFirstName = &quot;Sam&quot;, _userLastName = &quot;Taylor&quot;, _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;}
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-output">
+            <div class="codehilite"><pre><span></span>User {_userEmail = &quot;betty@example.com&quot;,
+      _userFirstName = &quot;Betty&quot;,
+      _userLastName = &quot;Jones&quot;,
+      _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;} --
+User {_userEmail = &quot;james@example.com&quot;,
+      _userFirstName = &quot;James&quot;,
+      _userLastName = &quot;Smith&quot;,
+      _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;} --
+User {_userEmail = &quot;sam@example.com&quot;,
+      _userFirstName = &quot;Sam&quot;,
+      _userLastName = &quot;Taylor&quot;,
+      _userPassword = &quot;332532dcfaa1cbf61e2a266bd723612c&quot;} --
 </pre></div>
 
-
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
 <p>We can use <code>limit_</code> and <code>offset_</code> in a similar manner to <code>take</code> and <code>drop</code> respectively.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">putStrLn</span> <span class="s">&quot;the second user based on their first names&quot;</span>
-          <span class="kt">Success</span> <span class="p">[</span><span class="n">secondUser</span><span class="p">]</span> <span class="ow">&lt;-</span> <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-                                  <span class="n">queryList</span> <span class="o">$</span> <span class="n">limit_</span> <span class="mi">1</span> <span class="p">(</span><span class="n">offset_</span> <span class="mi">1</span> <span class="p">(</span><span class="n">orderBy</span> <span class="p">(</span><span class="n">asc_</span> <span class="o">.</span> <span class="n">_userFirstName</span><span class="p">)</span> <span class="p">(</span><span class="n">all_</span> <span class="n">usersT</span><span class="p">)))</span>
-          <span class="n">putStrLn</span> <span class="p">(</span><span class="n">show</span> <span class="n">secondUser</span><span class="p">)</span>
-          <span class="n">putStrLn</span> <span class="s">&quot;----</span><span class="se">\n\n</span><span class="s">&quot;</span>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-sql" aria-controls="tab-2-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-output" aria-controls="tab-2-output" role="tab" data-toggle="tab" data-lang="output">Output</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">let</span> <span class="n">boundedQuery</span> <span class="ow">::</span> <span class="kt">Q</span> <span class="kt">SqliteSelectSyntax</span> <span class="kr">_</span> <span class="kr">_</span> <span class="kr">_</span>
+    <span class="n">boundedQuery</span> <span class="ow">=</span> <span class="n">limit_</span> <span class="mi">1</span> <span class="o">$</span> <span class="n">offset_</span> <span class="mi">1</span> <span class="o">$</span>
+                   <span class="n">orderBy_</span> <span class="p">(</span><span class="n">asc_</span> <span class="o">.</span> <span class="n">_userFirstName</span><span class="p">)</span> <span class="o">$</span>
+                   <span class="n">all_</span> <span class="p">(</span><span class="n">_shoppingCartUsers</span> <span class="n">shoppingCartDb</span><span class="p">)</span>
+
+<span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="n">users</span> <span class="ow">&lt;-</span> <span class="n">runSelectReturningList</span> <span class="p">(</span><span class="n">select</span> <span class="n">boundedQuery</span> <span class="ow">::</span> <span class="kt">SqlSelect</span> <span class="kt">SqliteSelectSyntax</span> <span class="kr">_</span><span class="p">)</span>
+  <span class="n">mapM_</span> <span class="p">(</span><span class="n">liftIO</span> <span class="o">.</span> <span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">users</span>
 </pre></div>
 
-
-<p>And the output:</p>
-<div class="codehilite"><pre><span></span>Will execute SELECT `t0`.`email`, `t0`.`first_name`, `t0`.`last_name`, `t0`.`password` FROM  cart_users AS t0 ORDER BY `t0`.`first_name` ASC LIMIT 1 OFFSET 1 with []
-User {_userEmail = &quot;james@example.com&quot;, _userFirstName = &quot;James&quot;, _userLastName = &quot;Smith&quot;, _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;}
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">ASC</span>
+<span class="k">LIMIT</span> <span class="mi">1</span>
+<span class="k">OFFSET</span> <span class="mi">1</span> <span class="c1">-- With values: []</span>
 </pre></div>
 
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-output">
+            <div class="codehilite"><pre><span></span>User {_userEmail = &quot;james@example.com&quot;,
+      _userFirstName = &quot;James&quot;,
+      _userLastName = &quot;Smith&quot;,
+      _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;} --
+</pre></div>
 
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The type signatures above are not necessary when run in GHCi. The
+documentation automates building and testing the queries, but the above
+results in strange type errors in GHC. This may be a compiler type-inference
+bug. More investigation is being carried out.</p>
+<p>Nevertheless, this shows how you could limit your queries to only work in a
+particular syntax.</p>
+<p>The <code>_</code> are type holes, which means GHC will happily infer these types, if
+the <code>PartialTypeSignatures</code> extension is turned on.</p>
+</div>
 <h2 id="aggregations">Aggregations</h2>
-<p>Sometimes we also want to group our data together and perform calculations over the groups of data. SQL calls these aggregations.</p>
-<p>The simplest aggregation is counting. We use the <code>aggregate</code> function to create aggregations.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">putStrLn</span> <span class="s">&quot;The total number of users&quot;</span>
-          <span class="kt">Success</span> <span class="p">[</span><span class="n">userCount</span><span class="p">]</span> <span class="ow">&lt;-</span> <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-                                 <span class="n">queryList</span> <span class="o">$</span> <span class="n">aggregate</span> <span class="p">(</span><span class="nf">\</span><span class="n">user</span> <span class="ow">-&gt;</span> <span class="n">count_</span> <span class="p">(</span><span class="n">_userEmail</span> <span class="n">user</span><span class="p">))</span> <span class="p">(</span><span class="n">all_</span> <span class="n">usersT</span><span class="p">)</span>
-          <span class="n">putStrLn</span> <span class="p">(</span><span class="n">show</span> <span class="n">userCount</span><span class="p">)</span>
-          <span class="n">putStrLn</span> <span class="s">&quot;----</span><span class="se">\n\n</span><span class="s">&quot;</span>
+<p>Sometimes we also want to group our data together and perform calculations over
+the groups of data. SQL calls these aggregations.</p>
+<p>The simplest aggregation is counting. We use the <code>aggregate_</code> function to create
+aggregations. For example, to count all users, we can use the <code>countAll_</code>
+aggregation. We also use the <code>runSelectReturningOne</code> function to get at most one
+record from the database.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-3-haskell" aria-controls="tab-3-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-sql" aria-controls="tab-3-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-3-output" aria-controls="tab-3-output" role="tab" data-toggle="tab" data-lang="output">Output</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-3-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">let</span> <span class="n">userCount</span> <span class="ow">=</span> <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="n">u</span> <span class="ow">-&gt;</span> <span class="n">as_</span> <span class="o">@</span><span class="kt">Int</span> <span class="n">countAll_</span><span class="p">)</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">_shoppingCartUsers</span> <span class="n">shoppingCartDb</span><span class="p">))</span>
+
+<span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="kt">Just</span> <span class="n">c</span> <span class="ow">&lt;-</span> <span class="n">runSelectReturningOne</span> <span class="o">$</span> <span class="n">select</span> <span class="n">userCount</span>
+  <span class="n">liftIO</span> <span class="o">$</span> <span class="n">putStrLn</span> <span class="p">(</span><span class="s">&quot;We have &quot;</span> <span class="o">++</span> <span class="n">show</span> <span class="n">c</span> <span class="o">++</span> <span class="s">&quot; users in the database&quot;</span><span class="p">)</span>
 </pre></div>
 
-
-<p>Maybe we'd like something a little more interesting, such as the number of users for each unique
-first name. We can also express these aggregations using the <code>aggregate</code> function. In order to get
-interesting results, we'll need to add more users to our database.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-           <span class="kr">do</span> <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;james@pallo.com&quot;</span> <span class="s">&quot;James&quot;</span> <span class="s">&quot;Pallo&quot;</span> <span class="s">&quot;b4cc344d25a2efe540adbf2678e2304c&quot;</span> <span class="cm">{- james -}</span><span class="p">)</span>
-              <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;betty@sims.com&quot;</span> <span class="s">&quot;Betty&quot;</span> <span class="s">&quot;Sims&quot;</span> <span class="s">&quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;</span> <span class="cm">{- betty -}</span><span class="p">)</span>
-              <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;james@oreily.com&quot;</span> <span class="s">&quot;James&quot;</span> <span class="s">&quot;O&#39;Reily&quot;</span> <span class="s">&quot;b4cc344d25a2efe540adbf2678e2304c&quot;</span> <span class="cm">{- james -}</span><span class="p">)</span>
-              <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;sam@sophitz.com&quot;</span> <span class="s">&quot;Sam&quot;</span> <span class="s">&quot;Sophitz&quot;</span> <span class="s">&quot;332532dcfaa1cbf61e2a266bd723612c&quot;</span> <span class="cm">{- sam -}</span><span class="p">)</span>
-              <span class="n">insertInto</span> <span class="n">usersT</span> <span class="p">(</span><span class="kt">User</span> <span class="s">&quot;sam@jely.com&quot;</span> <span class="s">&quot;Sam&quot;</span> <span class="s">&quot;Jely&quot;</span> <span class="s">&quot;332532dcfaa1cbf61e2a266bd723612c&quot;</span> <span class="cm">{- sam -}</span><span class="p">)</span>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span> <span class="c1">-- With values: []</span>
 </pre></div>
 
-
-<p>Now we can use <code>aggregate</code> to both group by a user's first name, and then count the number of users.</p>
-<div class="codehilite"><pre><span></span>          <span class="n">putStrLn</span> <span class="s">&quot;The number of users for each name&quot;</span>
-          <span class="kt">Success</span> <span class="n">countsByFirstName</span> <span class="ow">&lt;-</span> <span class="n">beamTxn</span> <span class="n">beam</span> <span class="o">$</span> <span class="nf">\</span><span class="p">(</span><span class="kt">ShoppingCartDb</span> <span class="n">usersT</span><span class="p">)</span> <span class="ow">-&gt;</span>
-                                       <span class="n">queryList</span> <span class="o">$</span>
-                                       <span class="n">aggregate</span> <span class="p">(</span><span class="nf">\</span><span class="n">user</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">group_</span> <span class="p">(</span><span class="n">_userFirstName</span> <span class="n">user</span><span class="p">),</span> <span class="n">count_</span> <span class="p">(</span><span class="n">_userEmail</span> <span class="n">user</span><span class="p">)))</span> <span class="o">$</span>
-                                       <span class="n">all_</span> <span class="n">usersT</span>
-          <span class="n">mapM</span> <span class="p">(</span><span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">countsByFirstName</span>
-          <span class="n">putStrLn</span> <span class="s">&quot;----</span><span class="se">\n\n</span><span class="s">&quot;</span>
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-3-output">
+            <div class="codehilite"><pre><span></span>We have 3 users in the database --
 </pre></div>
 
-
-<p>Beam produces a very reasonable looking SQL statement, and returns the correct results.</p>
-<div class="codehilite"><pre><span></span>The number of users for each name
-Will execute SELECT `t0`.`first_name`, COUNT(`t0`.`email`) FROM  cart_users AS t0 GROUP BY `t0`.`first_name` with []
-(&quot;Betty&quot;,2)
-(&quot;James&quot;,3)
-(&quot;Sam&quot;,3)
-----
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code>countAll_</code> is happy to unmarshal into any <code>Integral</code> type, so we use <code>as_</code>
+to constrain the type to <code>Int</code>.</p>
+</div>
+<p>Maybe we'd like something a little more interesting, such as the number of users
+for each unique first name. We can also express these aggregations using the
+<code>aggregate_</code> function. In order to get interesting results, we'll need to add
+more users to our database. We'll demonstrate using <code>withDatabase</code> to silence the debug messages.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-4-haskell" aria-controls="tab-4-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-4-sql" aria-controls="tab-4-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-4-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span>
+  <span class="n">runInsert</span> <span class="o">$</span>
+  <span class="n">insert</span> <span class="p">(</span><span class="n">_shoppingCartUsers</span> <span class="n">shoppingCartDb</span><span class="p">)</span> <span class="o">$</span>
+  <span class="n">insertValues</span> <span class="p">[</span> <span class="kt">User</span> <span class="s">&quot;james@pallo.com&quot;</span> <span class="s">&quot;James&quot;</span> <span class="s">&quot;Pallo&quot;</span> <span class="s">&quot;b4cc344d25a2efe540adbf2678e2304c&quot;</span> <span class="cm">{- james -}</span>
+               <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;betty@sims.com&quot;</span> <span class="s">&quot;Betty&quot;</span> <span class="s">&quot;Sims&quot;</span> <span class="s">&quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;</span> <span class="cm">{- betty -}</span>
+               <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;james@oreily.com&quot;</span> <span class="s">&quot;James&quot;</span> <span class="s">&quot;O&#39;Reily&quot;</span> <span class="s">&quot;b4cc344d25a2efe540adbf2678e2304c&quot;</span> <span class="cm">{- james -}</span>
+               <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;sam@sophitz.com&quot;</span> <span class="s">&quot;Sam&quot;</span> <span class="s">&quot;Sophitz&quot;</span> <span class="s">&quot;332532dcfaa1cbf61e2a266bd723612c&quot;</span> <span class="cm">{- sam -}</span>
+               <span class="p">,</span> <span class="kt">User</span> <span class="s">&quot;sam@jely.com&quot;</span> <span class="s">&quot;Sam&quot;</span> <span class="s">&quot;Jely&quot;</span> <span class="s">&quot;332532dcfaa1cbf61e2a266bd723612c&quot;</span> <span class="cm">{- sam -}</span> <span class="p">]</span>
 </pre></div>
 
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-4-sql">
+            <div class="codehilite"><pre><span></span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="ss">&quot;cart_users&quot;</span><span class="p">(</span><span class="ss">&quot;email&quot;</span><span class="p">,</span>
+                         <span class="ss">&quot;first_name&quot;</span><span class="p">,</span>
+                         <span class="ss">&quot;last_name&quot;</span><span class="p">,</span>
+                         <span class="ss">&quot;password&quot;</span><span class="p">)</span>
+<span class="k">VALUES</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+        <span class="o">?</span><span class="p">,</span>
+        <span class="o">?</span><span class="p">,</span>
+        <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+             <span class="o">?</span><span class="p">,</span>
+             <span class="o">?</span><span class="p">,</span>
+             <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+                  <span class="o">?</span><span class="p">,</span>
+                  <span class="o">?</span><span class="p">,</span>
+                  <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+                       <span class="o">?</span><span class="p">,</span>
+                       <span class="o">?</span><span class="p">,</span>
+                       <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
+                            <span class="o">?</span><span class="p">,</span>
+                            <span class="o">?</span><span class="p">,</span>
+                            <span class="o">?</span><span class="p">)</span> <span class="c1">-- With values: [SQLText &quot;james@pallo.com&quot;,SQLText &quot;James&quot;,SQLText &quot;Pallo&quot;,SQLText &quot;b4cc344d25a2efe540adbf2678e2304c&quot;,SQLText &quot;betty@sims.com&quot;,SQLText &quot;Betty&quot;,SQLText &quot;Sims&quot;,SQLText &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;,SQLText &quot;james@oreily.com&quot;,SQLText &quot;James&quot;,SQLText &quot;O&#39;Reily&quot;,SQLText &quot;b4cc344d25a2efe540adbf2678e2304c&quot;,SQLText &quot;sam@sophitz.com&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Sophitz&quot;,SQLText &quot;332532dcfaa1cbf61e2a266bd723612c&quot;,SQLText &quot;sam@jely.com&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Jely&quot;,SQLText &quot;332532dcfaa1cbf61e2a266bd723612c&quot;]</span>
+</pre></div>
 
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Now we can use <code>aggregate_</code> to both group by a user's first name, and then count
+the number of users.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-5-haskell" aria-controls="tab-5-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-5-sql" aria-controls="tab-5-sql" role="tab" data-toggle="tab" data-lang="sql">Sql</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-5-output" aria-controls="tab-5-output" role="tab" data-toggle="tab" data-lang="output">Output</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-5-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">let</span> <span class="n">numberOfUsersByName</span> <span class="ow">=</span> <span class="n">aggregate_</span> <span class="p">(</span><span class="nf">\</span><span class="n">u</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">group_</span> <span class="p">(</span><span class="n">_userFirstName</span> <span class="n">u</span><span class="p">),</span> <span class="n">as_</span> <span class="o">@</span><span class="kt">Int</span> <span class="n">countAll_</span><span class="p">))</span> <span class="o">$</span> 
+                          <span class="n">all_</span> <span class="p">(</span><span class="n">_shoppingCartUsers</span> <span class="n">shoppingCartDb</span><span class="p">)</span>
+
+<span class="nf">withDatabaseDebug</span> <span class="n">putStrLn</span> <span class="n">conn</span> <span class="o">$</span> <span class="kr">do</span>
+  <span class="n">countedByName</span> <span class="ow">&lt;-</span> <span class="n">runSelectReturningList</span> <span class="o">$</span> <span class="n">select</span> <span class="n">numberOfUsersByName</span>
+  <span class="n">mapM_</span> <span class="p">(</span><span class="n">liftIO</span> <span class="o">.</span> <span class="n">putStrLn</span> <span class="o">.</span> <span class="n">show</span><span class="p">)</span> <span class="n">countedByName</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-5-sql">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="c1">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-5-output">
+            <div class="codehilite"><pre><span></span>(&quot;Betty&quot;,
+ 2) --
+(&quot;James&quot;,
+ 3) --
+(&quot;Sam&quot;,
+ 3) --
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
 <h2 id="conclusion">Conclusion</h2>
-<p>In this tutorial, we've covered creating a database schema, opening up a beam database, inserting
-values into the database, and querying values from them. We used the knowledge we learned to create
-a partial shopping cart database that contains information about users. In the next tutorial, we'll
-delve deeper into the some of the query types and show how we can create relations between
-tables. We'll also use the monadic query interface to create SQL joins.</p>
+<p>In this tutorial, we've covered creating a database schema, opening up a beam
+database, inserting values into the database, and querying values from them. We
+used the knowledge we learned to create a partial shopping cart database that
+contains information about users. In the next tutorial, we'll delve deeper into
+the some of the query types and show how we can create relations between tables.
+We'll also use the monadic query interface to create SQL joins.</p>
 <p>Until next time!</p>
-<p>If you have any questions about beam, feel free to send them to travis@athougies.net . Pull requests and bug reports are welcome on <a href="https://github.com/tathougies/beam">GitHub</a>.</p>
+<p>If you have any questions about beam, feel free to send them to
+travis@athougies.net . Pull requests and bug reports are welcome
+on <a href="https://github.com/tathougies/beam">GitHub</a>.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Thanks to various bloggers for pointing this out. You can read more about this technique
+   <a href="https://typesandkinds.wordpress.com/2013/04/01/defunctionalization-for-the-win/">here</a>.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>Adding entities other than tables is covered in more depth in
+   the <a href="../../user-guide/databases/">user guide</a>.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>More on the default naming conventions can be found in
+   the <a href="../../user-guide/models/">models section</a> of the user guide. We'll talk
+   about how to override defaults in the next sections.&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
                 
                   
                 

@@ -15,7 +15,7 @@
     
     
       
-        <title>Extending - Beam Documentation</title>
+        <title>Custom queries - Beam Documentation</title>
       
     
     
@@ -80,11 +80,11 @@
             
               
                 <span class="md-header-nav__parent">
-                  Reference
+                  User Guide
                 </span>
               
             
-            Extending
+            Custom queries
           
         </span>
       </div>
@@ -275,10 +275,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
     
     <label class="md-nav__link" for="nav-4">
       User Guide
@@ -296,19 +298,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/getting-started/" title="Getting Started" class="md-nav__link">
-      Getting Started
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../user-guide/models/" title="Models" class="md-nav__link">
+    <a href="../models/" title="Models" class="md-nav__link">
       Models
     </a>
   </li>
@@ -320,7 +310,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/databases/" title="Databases" class="md-nav__link">
+    <a href="../databases/" title="Databases" class="md-nav__link">
       Databases
     </a>
   </li>
@@ -332,7 +322,38 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/basic/" title="Basic Queries" class="md-nav__link">
+    <a href="../backends/" title="Backends" class="md-nav__link">
+      Backends
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-4" type="checkbox" id="nav-4-4">
+    
+    <label class="md-nav__link" for="nav-4-4">
+      Queries
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-4">
+        Queries
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../queries/basic/" title="Basic Queries" class="md-nav__link">
       Basic Queries
     </a>
   </li>
@@ -344,7 +365,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/select/" title="More complex SELECTs" class="md-nav__link">
+    <a href="../queries/select/" title="More complex SELECTs" class="md-nav__link">
       More complex SELECTs
     </a>
   </li>
@@ -356,7 +377,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/ordering/" title="Ordering" class="md-nav__link">
+    <a href="../queries/ordering/" title="Ordering" class="md-nav__link">
       Ordering
     </a>
   </li>
@@ -368,7 +389,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/relationships/" title="Relationships" class="md-nav__link">
+    <a href="../queries/relationships/" title="Relationships" class="md-nav__link">
       Relationships
     </a>
   </li>
@@ -380,7 +401,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/aggregates/" title="Aggregates" class="md-nav__link">
+    <a href="../queries/aggregates/" title="Aggregates" class="md-nav__link">
       Aggregates
     </a>
   </li>
@@ -392,7 +413,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/combining-queries/" title="Combining queries" class="md-nav__link">
+    <a href="../queries/combining-queries/" title="Combining queries" class="md-nav__link">
       Combining queries
     </a>
   </li>
@@ -404,7 +425,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/window-functions/" title="Window functions" class="md-nav__link">
+    <a href="../queries/window-functions/" title="Window functions" class="md-nav__link">
       Window functions
     </a>
   </li>
@@ -416,9 +437,118 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/queries/advanced-features/" title="Advanced features" class="md-nav__link">
+    <a href="../queries/advanced-features/" title="Advanced features" class="md-nav__link">
       Advanced features
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="toc">
+        Custom queries
+      </label>
+    
+    <a href="./" title="Custom queries" class="md-nav__link md-nav__link--active">
+      Custom queries
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+  
+    <label class="md-nav__title" for="toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#custom-expressions" title="Custom expressions" class="md-nav__link">
+    Custom expressions
+  </a>
+  
+</li>
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-6" type="checkbox" id="nav-4-6">
+    
+    <label class="md-nav__link" for="nav-4-6">
+      Data Manipulation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-6">
+        Data Manipulation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../manipulation/insert/" title="INSERT" class="md-nav__link">
+      INSERT
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../manipulation/update/" title="UPDATE" class="md-nav__link">
+      UPDATE
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../manipulation/delete/" title="DELETE" class="md-nav__link">
+      DELETE
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
         
@@ -512,7 +642,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/backends/beam-postgres/" title="beam-postgres" class="md-nav__link">
+    <a href="../backends/beam-postgres/" title="beam-postgres" class="md-nav__link">
       beam-postgres
     </a>
   </li>
@@ -524,7 +654,7 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/backends/beam-sqlite/" title="beam-sqlite" class="md-nav__link">
+    <a href="../backends/beam-sqlite/" title="beam-sqlite" class="md-nav__link">
       beam-sqlite
     </a>
   </li>
@@ -536,122 +666,9 @@
 
 
   <li class="md-nav__item">
-    <a href="../../user-guide/custom-backends/" title="Writing a Custom Backend" class="md-nav__link">
+    <a href="../custom-backends/" title="Writing a Custom Backend" class="md-nav__link">
       Writing a Custom Backend
     </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
-    
-    <label class="md-nav__link" for="nav-7">
-      Reference
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        Reference
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../models/" title="Models" class="md-nav__link">
-      Models
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../expression/" title="Expressions" class="md-nav__link">
-      Expressions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../queries/" title="Queries" class="md-nav__link">
-      Queries
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-  
-
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="toc">
-    
-    
-      <label class="md-nav__link md-nav__link--active" for="toc">
-        Extending
-      </label>
-    
-    <a href="./" title="Extending" class="md-nav__link md-nav__link--active">
-      Extending
-    </a>
-    
-      
-<nav class="md-nav md-nav--secondary">
-  
-  
-  
-    <label class="md-nav__title" for="toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#custom-expressions" title="Custom expressions" class="md-nav__link">
-    Custom expressions
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#custom-queries" title="Custom queries" class="md-nav__link">
-    Custom queries
-  </a>
-  
-</li>
-      
-      
-      
-    </ul>
-  
-</nav>
-    
   </li>
 
         
@@ -667,13 +684,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
-    <label class="md-nav__link" for="nav-8">
+    <label class="md-nav__link" for="nav-7">
       About
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
+      <label class="md-nav__title" for="nav-7">
         About
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -745,13 +762,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#custom-queries" title="Custom queries" class="md-nav__link">
-    Custom queries
-  </a>
-  
-</li>
-      
       
       
     </ul>
@@ -767,7 +777,7 @@
               
                 
                 
-                  <h1>Extending</h1>
+                  <h1>Custom queries</h1>
                 
                 <p>The <code>beam-core</code> library and respective backends strive to expose the full power
 of each underlying database. If a particular feature is missing, please feel
@@ -782,12 +792,13 @@ can use the <code>customExpr_</code> function. Your backend's syntax must implem
 arity <em>n</em> and <em>n</em> arguments, which must all be <code>QGenExpr</code>s with the same thread
 parameter. The expressions may be from different contexts (i.e., you can pass an
 aggregate and scalar into the same <code>customExpr_</code>).</p>
-<p>The function supplied must return a <code>ByteString</code> corresponding to the custom bit
-of SQL that implements your expression. The function's arguments are <em>n</em>
-<code>ByteString</code>s corresponding to the expressions which will evaluate to the value
-of each of the arguments to <code>customExpr_</code>. The arguments are properly
-parenthesized and can be inserted whole into the final expression. You will
-likely need to explicitly supply a result type using the <code>as_</code> function.</p>
+<p>The function supplied must return a string-like expression that it can build
+using provided <code>IsString</code> and <code>Monoid</code> instances. The type of the expression is
+opaque to the user. The function's arguments will have the same type as the
+return type. Thus, they can be embedded into the returned expression using
+<code>mappend</code>. The arguments will be properly parenthesized and can be inserted
+whole into the final expression. You will likely need to explicitly supply a
+result type using the <code>as_</code> function.</p>
 <p>For example, below, we use <code>customExpr_</code> to access the <code>regr_intercept</code> and
 <code>regr_slope</code> functions in postgres.</p>
 <p>
@@ -827,15 +838,24 @@ likely need to explicitly supply a result type using the <code>as_</code> functi
     
                 </div>
                     </p>
-<p>Of course, this requires that the expression is easily expressible as a
-<code>ByteString</code>.</p>
-<h2 id="custom-queries">Custom queries</h2>
-<p>Sometimes you would like to drop down to raw SQL to write a query that will
-return an entire result. Beam supports this through the <code>customQuery_</code> function.
-Like <code>customExpr_</code>, this takes a function of <em>n</em> arity and <em>n</em> arguments, which
-may be either <code>QGenExpr</code>s or <code>Q</code>s from the same thread, select syntax, etc. The
-function supplied to <code>customQuery_</code> must return a <code>ByteString</code> and its arguments
-are <code>ByteString</code>s corresponding to the given <code>Q</code> or <code>QGenExpr</code> parameter.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Custom queries (i.e., embedding arbitrary expressions into <code>Q</code>) is currently
+being planned, but not implemented.</p>
+</div>
+<!-- ## Custom queries -->
+
+<!-- Sometimes you would like to drop down to raw SQL to write a query that will -->
+
+<!-- return an entire result. Beam supports this through the `customQuery_` function. -->
+
+<!-- Like `customExpr_`, this takes a function of *n* arity and *n* arguments, which -->
+
+<!-- may be either `QGenExpr`s or `Q`s from the same thread, select syntax, etc. The -->
+
+<!-- function supplied to `customQuery_` must return a `ByteString` and its arguments -->
+
+<!-- are `ByteString`s corresponding to the given `Q` or `QGenExpr` parameter. -->
                 
                   
                 
@@ -854,7 +874,7 @@ are <code>ByteString</code>s corresponding to the given <code>Q</code> or <code>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../queries/" title="Queries" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../queries/advanced-features/" title="Advanced features" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -863,19 +883,19 @@ are <code>ByteString</code>s corresponding to the given <code>Q</code> or <code>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Queries
+                Advanced features
               </span>
             </div>
           </a>
         
         
-          <a href="../../about/compatibility/" title="Compatibility Matrix" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../manipulation/insert/" title="INSERT" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Compatibility Matrix
+                INSERT
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">

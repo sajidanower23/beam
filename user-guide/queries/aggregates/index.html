@@ -83,6 +83,10 @@
                   User Guide
                 </span>
               
+                <span class="md-header-nav__parent">
+                  Queries
+                </span>
+              
             
             Aggregates
           
@@ -298,18 +302,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../../getting-started/" title="Getting Started" class="md-nav__link">
-      Getting Started
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../../models/" title="Models" class="md-nav__link">
       Models
     </a>
@@ -327,6 +319,39 @@
     </a>
   </li>
 
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../backends/" title="Backends" class="md-nav__link">
+      Backends
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-4" type="checkbox" id="nav-4-4" checked>
+    
+    <label class="md-nav__link" for="nav-4-4">
+      Queries
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-4">
+        Queries
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -493,6 +518,83 @@
     </nav>
   </li>
 
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../extensibility/" title="Custom queries" class="md-nav__link">
+      Custom queries
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-6" type="checkbox" id="nav-4-6">
+    
+    <label class="md-nav__link" for="nav-4-6">
+      Data Manipulation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
+      <label class="md-nav__title" for="nav-4-6">
+        Data Manipulation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manipulation/insert/" title="INSERT" class="md-nav__link">
+      INSERT
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manipulation/update/" title="UPDATE" class="md-nav__link">
+      UPDATE
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../../manipulation/delete/" title="DELETE" class="md-nav__link">
+      DELETE
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
     
       
       
@@ -624,82 +726,10 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      Reference
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        Reference
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/models/" title="Models" class="md-nav__link">
-      Models
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/expression/" title="Expressions" class="md-nav__link">
-      Expressions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/queries/" title="Queries" class="md-nav__link">
-      Queries
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../../../reference/extensibility/" title="Extending" class="md-nav__link">
-      Extending
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-8" type="checkbox" id="nav-8">
-    
-    <label class="md-nav__link" for="nav-8">
       About
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-8">
+      <label class="md-nav__title" for="nav-7">
         About
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -867,7 +897,7 @@ expressions as usual.</p>
     
         <div role="tabpanel" class="tab-pane " id="tab-0-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT COUNT(*) AS &quot;res0&quot;</span>
-<span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot;</span>
+<span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot; -- With values: []</span>
 </pre></div>
 
         </div>
@@ -923,7 +953,7 @@ group by the genre.</p>
 <span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot;</span>
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;</span>
 <span class="go">GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
-<span class="go">         &quot;t0&quot;.&quot;Name&quot;</span>
+<span class="go">         &quot;t0&quot;.&quot;Name&quot; -- With values: []</span>
 </pre></div>
 
         </div>
@@ -1003,7 +1033,7 @@ to be explicit about it, you can use the <code>allInGroupExplicitly_</code> quan
 <span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot;</span>
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;</span>
 <span class="go">GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
-<span class="go">         &quot;t0&quot;.&quot;Name&quot;</span>
+<span class="go">         &quot;t0&quot;.&quot;Name&quot; -- With values: [SQLInteger 1000]</span>
 </pre></div>
 
         </div>
@@ -1136,7 +1166,7 @@ subselect and add a <code>WHERE</code> clause. Either way, this is transparent t
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;</span>
 <span class="go">GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">         &quot;t0&quot;.&quot;Name&quot;</span>
-<span class="go">HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)</span>
+<span class="go">HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?) -- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1222,7 +1252,7 @@ over tracks.</p>
 <span class="go">   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t0&quot;</span>
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;)</span>
-<span class="go">WHERE (&quot;t0&quot;.&quot;res3&quot;)&gt;=(?)</span>
+<span class="go">WHERE (&quot;t0&quot;.&quot;res3&quot;)&gt;=(?) -- With values: [SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1323,7 +1353,7 @@ produced a <code>WHERE</code> clause on the outermost <code>SELECT</code>. If in
 <span class="go">   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">            &quot;t0&quot;.&quot;Name&quot;</span>
 <span class="go">   HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)) AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;)</span>
+<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;) -- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1427,7 +1457,7 @@ aggregate.</p>
 <span class="go">   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t1&quot;</span>
 <span class="go">WHERE ((&quot;t1&quot;.&quot;res3&quot;)&gt;=(?))</span>
-<span class="go">  AND ((&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;))</span>
+<span class="go">  AND ((&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;)) -- With values: [SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1536,7 +1566,7 @@ using the <code>subselect_</code> combinator.</p>
 <span class="go">      GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">               &quot;t0&quot;.&quot;Name&quot;</span>
 <span class="go">      HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)) AS &quot;t0&quot;) AS &quot;t1&quot;</span>
-<span class="go">WHERE (&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;)</span>
+<span class="go">WHERE (&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;) -- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
