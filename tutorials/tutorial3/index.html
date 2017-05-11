@@ -342,15 +342,27 @@
           
 
 
+  <li class="md-nav__item">
+    <a href="../../user-guide/expressions/" title="Expressions" class="md-nav__link">
+      Expressions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-4" type="checkbox" id="nav-4-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-5" type="checkbox" id="nav-4-5">
     
-    <label class="md-nav__link" for="nav-4-4">
+    <label class="md-nav__link" for="nav-4-5">
       Queries
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-4-4">
+      <label class="md-nav__title" for="nav-4-5">
         Queries
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -476,13 +488,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-6" type="checkbox" id="nav-4-6">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4-7" type="checkbox" id="nav-4-7">
     
-    <label class="md-nav__link" for="nav-4-6">
+    <label class="md-nav__link" for="nav-4-7">
       Data Manipulation
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="2">
-      <label class="md-nav__title" for="nav-4-6">
+      <label class="md-nav__title" for="nav-4-7">
         Data Manipulation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -1170,15 +1182,15 @@ a timestamp set by the database.</p>
         </div>
     
         <div role="tabpanel" class="tab-pane " id="tab-0-console">
-            <div class="codehilite"><pre><span></span><span class="go">Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:27,</span>
+            <div class="codehilite"><pre><span></span><span class="go">Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-10 22:26:14,</span>
 <span class="go">                                                                        _orderForUser = UserId &quot;james@example.com&quot;,</span>
 <span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),</span>
 <span class="go">                                                                        _orderShippingInfo = ShippingInfoId Nothing} --</span>
-<span class="go">Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-09 21:37:27,</span>
+<span class="go">Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-10 22:26:14,</span>
 <span class="go">                                                                        _orderForUser = UserId &quot;betty@example.com&quot;,</span>
 <span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 2}),</span>
 <span class="go">                                                                        _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))} --</span>
-<span class="go">Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:27,</span>
+<span class="go">Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-10 22:26:14,</span>
 <span class="go">                                                                        _orderForUser = UserId &quot;james@example.com&quot;,</span>
 <span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),</span>
 <span class="go">                                                                        _orderShippingInfo = ShippingInfoId Nothing} --</span>
@@ -1312,17 +1324,17 @@ orders.</p>
        _userFirstName = &quot;James&quot;,
        _userLastName = &quot;Smith&quot;,
        _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},Just (
-                                                                 Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:34, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
+                                                                 Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-10 22:26:21, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
 (User {_userEmail = &quot;james@example.com&quot;,
        _userFirstName = &quot;James&quot;,
        _userLastName = &quot;Smith&quot;,
        _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},Just (
-                                                                 Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:34, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
+                                                                 Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-10 22:26:21, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
 (User {_userEmail = &quot;betty@example.com&quot;,
        _userFirstName = &quot;Betty&quot;,
        _userLastName = &quot;Jones&quot;,
        _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;},Just (
-                                                                 Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-09 21:37:34, _orderForUser = UserId &quot;betty@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 2}), _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))})) --
+                                                                 Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-10 22:26:21, _orderForUser = UserId &quot;betty@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 2}), _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))})) --
 (User {_userEmail = &quot;sam@example.com&quot;,
        _userFirstName = &quot;Sam&quot;,
        _userLastName = &quot;Taylor&quot;,
@@ -1536,17 +1548,17 @@ order.</p>
     
         <div role="tabpanel" class="tab-pane " id="tab-5-out">
             <div class="codehilite"><pre><span></span>(
- Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:49,
+ Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-10 22:26:36,
                                                                          _orderForUser = UserId &quot;james@example.com&quot;,
                                                                          _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                          _orderShippingInfo = ShippingInfoId Nothing},24500) --
 (
-                                                                                                                                Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-09 21:37:49,
+                                                                                                                                Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-05-10 22:26:36,
                                                                                                                                                                                                         _orderForUser = UserId &quot;betty@example.com&quot;,
                                                                                                                                                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 2}),
                                                                                                                                                                                                         _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))},16500) --
 (
-                                                                                                                                                                                                                                                                                       Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:49,
+                                                                                                                                                                                                                                                                                       Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-10 22:26:36,
                                                                                                                                                                                                                                                                                                                                                                _orderForUser = UserId &quot;james@example.com&quot;,
                                                                                                                                                                                                                                                                                                                                                                _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                                                                                                                                                                                                                                                                                                                _orderShippingInfo = ShippingInfoId Nothing},2500) --
@@ -1727,11 +1739,11 @@ nullable primary keys to optionally include information.</p>
         </div>
     
         <div role="tabpanel" class="tab-pane " id="tab-7-out">
-            <div class="codehilite"><pre><span></span>Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-09 21:37:59,
+            <div class="codehilite"><pre><span></span>Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-05-10 22:26:45,
                                                                         _orderForUser = UserId &quot;james@example.com&quot;,
                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                         _orderShippingInfo = ShippingInfoId Nothing} --
-Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-09 21:37:59,
+Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-05-10 22:26:45,
                                                                         _orderForUser = UserId &quot;james@example.com&quot;,
                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                         _orderShippingInfo = ShippingInfoId Nothing} --
