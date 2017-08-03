@@ -419,6 +419,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#distinct-support" title="DISTINCT support" class="md-nav__link">
+    DISTINCT support
+  </a>
+  
+</li>
+      
       
       
     </ul>
@@ -790,6 +797,13 @@
         <li class="md-nav__item">
   <a href="#limitoffset-support" title="LIMIT/OFFSET support" class="md-nav__link">
     LIMIT/OFFSET support
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distinct-support" title="DISTINCT support" class="md-nav__link">
+    DISTINCT support
   </a>
   
 </li>
@@ -1186,22 +1200,22 @@ that returns no results.</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-20-haskell" aria-controls="tab-20-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-4-haskell" aria-controls="tab-4-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-20-sqlite3" aria-controls="tab-20-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+            <a href="#tab-4-sqlite3" aria-controls="tab-4-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-20-postgres" aria-controls="tab-20-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-4-postgres" aria-controls="tab-4-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-20-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-4-haskell">
             <div class="codehilite"><pre><span></span><span class="nf">offset_</span> <span class="mi">100</span> <span class="o">$</span> <span class="n">limit_</span> <span class="mi">10</span> <span class="o">$</span>
 <span class="nf">filter_</span> <span class="p">(</span><span class="nf">\</span><span class="n">customer</span> <span class="ow">-&gt;</span> <span class="p">((</span><span class="n">customerFirstName</span> <span class="n">customer</span> <span class="p">`</span><span class="n">like_</span><span class="p">`</span> <span class="s">&quot;Jo%&quot;</span><span class="p">)</span> <span class="o">&amp;&amp;.</span> <span class="p">(</span><span class="n">customerLastName</span> <span class="n">customer</span> <span class="p">`</span><span class="n">like_</span><span class="p">`</span> <span class="s">&quot;S%&quot;</span><span class="p">))</span> <span class="o">&amp;&amp;.</span>
                       <span class="p">(</span><span class="n">addressState</span> <span class="p">(</span><span class="n">customerAddress</span> <span class="n">customer</span><span class="p">)</span> <span class="o">==.</span> <span class="n">just_</span> <span class="s">&quot;CA&quot;</span> <span class="o">||.</span> <span class="n">addressState</span> <span class="p">(</span><span class="n">customerAddress</span> <span class="n">customer</span><span class="p">)</span> <span class="o">==.</span> <span class="n">just_</span> <span class="s">&quot;WA&quot;</span><span class="p">))</span> <span class="o">$</span>
@@ -1210,7 +1224,7 @@ that returns no results.</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-20-sqlite3">
+        <div role="tabpanel" class="tab-pane " id="tab-4-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,</span>
@@ -1235,7 +1249,7 @@ that returns no results.</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-20-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-4-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;CustomerId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;FirstName&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;LastName&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1256,6 +1270,56 @@ that returns no results.</p>
        <span class="k">OR</span> <span class="p">((</span><span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;State&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;WA&#39;</span><span class="p">)))</span>
 <span class="k">LIMIT</span> <span class="mf">0</span>
 <span class="k">OFFSET</span> <span class="mf">100</span>
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<h2 id="distinct-support"><code>DISTINCT</code> support</h2>
+<p>SQL can only return unique results from a query through the <code>SELECT DISTINCT</code>
+statement. Beam supports this using the <code>nub_</code> command. For example, to get all
+the unique postal codes where our customers live.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-23-haskell" aria-controls="tab-23-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-23-sqlite3" aria-controls="tab-23-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-23-postgres" aria-controls="tab-23-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-23-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">nub_</span> <span class="o">$</span> <span class="n">fmap</span> <span class="p">(</span><span class="n">addressPostalCode</span> <span class="o">.</span> <span class="n">customerAddress</span><span class="p">)</span> <span class="o">$</span>
+  <span class="n">all_</span> <span class="p">(</span><span class="n">customer</span> <span class="n">chinookDb</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-23-sqlite3">
+            <div class="codehilite"><pre><span></span><span class="go">SELECT DISTINCT &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res0&quot;</span>
+<span class="go">FROM &quot;Customer&quot; AS &quot;t0&quot; -- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-23-postgres">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;PostalCode&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span>
+<span class="k">FROM</span> <span class="s s-Name">&quot;Customer&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t0&quot;</span>
 </pre></div>
 
         </div>
