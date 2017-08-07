@@ -975,8 +975,90 @@ Similarly, <code>a &gt; ALL(b)</code> returns true if <code>a &gt; x</code> for 
 <code>&gt;=*.</code> operators. Like their unquantified counterparts, these operators yield a
 <code>QGenExpr</code> of type <code>Bool</code>. Unlike the unquantified operators, the second
 argument of these operators is of type <code>QQuantified</code>. You can create a
-<code>QQuantified</code> from a <code>QGenExpr</code> by using the <code>anyOf_</code> or <code>allOf_</code> functions,
-which correspond to the <code>ANY</code> and <code>ALL</code> syntax respectively.</p>
+<code>QQuantified</code> from a <code>QGenExpr</code> by using the <code>anyOf_/anyIn_</code> or <code>allOf_/allIn_</code>
+functions, which correspond to the <code>ANY</code> and <code>ALL</code> syntax respectively. <code>anyOf_</code>
+and <code>allOf_</code> take <code>Q</code> expressions (representing a query) and <code>anyIn_</code> and
+<code>allIn_</code> take lists of expressions.</p>
+<p>You can also use <code>in_</code> to use the common <code>IN</code> predicate.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-0-haskell" aria-controls="tab-0-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-sqlite3" aria-controls="tab-0-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-0-postgres" aria-controls="tab-0-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">limit_</span> <span class="mi">10</span> <span class="o">$</span>
+  <span class="n">filter_</span> <span class="p">(</span><span class="nf">\</span><span class="n">customer</span> <span class="ow">-&gt;</span> <span class="n">customerFirstName</span> <span class="n">customer</span> <span class="p">`</span><span class="n">in_</span><span class="p">`</span> <span class="p">[</span><span class="n">val_</span> <span class="s">&quot;Joe&quot;</span><span class="p">,</span> <span class="n">val_</span> <span class="s">&quot;Sam&quot;</span><span class="p">,</span> <span class="n">val_</span> <span class="s">&quot;Elizabeth&quot;</span><span class="p">])</span> <span class="o">$</span>
+  <span class="n">all_</span> <span class="p">(</span><span class="n">customer</span> <span class="n">chinookDb</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-sqlite3">
+            <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res0&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;FirstName&quot; AS &quot;res1&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;LastName&quot; AS &quot;res2&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Company&quot; AS &quot;res3&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Address&quot; AS &quot;res4&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;City&quot; AS &quot;res5&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;State&quot; AS &quot;res6&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Country&quot; AS &quot;res7&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;PostalCode&quot; AS &quot;res8&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Phone&quot; AS &quot;res9&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Fax&quot; AS &quot;res10&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Email&quot; AS &quot;res11&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;SupportRepId&quot; AS &quot;res12&quot;</span>
+<span class="go">FROM &quot;Customer&quot; AS &quot;t0&quot;</span>
+<span class="go">WHERE (&quot;t0&quot;.&quot;FirstName&quot;) IN (?,</span>
+<span class="go">                             ?,</span>
+<span class="go">                             ?)</span>
+<span class="go">LIMIT 10 -- With values: [SQLText &quot;Joe&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Elizabeth&quot;]</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;CustomerId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;FirstName&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;LastName&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Company&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Address&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;City&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res5&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;State&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res6&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Country&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res7&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;PostalCode&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res8&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Phone&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res9&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Fax&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res10&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Email&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res11&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;SupportRepId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res12&quot;</span>
+<span class="k">FROM</span> <span class="s s-Name">&quot;Customer&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t0&quot;</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;FirstName&quot;</span><span class="p">)</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">&#39;Joe&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;Sam&#39;</span><span class="p">,</span>
+                             <span class="s1">&#39;Elizabeth&#39;</span><span class="p">)</span>
+<span class="k">LIMIT</span> <span class="mf">10</span>
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
 <h2 id="case-when-else-statements"><code>CASE .. WHEN .. ELSE ..</code> statements</h2>
 <p>The SQL <code>CASE .. WHEN .. ELSE</code> construct can be used to implement a multi-way
 if. The corresponding beam syntax is</p>
@@ -1176,7 +1258,7 @@ pull request! See the section on <a href="../extensibility/">adding your own fun
       <script>app.initialize({url:{base:"../.."}})</script>
       
     
-<script type="text/javascript" language="javascript"  src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" language="javascript"  src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 <script type="text/javascript" language="javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript" language="javascript">
  $(document.body).tab();
