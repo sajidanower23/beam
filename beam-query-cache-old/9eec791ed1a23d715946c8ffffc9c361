@@ -1,0 +1,15 @@
+(
+ Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-09-26 00:08:24,
+                                                                         _orderForUser = UserId "james@example.com",
+                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
+                                                                         _orderShippingInfo = ShippingInfoId Nothing},24500) --
+(
+                                                                                                                                Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-09-26 00:08:24,
+                                                                                                                                                                                                        _orderForUser = UserId "betty@example.com",
+                                                                                                                                                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 2}),
+                                                                                                                                                                                                        _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))},16500) --
+(
+                                                                                                                                                                                                                                                                                       Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-09-26 00:08:24,
+                                                                                                                                                                                                                                                                                                                                                               _orderForUser = UserId "james@example.com",
+                                                                                                                                                                                                                                                                                                                                                               _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
+                                                                                                                                                                                                                                                                                                                                                               _orderShippingInfo = ShippingInfoId Nothing},2500) --

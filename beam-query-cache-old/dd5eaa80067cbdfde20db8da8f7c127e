@@ -1,0 +1,4 @@
+SELECT "t0"."PostalCode" AS "res0",
+       string_agg(COALESCE("t0"."City", ''), ',') AS "res1"
+FROM "Customer" AS "t0"
+GROUP BY "t0"."PostalCode"

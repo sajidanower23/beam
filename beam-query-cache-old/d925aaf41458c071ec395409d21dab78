@@ -1,0 +1,3 @@
+SELECT regr_intercept(("t0"."Bytes"), ("t0"."Milliseconds")) AS "res0",
+       regr_slope(("t0"."Bytes"), ("t0"."Milliseconds")) AS "res1"
+FROM "Track" AS "t0"

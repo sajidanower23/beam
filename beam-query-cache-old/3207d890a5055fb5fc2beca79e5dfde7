@@ -1,0 +1,14 @@
+SELECT "t0"."InvoiceId" AS "res0",
+       "t0"."CustomerId" AS "res1",
+       "t0"."InvoiceDate" AS "res2",
+       "t0"."BillingAddress" AS "res3",
+       "t0"."BillingCity" AS "res4",
+       "t0"."BillingState" AS "res5",
+       "t0"."BillingCountry" AS "res6",
+       "t0"."BillingPostalCode" AS "res7",
+       "t0"."Total" AS "res8",
+       RANK() OVER (
+                    ORDER BY "t0"."Total" ASC) AS "res9",
+       RANK() OVER (PARTITION BY "t0"."CustomerId"
+                    ORDER BY "t0"."Total" ASC) AS "res10"
+FROM "Invoice" AS "t0"

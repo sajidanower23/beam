@@ -1187,7 +1187,7 @@ by the Haskell type system ensure that the query is constructed correctly.</p>
      <span class="k">AND</span> <span class="p">(((</span><span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;State&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;CA&#39;</span><span class="p">))</span>
           <span class="k">OR</span> <span class="p">((</span><span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;State&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;WA&#39;</span><span class="p">)))</span>
    <span class="k">LIMIT</span> <span class="mf">10</span><span class="p">)</span> <span class="k">AS</span> <span class="s s-Name">&quot;t0&quot;</span>
-<span class="k">INNER</span> <span class="k">JOIN</span> <span class="s s-Name">&quot;Track&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t1&quot;</span>
+<span class="k">CROSS</span> <span class="k">JOIN</span> <span class="s s-Name">&quot;Track&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t1&quot;</span>
 </pre></div>
 
         </div>
@@ -1325,7 +1325,7 @@ possible, rather than shipping data to your application pre-processing.</p>
      <span class="k">AND</span> <span class="p">(((</span><span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;State&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;CA&#39;</span><span class="p">))</span>
           <span class="k">OR</span> <span class="p">((</span><span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;State&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;WA&#39;</span><span class="p">)))</span>
    <span class="k">LIMIT</span> <span class="mf">10</span><span class="p">)</span> <span class="k">AS</span> <span class="s s-Name">&quot;t0&quot;</span>
-<span class="k">INNER</span> <span class="k">JOIN</span> <span class="s s-Name">&quot;Track&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t1&quot;</span>
+<span class="k">CROSS</span> <span class="k">JOIN</span> <span class="s s-Name">&quot;Track&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t1&quot;</span>
 </pre></div>
 
         </div>

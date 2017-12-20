@@ -866,19 +866,34 @@ the <a href="user-guide/custom-backends/">manual section</a> for more.</p>
   compiler may need more help.</li>
 </ul>
 <h2 id="how-to-install">How to install</h2>
-<p>Beam is available via both <a href="https://hackage.haskell.org/packages/beam">Hackage</a>
-and <a href="https://www.stackage.org/package/beam">Stack</a>. For most Haskell
-installations, one of the two commands should work.</p>
-<div class="codehilite"><pre><span></span>cabal install beam-core beam-migrate &lt;backend&gt;
+<p>Beam <strong>isnt</strong> available via Hackage <em>or</em> Stack. Until a release is cut, put the
+following in your <code>stack.yaml</code> to build and use beam in your project!</p>
+<div class="codehilite"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">packages</span><span class="p p-Indicator">:</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">.</span>
+<span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">location</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">git</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/tathougies/beam.git</span>
+    <span class="l l-Scalar l-Scalar-Plain">commit</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">a3b5e0763843fed48c7eef53fa7d08cfe710342d</span>
+  <span class="l l-Scalar l-Scalar-Plain">extra-dep</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+  <span class="l l-Scalar l-Scalar-Plain">subdirs</span><span class="p p-Indicator">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">beam-core</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">beam-migrate</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">&lt;backend&gt;</span>
 </pre></div>
 
 
-<p>or</p>
-<div class="codehilite"><pre><span></span>stack install beam-core beam-migrate &lt;backend&gt;
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>the commit will need to be changed to whatever the latest commit of master is,
+or whichever commit you want to build from even.</p>
+</div>
+<p>and add the following to your <code>.cabal</code> file, in the <code>build-depends</code> section:</p>
+<div class="codehilite"><pre><span></span><span class="nf">beam</span><span class="o">-</span><span class="n">core</span><span class="p">,</span>
+<span class="nf">beam</span><span class="o">-</span><span class="n">migrate</span><span class="p">,</span>
+<span class="o">&lt;</span><span class="n">backend</span><span class="o">&gt;</span>
 </pre></div>
 
 
-<p>You will also need to install an appropriate backend. Available backends are</p>
+<p>Available backends are:</p>
 <ul>
 <li>
 <p><code>beam-postgres</code> -- A feature-complete backend for the Postgres RDBMS.

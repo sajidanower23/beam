@@ -1,0 +1,7 @@
+SELECT "t0"."id" AS "res0",
+       "t0"."date" AS "res1",
+       "t0"."for_user__email" AS "res2",
+       "t0"."ship_to_address__id" AS "res3",
+       "t0"."shipping_info__id" AS "res4"
+FROM "orders" AS "t0"
+WHERE ("t0"."shipping_info__id") IS NULL -- With values: []

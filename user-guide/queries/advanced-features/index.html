@@ -482,6 +482,19 @@
     SQL2003 T611: Elementary OLAP operations
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#null-ordering" title="Null Ordering" class="md-nav__link">
+    Null Ordering
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -785,6 +798,19 @@
     SQL2003 T611: Elementary OLAP operations
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#null-ordering" title="Null Ordering" class="md-nav__link">
+    Null Ordering
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -917,6 +943,64 @@ version of beam.</p>
 <p>This extension also provides various window functions for SQL. The only one beam
 currently implements is <code>RANK()</code> via the <code>rank_</code> function. Contributions are
 appreciated!</p>
+<h3 id="null-ordering">Null Ordering</h3>
+<p>This optional SQL2003 feature allows nulls to appear before or after non-null
+values in the sort ordering.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-postgres" aria-controls="tab-2-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <div class="codehilite"><pre><span></span><span class="nf">limit_</span> <span class="mi">10</span> <span class="o">$</span>
+<span class="nf">orderBy_</span> <span class="p">(</span><span class="nf">\</span><span class="n">e</span> <span class="ow">-&gt;</span> <span class="p">(</span><span class="n">asc_</span> <span class="p">(</span><span class="n">addressState</span> <span class="p">(</span><span class="n">employeeAddress</span> <span class="n">e</span><span class="p">)),</span> <span class="n">nullsLast_</span> <span class="p">(</span><span class="n">desc_</span> <span class="p">(</span><span class="n">addressCity</span> <span class="p">(</span><span class="n">employeeAddress</span> <span class="n">e</span><span class="p">))))</span> <span class="o">$</span>
+<span class="nf">all_</span> <span class="p">(</span><span class="n">employee</span> <span class="n">chinookDb</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-postgres">
+            <div class="codehilite"><pre><span></span><span class="k">on</span>
+<span class="n">the</span>
+<span class="n">commandline</span><span class="p">:</span>
+<span class="n">warning</span><span class="p">:</span>
+<span class="o">-</span><span class="n">fglasgow</span><span class="o">-</span><span class="n">exts</span>
+<span class="k">is</span>
+<span class="n">deprecated</span><span class="p">:</span>
+<span class="n">Use</span>
+<span class="n">individual</span>
+<span class="n">extensions</span>
+<span class="k">instead</span>
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="n">sr</span><span class="o">/</span><span class="mf">3</span><span class="n">mms1s3142j0j9pqvm1w5wtw0000gn</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">runghcXXXX13539632491323602331</span><span class="mf">.</span><span class="n">hs</span><span class="p">:</span><span class="mf">26</span><span class="p">:</span><span class="mf">1</span><span class="p">:</span>
+<span class="n">error</span><span class="p">:</span>
+<span class="n">parse</span>
+<span class="n">error</span>
+<span class="p">(</span><span class="n">possibly</span>
+<span class="n">incorrect</span>
+<span class="n">indentation</span>
+<span class="k">or</span>
+<span class="n">mismatched</span>
+<span class="n">brackets</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
 <h2 id="sql2003-t612-advanced-olap-operations">SQL2003 T612: Advanced OLAP operations</h2>
 <p>This provides both the <code>PERCENT_RANK()</code> and <code>CUME_DIST()</code> functions as
 <code>percentRank_</code> and <code>cumeDist_</code> respectively.</p>

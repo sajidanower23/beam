@@ -1,0 +1,9 @@
+SELECT "t0"."GenreId" AS "res0",
+       "t0"."Name" AS "res1",
+       COUNT(DISTINCT "t1"."UnitPrice") AS "res2",
+       (SUM(ALL "t1"."Milliseconds")) / (?) AS "res3"
+FROM "Genre" AS "t0"
+INNER JOIN "Track" AS "t1"
+GROUP BY "t0"."GenreId",
+         "t0"."Name"
+HAVING ((SUM(ALL "t1"."Milliseconds")) / (?))>=(?) -- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]

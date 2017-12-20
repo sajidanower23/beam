@@ -1,0 +1,12 @@
+Address {_addressId = Auto {unAuto = Just 2}, _addressLine1 = "222 Main Street",
+                                              _addressLine2 = Just "Ste 1",
+                                              _addressCity = "Houston",
+                                              _addressState = "TX",
+                                              _addressZip = "8888",
+                                              _addressForUser = UserId "betty@example.com"} --
+Address {_addressId = Auto {unAuto = Just 3}, _addressLine1 = "9999 Residence Ave",
+                                              _addressLine2 = Nothing,
+                                                              _addressCity = "Sugarland",
+                                                              _addressState = "TX",
+                                                              _addressZip = "8989",
+                                                              _addressForUser = UserId "betty@example.com"} --

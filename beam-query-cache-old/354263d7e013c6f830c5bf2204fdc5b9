@@ -1,0 +1,29 @@
+SELECT "t0"."email" AS "res0",
+       "t0"."first_name" AS "res1",
+       "t0"."last_name" AS "res2",
+       "t0"."password" AS "res3",
+       "t1"."res1" AS "res4",
+       "t2"."res1" AS "res5"
+FROM "cart_users" AS "t0"
+INNER JOIN
+  (SELECT "t0"."res0" AS "res0",
+          "t0"."res1" AS "res1"
+   FROM
+     (SELECT "t0"."email" AS "res0",
+             COUNT(*) AS "res1"
+      FROM "cart_users" AS "t0"
+      LEFT JOIN "orders" AS "t1" ON (("t1"."for_user__email")=("t0"."email"))
+      AND (("t1"."shipping_info__id") IS NULL)
+      GROUP BY "t0"."email") AS "t0") AS "t1"
+INNER JOIN
+  (SELECT "t0"."res0" AS "res0",
+          "t0"."res1" AS "res1"
+   FROM
+     (SELECT "t0"."email" AS "res0",
+             COUNT(*) AS "res1"
+      FROM "cart_users" AS "t0"
+      LEFT JOIN "orders" AS "t1" ON (("t1"."for_user__email")=("t0"."email"))
+      AND (("t1"."shipping_info__id") IS NOT NULL)
+      GROUP BY "t0"."email") AS "t0") AS "t2"
+WHERE (("t1"."res0")=("t0"."email"))
+  AND (("t2"."res0")=("t0"."email")) -- With values: []

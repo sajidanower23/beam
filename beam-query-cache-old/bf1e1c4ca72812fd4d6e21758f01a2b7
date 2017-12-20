@@ -1,0 +1,43 @@
+SELECT "t0"."res0" AS "res0",
+       "t0"."res1" AS "res1",
+       "t0"."res2" AS "res2",
+       "t0"."res3" AS "res3",
+       "t0"."res4" AS "res4",
+       "t0"."res5" AS "res5",
+       "t0"."res6" AS "res6",
+       "t0"."res7" AS "res7",
+       "t0"."res8" AS "res8",
+       "t0"."res9" AS "res9",
+       "t0"."res10" AS "res10",
+       "t0"."res11" AS "res11",
+       "t0"."res12" AS "res12",
+       "t1"."TrackId" AS "res13",
+       "t1"."Name" AS "res14",
+       "t1"."AlbumId" AS "res15",
+       "t1"."MediaTypeId" AS "res16",
+       "t1"."GenreId" AS "res17",
+       "t1"."Composer" AS "res18",
+       "t1"."Milliseconds" AS "res19",
+       "t1"."Bytes" AS "res20",
+       "t1"."UnitPrice" AS "res21"
+FROM
+  (SELECT "t0"."CustomerId" AS "res0",
+          "t0"."FirstName" AS "res1",
+          "t0"."LastName" AS "res2",
+          "t0"."Company" AS "res3",
+          "t0"."Address" AS "res4",
+          "t0"."City" AS "res5",
+          "t0"."State" AS "res6",
+          "t0"."Country" AS "res7",
+          "t0"."PostalCode" AS "res8",
+          "t0"."Phone" AS "res9",
+          "t0"."Fax" AS "res10",
+          "t0"."Email" AS "res11",
+          "t0"."SupportRepId" AS "res12"
+   FROM "Customer" AS "t0"
+   WHERE ((("t0"."FirstName") LIKE ('Jo%'))
+          AND (("t0"."LastName") LIKE ('S%')))
+     AND ((("t0"."State") = ('CA'))
+          OR (("t0"."State") = ('WA')))
+   LIMIT 10) AS "t0"
+CROSS JOIN "Track" AS "t1"

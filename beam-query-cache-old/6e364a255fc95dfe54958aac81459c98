@@ -1,0 +1,13 @@
+SELECT "t1"."email" AS "res0",
+       "t1"."first_name" AS "res1",
+       "t1"."last_name" AS "res2",
+       "t1"."password" AS "res3",
+       "t0"."id" AS "res4",
+       "t0"."address1" AS "res5",
+       "t0"."address2" AS "res6",
+       "t0"."city" AS "res7",
+       "t0"."state" AS "res8",
+       "t0"."zip" AS "res9",
+       "t0"."for_user__email" AS "res10"
+FROM "addresses" AS "t0"
+INNER JOIN "cart_users" AS "t1" ON ("t0"."for_user__email")=("t1"."email") -- With values: []

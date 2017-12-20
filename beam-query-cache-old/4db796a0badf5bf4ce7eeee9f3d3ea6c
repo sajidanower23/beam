@@ -1,0 +1,4 @@
+DELETE
+FROM "addresses"
+WHERE (("city")=(?))
+  AND (("for_user__email")=(?)) -- With values: [SQLText "Houston",SQLText "betty@example.com"]

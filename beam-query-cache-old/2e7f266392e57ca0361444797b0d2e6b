@@ -1,0 +1,18 @@
+INSERT INTO "orders"("id",
+                     "date",
+                     "for_user__email",
+                     "ship_to_address__id",
+                     "shipping_info__id")
+VALUES (NULL,
+        CURRENT_TIMESTAMP,
+        ?,
+        ?,
+        NULL), (NULL,
+                CURRENT_TIMESTAMP,
+                ?,
+                ?,
+                ?), (NULL,
+                     CURRENT_TIMESTAMP,
+                     ?,
+                     ?,
+                     NULL) --With values: [SQLText "james@example.com",SQLInteger 1,SQLText "betty@example.com",SQLInteger 2,SQLInteger 1,SQLText "james@example.com",SQLInteger 1]

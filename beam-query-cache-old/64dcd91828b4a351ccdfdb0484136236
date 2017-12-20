@@ -1,0 +1,25 @@
+SELECT "t1"."res0" AS "res0",
+       "t1"."res1" AS "res1",
+       "t0"."TrackId" AS "res2",
+       "t0"."Name" AS "res3",
+       "t0"."AlbumId" AS "res4",
+       "t0"."MediaTypeId" AS "res5",
+       "t0"."GenreId" AS "res6",
+       "t0"."Composer" AS "res7",
+       "t0"."Milliseconds" AS "res8",
+       "t0"."Bytes" AS "res9",
+       "t0"."UnitPrice" AS "res10",
+       "t1"."res2" AS "res11",
+       "t1"."res3" AS "res12"
+FROM "Track" AS "t0"
+INNER JOIN
+  (SELECT "t0"."GenreId" AS "res0",
+          "t0"."Name" AS "res1",
+          COUNT(DISTINCT "t1"."UnitPrice") AS "res2",
+          (SUM(ALL "t1"."Milliseconds")) / (?) AS "res3"
+   FROM "Genre" AS "t0"
+   INNER JOIN "Track" AS "t1"
+   GROUP BY "t0"."GenreId",
+            "t0"."Name") AS "t1"
+WHERE (("t1"."res3")>=(?))
+  AND (("t0"."GenreId")=("t1"."res0")) -- With values: [SQLInteger 1000,SQLInteger 300000]

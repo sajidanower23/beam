@@ -1,0 +1,6 @@
+SELECT "t0"."AlbumId" AS "res0",
+       "t0"."Title" AS "res1",
+       "t0"."ArtistId" AS "res2"
+FROM "Album" AS "t0"
+ORDER BY "t0"."Title" ASC
+LIMIT 10

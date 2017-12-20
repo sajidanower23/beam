@@ -1,0 +1,14 @@
+UPDATE "addresses"
+SET "city"=?,
+    "zip"=?
+WHERE (("city")=(?))
+  AND (("state")=(?))-- With values: [SQLText "Sugarville",SQLText "12345",SQLText "Sugarland",SQLText "TX"]
+
+  SELECT "t0"."id" AS "res0",
+         "t0"."address1" AS "res1",
+         "t0"."address2" AS "res2",
+         "t0"."city" AS "res3",
+         "t0"."state" AS "res4",
+         "t0"."zip" AS "res5",
+         "t0"."for_user__email" AS "res6"
+  FROM "addresses" AS "t0" -- With values: []

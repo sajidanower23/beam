@@ -1,0 +1,7 @@
+SELECT "t0"."GenreId" AS "res0",
+       "t0"."Name" AS "res1",
+       COUNT("t1"."TrackId") AS "res2"
+FROM "Genre" AS "t0"
+INNER JOIN "Track" AS "t1"
+GROUP BY "t0"."GenreId",
+         "t0"."Name" -- With values: []
