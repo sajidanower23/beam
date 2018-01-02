@@ -1,5 +1,0 @@
-SELECT "t0"."email" AS "res0",
-       "t0"."first_name" AS "res1",
-       "t0"."last_name" AS "res2",
-       "t0"."password" AS "res3"
-FROM "cart_users" AS "t0" -- With values: []

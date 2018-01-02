@@ -1,2 +1,0 @@
-SELECT COUNT(*) AS "res0"
-FROM "Genre" AS "t0"

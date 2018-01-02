@@ -1,2 +1,0 @@
-SELECT DISTINCT "t0"."PostalCode" AS "res0"
-FROM "Customer" AS "t0"

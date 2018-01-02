@@ -1,4 +1,0 @@
-SELECT "t0"."first_name" AS "res0",
-       COUNT(*) AS "res1"
-FROM "cart_users" AS "t0"
-GROUP BY "t0"."first_name" -- With values: []

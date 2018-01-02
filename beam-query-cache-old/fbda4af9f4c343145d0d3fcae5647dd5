@@ -1,2 +1,0 @@
-SELECT COUNT(*) AS "res0"
-FROM "cart_users" AS "t0" -- With values: []

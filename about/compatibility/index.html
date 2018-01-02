@@ -1015,8 +1015,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left">E021-07 Character concatenation</td>
-<td align="center">TODO</td>
-<td align="left">Use <code>(&amp;#x007c;&amp;#0x007c).</code></td>
+<td align="center">FULL</td>
+<td align="left">Use <code>concat_</code></td>
 </tr>
 <tr>
 <td align="left">E021-08 UPPER and LOWER functions</td>
@@ -1160,13 +1160,13 @@ planned.</p>
 </tr>
 <tr>
 <td align="left">E061-11 Subqueries in IN predicate</td>
-<td align="center">TODO</td>
-<td align="left">Would be fixed by E061-03</td>
+<td align="center">FULL</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td align="left">E061-12 Subqueries in quantified comparison predicate</td>
-<td align="center">TODO</td>
-<td align="left">Would be fixed by E061-07</td>
+<td align="center">FULL</td>
+<td align="left"></td>
 </tr>
 <tr>
 <td align="left">E061-13 Correlated subqueries</td>
@@ -1431,7 +1431,7 @@ planned.</p>
 <tr>
 <td align="left">F041-02 INNER keyword</td>
 <td align="center">N/A</td>
-<td align="left">No semantic difference</td>
+<td align="left">The <code>INNER</code> keyword is just syntactic sugar. The regular joins do what you want.</td>
 </tr>
 <tr>
 <td align="left">F041-03 LEFT OUTER JOIN</td>
@@ -1445,8 +1445,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left">F041-05 Outer joins can be nested</td>
-<td align="center">TODO</td>
-<td align="left">Depends on <code>outerJoin_</code></td>
+<td align="center">FULL</td>
+<td align="left"><code>outerJoin_</code> can be nested arbitrarily</td>
 </tr>
 <tr>
 <td align="left">F041-07 The inner table in outer join can be used in inner join</td>
@@ -1505,8 +1505,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>F081 UNION and EXCEPT in views</strong></td>
-<td align="center">TODO</td>
-<td align="left">Depends on view support</td>
+<td align="center">FULL</td>
+<td align="left">Views can use any query</td>
 </tr>
 <tr>
 <td align="left"><strong>F111 Isolation levels other than SERIALIZABLE</strong></td>
@@ -1566,7 +1566,7 @@ planned.</p>
 <tr>
 <td align="left"><strong>F221 Explicit defaults</strong></td>
 <td align="center">FULL</td>
-<td align="left">Use <code>Auto Nothing</code> when inserting</td>
+<td align="left">Use <code>default_</code> and <code>insertExpressions</code> when inserting</td>
 </tr>
 <tr>
 <td align="left"><strong>F222 INSERT statement: DEFAULT VALUES clause</strong></td>
@@ -1575,8 +1575,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>F251 Domain support</strong></td>
-<td align="center">TODO</td>
-<td align="left">Use <code>DomainType</code></td>
+<td align="center">PARTIAL</td>
+<td align="left">Use <code>DomainTypeEntity</code></td>
 </tr>
 <tr>
 <td align="left"><strong>F261 CASE expression</strong></td>
@@ -1605,18 +1605,18 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>F262 Extended CASE expression</strong></td>
-<td align="center">PARTIAL</td>
-<td align="left">Beam allows any value in a <code>CASE</code> expression</td>
+<td align="center">WONTFIX</td>
+<td align="left">Beam allows any expression in a <code>WHEN</code> condition</td>
 </tr>
 <tr>
 <td align="left"><strong>F263 Comma-separater predicates in simple CASE expression</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">WONTFIX</td>
+<td align="left">Unnecessary</td>
 </tr>
 <tr>
 <td align="left"><strong>F271 Compound character literals</strong></td>
-<td align="center">PARTIAL</td>
-<td align="left">Backends may do this automatically</td>
+<td align="center">N/A</td>
+<td align="left">This is syntactic sugar</td>
 </tr>
 <tr>
 <td align="left"><strong>F281 LIKE enhancements</strong></td>
@@ -1630,8 +1630,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>F301 CORRESPONDING in query expressions</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">N/A</td>
+<td align="left">Beam set functions work based off the query result type, not the column name</td>
 </tr>
 <tr>
 <td align="left"><strong>F302 INTERSECT table operator</strong></td>
@@ -1730,8 +1730,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>F401 Extended joined table</strong></td>
-<td align="center">PARTIAL</td>
-<td align="left"><code>FULL OUTER JOIN</code> support planned with <code>outerJoin_</code>. <code>CROSS JOIN</code> is the same as <code>INNER JOIN</code>, and <code>NATURAL JOIN</code> has no meaning in beam.</td>
+<td align="center">FULL</td>
+<td align="left">Full outer join using <code>outerJoin_</code>. Natural join is not needed. A cross join is generated automatically when there are no join conditions.</td>
 </tr>
 <tr>
 <td align="left"><strong>F402 Named column joins for LOBs, arrays, and multisets</strong></td>
@@ -1970,8 +1970,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>F852 Top-level <order by clause> in views</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left">Views can use any query</td>
 </tr>
 <tr>
 <td align="left"><strong>F855 Nested <order by clause> in <query expression></strong></td>
@@ -1980,22 +1980,22 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>F856 Nested <fetch first clause> in <query expression></strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">N/A</td>
+<td align="left">Beam automatically optimizes nested <code>orderBy_</code> calls</td>
 </tr>
 <tr>
 <td align="left"><strong>F857 Top-level <fetch first clause> in <query expression></strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left"><code>limit_</code> and <code>offset_</code> are correctly translated to dialect-specific pagination mechanisms</td>
 </tr>
 <tr>
 <td align="left"><strong>F858 <fetch first clause> in subqueries</strong></td>
-<td align="center">TODO</td>
+<td align="center">FULL</td>
 <td align="left"></td>
 </tr>
 <tr>
 <td align="left"><strong>F859 Top-level <fetch first clause> in subqueries</strong></td>
-<td align="center">TODO</td>
+<td align="center">FULL</td>
 <td align="left"></td>
 </tr>
 <tr>
@@ -2005,22 +2005,22 @@ planned.</p>
 </tr>
 <tr>
 <td align="left">*<em>F861 Top-level <result offset clause> in <query expression></em></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left">See note for F587</td>
 </tr>
 <tr>
 <td align="left"><strong>F862 <result offset clause> in subqueries</strong></td>
-<td align="center">TODO</td>
+<td align="center">FULL</td>
 <td align="left"></td>
 </tr>
 <tr>
 <td align="left"><strong>F863 Nested <result offset clause> in <query expression></strong></td>
-<td align="center">TODO</td>
+<td align="center">FULL</td>
 <td align="left"></td>
 </tr>
 <tr>
-<td align="left"><strong>F864 TOp-level <result offset clause> in views</strong></td>
-<td align="center">TODO</td>
+<td align="left"><strong>F864 Top-level <result offset clause> in views</strong></td>
+<td align="center">FULL</td>
 <td align="left"></td>
 </tr>
 <tr>
@@ -2116,7 +2116,7 @@ planned.</p>
 <tr>
 <td align="left"><strong>S091 Basic array support</strong></td>
 <td align="center">PARTIAL</td>
-<td align="left">Supported via custom syntax in some backends (<code>beam-postgres</code> for example)</td>
+<td align="left">Supported in some backends (<code>beam-postgres</code> for example)</td>
 </tr>
 <tr>
 <td align="left"><strong>S092 Arrays of user-defined types</strong></td>
@@ -2330,7 +2330,7 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>T071 BIGINT data type</strong></td>
-<td align="center">TODO</td>
+<td align="center">FULL</td>
 <td align="left"></td>
 </tr>
 <tr>
@@ -2660,13 +2660,13 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>T611 Elementary OLAP operations</strong></td>
-<td align="center">PARTIAL</td>
+<td align="center">FULL</td>
 <td align="left">See <code>withWindow_</code>, <a href="../../user-guide/queries/window-functions/">window functions</a></td>
 </tr>
 <tr>
 <td align="left"><strong>T612 Advanced OLAP operations</strong></td>
 <td align="center">PARTIAL</td>
-<td align="left">Need <code>percentRank_</code>, <code>cumeDist_</code>, no exclusions yet</td>
+<td align="left">No exclusions yet. See <code>percentRank_</code>, <code>cumeDist_</code>, and <code>denseRank_</code></td>
 </tr>
 <tr>
 <td align="left"><strong>T613 Sampling</strong></td>
@@ -2675,13 +2675,13 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>T614 NTILE function</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left"><code>ntile_</code></td>
 </tr>
 <tr>
 <td align="left"><strong>T615 LEAD and LAG function</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left"><code>lead1_</code>, <code>lag1_</code>, <code>lead_</code>, <code>lag_</code>, <code>leadWithDefault_</code>, <code>lagWithDefault_</code></td>
 </tr>
 <tr>
 <td align="left"><strong>T616 Null treatment for LEAD and LAG functions</strong></td>
@@ -2690,13 +2690,13 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>T617 FIRST_VALUE and LAST_VALUE function</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left"><code>lastValue_</code> and <code>firstValue_</code> respectively</td>
 </tr>
 <tr>
 <td align="left"><strong>T618 NTH_VALUE function</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left"><code>nthValue_</code></td>
 </tr>
 <tr>
 <td align="left"><strong>T619 Nested window function</strong></td>
@@ -2710,8 +2710,8 @@ planned.</p>
 </tr>
 <tr>
 <td align="left"><strong>T621 Enhanced numeric functions</strong></td>
-<td align="center">TODO</td>
-<td align="left"></td>
+<td align="center">FULL</td>
+<td align="left">All functions and aggregates in <code>Database.Beam.Query.Extension</code></td>
 </tr>
 <tr>
 <td align="left"><strong>T641 Multiple column assignment</strong></td>

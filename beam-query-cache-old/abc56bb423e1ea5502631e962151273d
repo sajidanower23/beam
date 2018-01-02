@@ -1,7 +1,0 @@
-SELECT "t0"."ArtistId" AS "res0",
-       "t0"."Name" AS "res1",
-       "t1"."AlbumId" AS "res2",
-       "t1"."Title" AS "res3",
-       "t1"."ArtistId" AS "res4"
-FROM "Artist" AS "t0"
-LEFT JOIN "Album" AS "t1" ON ("t1"."ArtistId") = ("t0"."ArtistId")
