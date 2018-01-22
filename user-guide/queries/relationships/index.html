@@ -430,6 +430,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#full-inner-joins" title="Full inner joins" class="md-nav__link">
+    Full inner joins
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#one-to-many" title="One-to-many" class="md-nav__link">
     One-to-many
   </a>
@@ -862,6 +869,13 @@
     <ul class="md-nav__list" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#full-inner-joins" title="Full inner joins" class="md-nav__link">
+    Full inner joins
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#one-to-many" title="One-to-many" class="md-nav__link">
     One-to-many
   </a>
@@ -996,9 +1010,22 @@ provided sample Chinook database.</p>
 
 <p>This function prints each of our queries to standard output before running them.
 Using this function will let us see what SQL is executing.</p>
-<h2 id="one-to-many">One-to-many</h2>
-<p>Beam supports querying for one-to-many joins. For example, to get every
-<code>InvoiceLine</code> for each <code>Invoice</code>, use the <code>oneToMany_</code> combinator.</p>
+<h2 id="full-inner-joins">Full inner joins</h2>
+<p>Recall that the <code>Q</code> type is a monad. In many respects, <code>Q</code> operates like the
+list monad. For those unfamiliar, the monadic bind operator for <code>[]</code> is defined
+as <code>concatMap</code>. Thus,</p>
+<div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">a</span> <span class="ow">&lt;-</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+   <span class="n">b</span> <span class="ow">&lt;-</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+   <span class="n">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+
+<p>is equivalent to <code>[(1,4),(1,5),(1,6),(2,4),(2,5),(2,6),(3,4),(3,5),(3,6)]</code>.</p>
+<p>This operation is similar to the cartesian product from set theory or the <em>inner
+join</em> from relational algebra. The <code>Q</code> monad fully supports this notion of join,
+and in fact, every other join is built off of this primitive.</p>
+<p>For example, to get every row from the invoice table and every row from the
+invoice line table, with no attention paid to any relationship between the two:</p>
 <p>
                 <div class="code-nav-container">
                     
@@ -1022,7 +1049,7 @@ Using this function will let us see what SQL is executing.</p>
             
         <div role="tabpanel" class="tab-pane active" id="tab-0-haskell">
             <div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">i</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoice</span> <span class="n">chinookDb</span><span class="p">)</span>
-   <span class="n">ln</span> <span class="ow">&lt;-</span> <span class="n">oneToMany_</span> <span class="p">(</span><span class="n">invoiceLine</span> <span class="n">chinookDb</span><span class="p">)</span> <span class="n">invoiceLineInvoice</span> <span class="n">i</span>
+   <span class="n">ln</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoiceLine</span> <span class="n">chinookDb</span><span class="p">)</span>
    <span class="n">pure</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
 </pre></div>
 
@@ -1044,12 +1071,201 @@ Using this function will let us see what SQL is executing.</p>
 <span class="go">       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,</span>
 <span class="go">       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;</span>
 <span class="go">FROM &quot;Invoice&quot; AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;InvoiceId&quot;) -- With values: []</span>
+<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot;;</span>
+
+<span class="go">-- With values: []</span>
 </pre></div>
 
         </div>
     
         <div role="tabpanel" class="tab-pane " id="tab-0-postgres">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;CustomerId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceDate&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingAddress&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingCity&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingState&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res5&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingCountry&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res6&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingPostalCode&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res7&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Total&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res8&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceLineId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res9&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res10&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;TrackId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res11&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;UnitPrice&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res12&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Quantity&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res13&quot;</span>
+<span class="k">FROM</span> <span class="s s-Name">&quot;Invoice&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t0&quot;</span>
+<span class="k">CROSS</span> <span class="k">JOIN</span> <span class="s s-Name">&quot;InvoiceLine&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t1&quot;</span>
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Of course, most of the time you only want to fetch relevant rows. Going back to
+the list monad example, suppose we only want to fetch pairs where the second
+number is less than or equal to twice the first. In Haskell, we'd use the
+<code>guard</code> function.</p>
+<div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">a</span> <span class="ow">&lt;-</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+   <span class="n">b</span> <span class="ow">&lt;-</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+   <span class="n">guard</span> <span class="p">(</span><span class="n">b</span> <span class="o">&lt;=</span> <span class="n">a</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+   <span class="n">return</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+
+
+<p>This would return <code>[(2,4),(3,4),(3,5)]</code>.</p>
+<p>Beam offers a similar function for the <code>Q</code> monad, named <code>guard_</code>. Note that
+whereas the <code>Q</code> bind operator is the same as the Haskell monadic bind, the
+corresponding <code>guard</code> function is not from <code>MonadZero</code>, as it is in Haskell. The
+technical reason is that the argument to <code>guard_</code> in <code>Q</code> represents a SQL
+expression returning a boolean, rather than a Haskell boolean itself.</p>
+<p>Going back to our invoice line example above, we can fetch every invoice along
+with only those invoice lines corresponding to that invoice.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-sqlite3" aria-controls="tab-1-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-1-postgres" aria-controls="tab-1-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">i</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoice</span> <span class="n">chinookDb</span><span class="p">)</span>
+   <span class="n">ln</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoiceLine</span> <span class="n">chinookDb</span><span class="p">)</span>
+   <span class="n">guard_</span> <span class="p">(</span><span class="n">invoiceLineInvoice</span> <span class="n">ln</span> <span class="p">`</span><span class="n">references_</span><span class="p">`</span> <span class="n">i</span><span class="p">)</span>
+   <span class="n">pure</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-sqlite3">
+            <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;</span>
+<span class="go">FROM &quot;Invoice&quot; AS &quot;t0&quot;</span>
+<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot;</span>
+<span class="go">WHERE (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;InvoiceId&quot;);</span>
+
+<span class="go">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-1-postgres">
+            <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;CustomerId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceDate&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingAddress&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingCity&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingState&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res5&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingCountry&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res6&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;BillingPostalCode&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res7&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Total&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res8&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceLineId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res9&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res10&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;TrackId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res11&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;UnitPrice&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res12&quot;</span><span class="p">,</span>
+       <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Quantity&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res13&quot;</span>
+<span class="k">FROM</span> <span class="s s-Name">&quot;Invoice&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t0&quot;</span>
+<span class="k">CROSS</span> <span class="k">JOIN</span> <span class="s s-Name">&quot;InvoiceLine&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;t1&quot;</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span><span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+    
+        </div>
+    
+                </div>
+                    </p>
+<p>Note that beam has floated the <code>guard_</code> expression into the <code>WHERE</code> clause,
+rather than the <code>ON</code> clause, This is fine for most inner joins on most database
+engines, as the query optimizer will execute both queries similarly. However,
+some backends are more temperamental, so Beam offers several more idiomatic ways
+to express joins which more closely reflect the underlying SQL. In practice,
+most users will use the methods below to express JOINs, but it is nevertheless
+important to understand that joining is fundamental to the structure of the <code>Q</code>
+moand.</p>
+<h2 id="one-to-many">One-to-many</h2>
+<p>Beam supports querying for one-to-many joins. For example, to get every
+<code>InvoiceLine</code> for each <code>Invoice</code>, use the <code>oneToMany_</code> combinator.</p>
+<p>
+                <div class="code-nav-container">
+                    
+        <ul class="nav nav-tabs">
+            
+        <li class="nav-item">
+            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-sqlite3" aria-controls="tab-2-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+        </li>
+    
+        <li class="nav-item">
+            <a href="#tab-2-postgres" aria-controls="tab-2-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+        </li>
+    
+        </ul>
+    
+        <div class="tab-content">
+            
+        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+            <div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">i</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoice</span> <span class="n">chinookDb</span><span class="p">)</span>
+   <span class="n">ln</span> <span class="ow">&lt;-</span> <span class="n">oneToMany_</span> <span class="p">(</span><span class="n">invoiceLine</span> <span class="n">chinookDb</span><span class="p">)</span> <span class="n">invoiceLineInvoice</span> <span class="n">i</span>
+   <span class="n">pure</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-sqlite3">
+            <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingAddress&quot; AS &quot;res3&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingCity&quot; AS &quot;res4&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingState&quot; AS &quot;res5&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingCountry&quot; AS &quot;res6&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;BillingPostalCode&quot; AS &quot;res7&quot;,</span>
+<span class="go">       &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;InvoiceLineId&quot; AS &quot;res9&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;InvoiceId&quot; AS &quot;res10&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res11&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,</span>
+<span class="go">       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;</span>
+<span class="go">FROM &quot;Invoice&quot; AS &quot;t0&quot;</span>
+<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;InvoiceId&quot;);</span>
+
+<span class="go">-- With values: []</span>
+</pre></div>
+
+        </div>
+    
+        <div role="tabpanel" class="tab-pane " id="tab-2-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;CustomerId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceDate&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1098,6 +1314,9 @@ expression level.</p>
 </pre></div>
 
 
+<p>Notice that, instead of floating the join condition to the <code>WHERE</code> clause, beam
+generates an <code>INNER JOIN ... ON</code> expression. These statements are equivalent,
+although the <code>ON</code> expression is more idiomatic.</p>
 <h3 id="nullable-columns">Nullable columns</h3>
 <p>If you have a nullable foreign key in your many table, you can use
 <code>oneToManyOptional_</code> and <code>OneToManyOptional</code>, respectively. For example, </p>
@@ -1144,22 +1363,22 @@ either "Movies" or "Music".</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-1-haskell" aria-controls="tab-1-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-3-haskell" aria-controls="tab-3-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-1-sqlite3" aria-controls="tab-1-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+            <a href="#tab-3-sqlite3" aria-controls="tab-3-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-1-postgres" aria-controls="tab-1-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-3-postgres" aria-controls="tab-3-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-1-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-3-haskell">
             <div class="codehilite"><pre><span></span><span class="nf">manyToMany_</span> <span class="p">(</span><span class="n">playlistTrack</span> <span class="n">chinookDb</span><span class="p">)</span>
             <span class="n">playlistTrackPlaylistId</span> <span class="n">playlistTrackTrackId</span>
 
@@ -1172,7 +1391,7 @@ either "Movies" or "Music".</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-1-sqlite3">
+        <div role="tabpanel" class="tab-pane " id="tab-3-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;PlaylistId&quot; AS &quot;res0&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,</span>
 <span class="go">       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,</span>
@@ -1189,12 +1408,14 @@ either "Movies" or "Music".</p>
 <span class="go">INNER JOIN &quot;PlaylistTrack&quot; AS &quot;t2&quot; ON ((&quot;t2&quot;.&quot;PlaylistId&quot;)=(&quot;t0&quot;.&quot;PlaylistId&quot;))</span>
 <span class="go">AND ((&quot;t2&quot;.&quot;TrackId&quot;)=(&quot;t1&quot;.&quot;TrackId&quot;))</span>
 <span class="go">WHERE ((&quot;t0&quot;.&quot;Name&quot;)=(?))</span>
-<span class="go">  OR ((&quot;t0&quot;.&quot;Name&quot;)=(?)) -- With values: [SQLText &quot;Music&quot;,SQLText &quot;Movies&quot;]</span>
+<span class="go">  OR ((&quot;t0&quot;.&quot;Name&quot;)=(?));</span>
+
+<span class="go">-- With values: [SQLText &quot;Music&quot;,SQLText &quot;Movies&quot;]</span>
 </pre></div>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-1-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-3-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;PlaylistId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Name&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;TrackId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1264,22 +1485,22 @@ many-to-many relationships, via the <code>ManyToMany</code> type.</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-2-haskell" aria-controls="tab-2-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-4-haskell" aria-controls="tab-4-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-2-sqlite3" aria-controls="tab-2-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+            <a href="#tab-4-sqlite3" aria-controls="tab-4-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-2-postgres" aria-controls="tab-2-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-4-postgres" aria-controls="tab-4-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-2-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-4-haskell">
             <div class="codehilite"><pre><span></span><span class="nf">playlistTrackRelationship</span>
     <span class="p">(</span><span class="n">filter_</span> <span class="p">(</span><span class="nf">\</span><span class="n">p</span> <span class="ow">-&gt;</span> <span class="n">playlistName</span> <span class="n">p</span> <span class="o">==.</span> <span class="n">just_</span> <span class="p">(</span><span class="n">val_</span> <span class="s">&quot;Music&quot;</span><span class="p">)</span> <span class="o">||.</span>
                     <span class="n">playlistName</span> <span class="n">p</span> <span class="o">==.</span> <span class="n">just_</span> <span class="p">(</span><span class="n">val_</span> <span class="s">&quot;Movies&quot;</span><span class="p">))</span>
@@ -1290,7 +1511,7 @@ many-to-many relationships, via the <code>ManyToMany</code> type.</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-2-sqlite3">
+        <div role="tabpanel" class="tab-pane " id="tab-4-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;PlaylistId&quot; AS &quot;res0&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,</span>
 <span class="go">       &quot;t1&quot;.&quot;TrackId&quot; AS &quot;res2&quot;,</span>
@@ -1307,12 +1528,14 @@ many-to-many relationships, via the <code>ManyToMany</code> type.</p>
 <span class="go">INNER JOIN &quot;PlaylistTrack&quot; AS &quot;t2&quot; ON ((&quot;t2&quot;.&quot;PlaylistId&quot;)=(&quot;t0&quot;.&quot;PlaylistId&quot;))</span>
 <span class="go">AND ((&quot;t2&quot;.&quot;TrackId&quot;)=(&quot;t1&quot;.&quot;TrackId&quot;))</span>
 <span class="go">WHERE ((&quot;t0&quot;.&quot;Name&quot;)=(?))</span>
-<span class="go">  OR ((&quot;t0&quot;.&quot;Name&quot;)=(?)) -- With values: [SQLText &quot;Music&quot;,SQLText &quot;Movies&quot;]</span>
+<span class="go">  OR ((&quot;t0&quot;.&quot;Name&quot;)=(?));</span>
+
+<span class="go">-- With values: [SQLText &quot;Music&quot;,SQLText &quot;Movies&quot;]</span>
 </pre></div>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-2-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-4-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;PlaylistId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Name&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;TrackId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1362,22 +1585,22 @@ For example, <code>oneToMany_</code> is implemented as</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-3-haskell" aria-controls="tab-3-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-5-haskell" aria-controls="tab-5-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-3-sqlite3" aria-controls="tab-3-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+            <a href="#tab-5-sqlite3" aria-controls="tab-5-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-3-postgres" aria-controls="tab-3-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-5-postgres" aria-controls="tab-5-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-3-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-5-haskell">
             <div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">i</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoice</span> <span class="n">chinookDb</span><span class="p">)</span>
    <span class="n">ln</span> <span class="ow">&lt;-</span> <span class="n">join_</span> <span class="p">(</span><span class="n">invoiceLine</span> <span class="n">chinookDb</span><span class="p">)</span> <span class="p">(</span><span class="nf">\</span><span class="n">line</span> <span class="ow">-&gt;</span> <span class="n">invoiceLineInvoice</span> <span class="n">line</span> <span class="o">==.</span> <span class="n">primaryKey</span> <span class="n">i</span><span class="p">)</span>
    <span class="n">pure</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ln</span><span class="p">)</span>
@@ -1385,7 +1608,7 @@ For example, <code>oneToMany_</code> is implemented as</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-3-sqlite3">
+        <div role="tabpanel" class="tab-pane " id="tab-5-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;InvoiceId&quot; AS &quot;res0&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;CustomerId&quot; AS &quot;res1&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;InvoiceDate&quot; AS &quot;res2&quot;,</span>
@@ -1401,12 +1624,14 @@ For example, <code>oneToMany_</code> is implemented as</p>
 <span class="go">       &quot;t1&quot;.&quot;UnitPrice&quot; AS &quot;res12&quot;,</span>
 <span class="go">       &quot;t1&quot;.&quot;Quantity&quot; AS &quot;res13&quot;</span>
 <span class="go">FROM &quot;Invoice&quot; AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;InvoiceId&quot;) -- With values: []</span>
+<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;InvoiceId&quot;);</span>
+
+<span class="go">-- With values: []</span>
 </pre></div>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-3-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-5-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;CustomerId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;InvoiceDate&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1453,22 +1678,22 @@ every artist, use <code>leftJoin_</code> as follows.</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-4-haskell" aria-controls="tab-4-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-6-haskell" aria-controls="tab-6-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-4-sqlite3" aria-controls="tab-4-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+            <a href="#tab-6-sqlite3" aria-controls="tab-6-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-4-postgres" aria-controls="tab-4-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-6-postgres" aria-controls="tab-6-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-4-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-6-haskell">
             <div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">artist</span> <span class="ow">&lt;-</span> <span class="n">all_</span> <span class="p">(</span><span class="n">artist</span> <span class="n">chinookDb</span><span class="p">)</span>
    <span class="n">album</span>  <span class="ow">&lt;-</span> <span class="n">leftJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">album</span> <span class="n">chinookDb</span><span class="p">))</span> <span class="p">(</span><span class="nf">\</span><span class="n">album</span> <span class="ow">-&gt;</span> <span class="n">albumArtist</span> <span class="n">album</span> <span class="o">==.</span> <span class="n">primaryKey</span> <span class="n">artist</span><span class="p">)</span>
    <span class="n">pure</span> <span class="p">(</span><span class="n">artist</span><span class="p">,</span> <span class="n">album</span><span class="p">)</span>
@@ -1476,19 +1701,21 @@ every artist, use <code>leftJoin_</code> as follows.</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-4-sqlite3">
+        <div role="tabpanel" class="tab-pane " id="tab-6-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;ArtistId&quot; AS &quot;res0&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;Name&quot; AS &quot;res1&quot;,</span>
 <span class="go">       &quot;t1&quot;.&quot;AlbumId&quot; AS &quot;res2&quot;,</span>
 <span class="go">       &quot;t1&quot;.&quot;Title&quot; AS &quot;res3&quot;,</span>
 <span class="go">       &quot;t1&quot;.&quot;ArtistId&quot; AS &quot;res4&quot;</span>
 <span class="go">FROM &quot;Artist&quot; AS &quot;t0&quot;</span>
-<span class="go">LEFT JOIN &quot;Album&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;ArtistId&quot;)=(&quot;t0&quot;.&quot;ArtistId&quot;) -- With values: []</span>
+<span class="go">LEFT JOIN &quot;Album&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;ArtistId&quot;)=(&quot;t0&quot;.&quot;ArtistId&quot;);</span>
+
+<span class="go">-- With values: []</span>
 </pre></div>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-4-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-6-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;ArtistId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;Name&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t1&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;AlbumId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1525,24 +1752,24 @@ but including all employees and customers, we can run the query</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-5-haskell" aria-controls="tab-5-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-7-haskell" aria-controls="tab-7-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-5-postgres" aria-controls="tab-5-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-7-postgres" aria-controls="tab-7-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-5-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-7-haskell">
             <div class="codehilite"><pre><span></span><span class="nf">outerJoin_</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">employee</span> <span class="n">chinookDb</span><span class="p">))</span> <span class="p">(</span><span class="n">all_</span> <span class="p">(</span><span class="n">customer</span> <span class="n">chinookDb</span><span class="p">))</span> <span class="p">(</span><span class="nf">\</span><span class="p">(</span><span class="n">employee</span><span class="p">,</span> <span class="n">customer</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="n">employeeFirstName</span> <span class="n">employee</span> <span class="o">==.</span> <span class="n">customerFirstName</span> <span class="n">customer</span><span class="p">)</span>
 </pre></div>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-5-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-7-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;EmployeeId&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;LastName&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;FirstName&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1595,22 +1822,22 @@ subqueries as expected.</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-6-haskell" aria-controls="tab-6-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-8-haskell" aria-controls="tab-8-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-6-sqlite3" aria-controls="tab-6-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+            <a href="#tab-8-sqlite3" aria-controls="tab-8-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-6-postgres" aria-controls="tab-6-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-8-postgres" aria-controls="tab-8-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-6-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-8-haskell">
             <div class="codehilite"><pre><span></span><span class="kr">do</span> <span class="n">i</span> <span class="ow">&lt;-</span> <span class="n">limit_</span> <span class="mi">10</span> <span class="o">$</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoice</span> <span class="n">chinookDb</span><span class="p">)</span>
    <span class="n">line</span> <span class="ow">&lt;-</span> <span class="n">invoiceLines</span> <span class="n">i</span>
    <span class="n">pure</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
@@ -1618,7 +1845,7 @@ subqueries as expected.</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-6-sqlite3">
+        <div role="tabpanel" class="tab-pane " id="tab-8-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,</span>
@@ -1645,12 +1872,14 @@ subqueries as expected.</p>
 <span class="go">          &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;</span>
 <span class="go">   FROM &quot;Invoice&quot; AS &quot;t0&quot;</span>
 <span class="go">   LIMIT 10) AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;res0&quot;) -- With values: []</span>
+<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;res0&quot;);</span>
+
+<span class="go">-- With values: []</span>
 </pre></div>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-6-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-8-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;res0&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;res1&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;res2&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>
@@ -1696,22 +1925,22 @@ no effect.</p>
         <ul class="nav nav-tabs">
             
         <li class="nav-item">
-            <a href="#tab-36-haskell" aria-controls="tab-36-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
+            <a href="#tab-44-haskell" aria-controls="tab-44-haskell" role="tab" data-toggle="tab" data-lang="haskell">Haskell</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-36-sqlite3" aria-controls="tab-36-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
+            <a href="#tab-44-sqlite3" aria-controls="tab-44-sqlite3" role="tab" data-toggle="tab" data-lang="sqlite3">Sqlite3</a>
         </li>
     
         <li class="nav-item">
-            <a href="#tab-36-postgres" aria-controls="tab-36-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
+            <a href="#tab-44-postgres" aria-controls="tab-44-postgres" role="tab" data-toggle="tab" data-lang="postgres">Postgres</a>
         </li>
     
         </ul>
     
         <div class="tab-content">
             
-        <div role="tabpanel" class="tab-pane active" id="tab-36-haskell">
+        <div role="tabpanel" class="tab-pane active" id="tab-44-haskell">
             <div class="codehilite"><pre><span></span><span class="c1">-- Same as above, but with explicit sub select</span>
 <span class="kr">do</span> <span class="n">i</span> <span class="ow">&lt;-</span> <span class="n">subselect_</span> <span class="o">$</span> <span class="n">limit_</span> <span class="mi">10</span> <span class="o">$</span> <span class="n">all_</span> <span class="p">(</span><span class="n">invoice</span> <span class="n">chinookDb</span><span class="p">)</span>
    <span class="n">line</span> <span class="ow">&lt;-</span> <span class="n">invoiceLines</span> <span class="n">i</span>
@@ -1720,7 +1949,7 @@ no effect.</p>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-36-sqlite3">
+        <div role="tabpanel" class="tab-pane " id="tab-44-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT &quot;t0&quot;.&quot;res0&quot; AS &quot;res0&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;res1&quot; AS &quot;res1&quot;,</span>
 <span class="go">       &quot;t0&quot;.&quot;res2&quot; AS &quot;res2&quot;,</span>
@@ -1747,12 +1976,14 @@ no effect.</p>
 <span class="go">          &quot;t0&quot;.&quot;Total&quot; AS &quot;res8&quot;</span>
 <span class="go">   FROM &quot;Invoice&quot; AS &quot;t0&quot;</span>
 <span class="go">   LIMIT 10) AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;res0&quot;) -- With values: []</span>
+<span class="go">INNER JOIN &quot;InvoiceLine&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;InvoiceId&quot;)=(&quot;t0&quot;.&quot;res0&quot;);</span>
+
+<span class="go">-- With values: []</span>
 </pre></div>
 
         </div>
     
-        <div role="tabpanel" class="tab-pane " id="tab-36-postgres">
+        <div role="tabpanel" class="tab-pane " id="tab-44-postgres">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;res0&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res0&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;res1&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res1&quot;</span><span class="p">,</span>
        <span class="s s-Name">&quot;t0&quot;</span><span class="mf">.</span><span class="s s-Name">&quot;res2&quot;</span> <span class="k">AS</span> <span class="s s-Name">&quot;res2&quot;</span><span class="p">,</span>

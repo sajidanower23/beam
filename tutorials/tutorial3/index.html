@@ -1176,21 +1176,23 @@ a timestamp set by the database.</p>
                      <span class="k">CURRENT_TIMESTAMP</span><span class="p">,</span>
                      <span class="o">?</span><span class="p">,</span>
                      <span class="o">?</span><span class="p">,</span>
-                     <span class="k">NULL</span><span class="p">)</span> <span class="c1">--With values: [SQLText &quot;james@example.com&quot;,SQLInteger 1,SQLText &quot;betty@example.com&quot;,SQLInteger 2,SQLInteger 1,SQLText &quot;james@example.com&quot;,SQLInteger 1]</span>
+                     <span class="k">NULL</span><span class="p">);</span>
+
+<span class="c1">-- With values: [SQLText &quot;james@example.com&quot;,SQLInteger 1,SQLText &quot;betty@example.com&quot;,SQLInteger 2,SQLInteger 1,SQLText &quot;james@example.com&quot;,SQLInteger 1]</span>
 </pre></div>
 
         </div>
     
         <div role="tabpanel" class="tab-pane " id="tab-0-console">
-            <div class="codehilite"><pre><span></span><span class="go">Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-12-20 18:19:04,</span>
+            <div class="codehilite"><pre><span></span><span class="go">Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2018-01-17 23:02:20,</span>
 <span class="go">                                                                        _orderForUser = UserId &quot;james@example.com&quot;,</span>
 <span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),</span>
 <span class="go">                                                                        _orderShippingInfo = ShippingInfoId Nothing} --</span>
-<span class="go">Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-12-20 18:19:04,</span>
+<span class="go">Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2018-01-17 23:02:20,</span>
 <span class="go">                                                                        _orderForUser = UserId &quot;betty@example.com&quot;,</span>
 <span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 2}),</span>
 <span class="go">                                                                        _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))} --</span>
-<span class="go">Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-12-20 18:19:04,</span>
+<span class="go">Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2018-01-17 23:02:20,</span>
 <span class="go">                                                                        _orderForUser = UserId &quot;james@example.com&quot;,</span>
 <span class="go">                                                                        _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),</span>
 <span class="go">                                                                        _orderShippingInfo = ShippingInfoId Nothing} --</span>
@@ -1253,7 +1255,9 @@ a timestamp set by the database.</p>
                             <span class="o">?</span><span class="p">,</span>
                             <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
                                  <span class="o">?</span><span class="p">,</span>
-                                 <span class="o">?</span><span class="p">)</span> <span class="c1">--With values: [SQLInteger 1,SQLInteger 1,SQLInteger 10,SQLInteger 1,SQLInteger 2,SQLInteger 1,SQLInteger 1,SQLInteger 3,SQLInteger 4,SQLInteger 2,SQLInteger 2,SQLInteger 3,SQLInteger 2,SQLInteger 3,SQLInteger 3,SQLInteger 3,SQLInteger 2,SQLInteger 1]</span>
+                                 <span class="o">?</span><span class="p">);</span>
+
+<span class="c1">-- With values: [SQLInteger 1,SQLInteger 1,SQLInteger 10,SQLInteger 1,SQLInteger 2,SQLInteger 1,SQLInteger 1,SQLInteger 3,SQLInteger 4,SQLInteger 2,SQLInteger 2,SQLInteger 3,SQLInteger 2,SQLInteger 3,SQLInteger 3,SQLInteger 3,SQLInteger 2,SQLInteger 1]</span>
 </pre></div>
 
         </div>
@@ -1314,7 +1318,9 @@ orders.</p>
        <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res7&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res8&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
-<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="c1">-- With values: []</span>
+<span class="k">LEFT</span> <span class="k">JOIN</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">);</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1324,17 +1330,17 @@ orders.</p>
        _userFirstName = &quot;James&quot;,
        _userLastName = &quot;Smith&quot;,
        _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},Just (
-                                                                 Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-12-20 18:19:11, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
+                                                                 Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2018-01-17 23:02:27, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
 (User {_userEmail = &quot;james@example.com&quot;,
        _userFirstName = &quot;James&quot;,
        _userLastName = &quot;Smith&quot;,
        _userPassword = &quot;b4cc344d25a2efe540adbf2678e2304c&quot;},Just (
-                                                                 Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-12-20 18:19:11, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
+                                                                 Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2018-01-17 23:02:27, _orderForUser = UserId &quot;james@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 1}), _orderShippingInfo = ShippingInfoId Nothing})) --
 (User {_userEmail = &quot;betty@example.com&quot;,
        _userFirstName = &quot;Betty&quot;,
        _userLastName = &quot;Jones&quot;,
        _userPassword = &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;},Just (
-                                                                 Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-12-20 18:19:11, _orderForUser = UserId &quot;betty@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 2}), _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))})) --
+                                                                 Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2018-01-17 23:02:27, _orderForUser = UserId &quot;betty@example.com&quot;, _orderShipToAddress = AddressId (Auto {unAuto = Just 2}), _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))})) --
 (User {_userEmail = &quot;sam@example.com&quot;,
        _userFirstName = &quot;Sam&quot;,
        _userLastName = &quot;Taylor&quot;,
@@ -1401,7 +1407,9 @@ find users who have no associated orders.</p>
          <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">))</span>
         <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">))</span>
        <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">))</span>
-  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">)</span> <span class="c1">-- With values: []</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">);</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1465,7 +1473,9 @@ find users who have no associated orders.</p>
 <span class="k">WHERE</span> <span class="k">NOT</span><span class="p">(</span><span class="k">EXISTS</span>
             <span class="p">(</span><span class="k">SELECT</span> <span class="ss">&quot;sub_t0&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span> <span class="ss">&quot;sub_t0&quot;</span><span class="p">.</span><span class="ss">&quot;date&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span> <span class="ss">&quot;sub_t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span> <span class="ss">&quot;sub_t0&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span> <span class="ss">&quot;sub_t0&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span>
              <span class="k">FROM</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;sub_t0&quot;</span>
-             <span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;sub_t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)))</span> <span class="c1">-- With values: []</span>
+             <span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;sub_t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)));</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1541,24 +1551,26 @@ order.</p>
          <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">,</span>
          <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span><span class="p">,</span>
          <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span>
-<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">SUM</span><span class="p">((</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span><span class="p">))</span> <span class="k">DESC</span> <span class="c1">-- With values: []</span>
+<span class="k">ORDER</span> <span class="k">BY</span> <span class="k">SUM</span><span class="p">((</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;item_quantity&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span><span class="p">))</span> <span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
     
         <div role="tabpanel" class="tab-pane " id="tab-5-out">
             <div class="codehilite"><pre><span></span>(
- Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-12-20 18:19:26,
+ Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2018-01-17 23:02:41,
                                                                          _orderForUser = UserId &quot;james@example.com&quot;,
                                                                          _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                          _orderShippingInfo = ShippingInfoId Nothing},24500) --
 (
-                                                                                                                                Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2017-12-20 18:19:26,
+                                                                                                                                Order {_orderId = Auto {unAuto = Just 2}, _orderDate = 2018-01-17 23:02:41,
                                                                                                                                                                                                         _orderForUser = UserId &quot;betty@example.com&quot;,
                                                                                                                                                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 2}),
                                                                                                                                                                                                         _orderShippingInfo = ShippingInfoId (Just (Auto {unAuto = Just 1}))},16500) --
 (
-                                                                                                                                                                                                                                                                                       Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-12-20 18:19:26,
+                                                                                                                                                                                                                                                                                       Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2018-01-17 23:02:41,
                                                                                                                                                                                                                                                                                                                                                                _orderForUser = UserId &quot;james@example.com&quot;,
                                                                                                                                                                                                                                                                                                                                                                _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                                                                                                                                                                                                                                                                                                                _orderShippingInfo = ShippingInfoId Nothing},2500) --
@@ -1661,7 +1673,9 @@ the type of <code>maybe_</code> is</p>
               <span class="k">END</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="k">CASE</span>
                           <span class="k">WHEN</span> <span class="p">(</span><span class="ss">&quot;t3&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">THEN</span> <span class="ss">&quot;t3&quot;</span><span class="p">.</span><span class="ss">&quot;price&quot;</span>
                           <span class="k">ELSE</span> <span class="o">?</span>
-                      <span class="k">END</span><span class="p">))</span> <span class="k">DESC</span> <span class="c1">-- With values: [SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0]</span>
+                      <span class="k">END</span><span class="p">))</span> <span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- With values: [SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0,SQLInteger 0]</span>
 </pre></div>
 
         </div>
@@ -1733,17 +1747,19 @@ nullable primary keys to optionally include information.</p>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;ship_to_address__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;orders&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
-<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span> <span class="c1">-- With values: []</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
     
         <div role="tabpanel" class="tab-pane " id="tab-7-out">
-            <div class="codehilite"><pre><span></span>Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2017-12-20 18:19:36,
+            <div class="codehilite"><pre><span></span>Order {_orderId = Auto {unAuto = Just 1}, _orderDate = 2018-01-17 23:02:51,
                                                                         _orderForUser = UserId &quot;james@example.com&quot;,
                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                         _orderShippingInfo = ShippingInfoId Nothing} --
-Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-12-20 18:19:36,
+Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2018-01-17 23:02:51,
                                                                         _orderForUser = UserId &quot;james@example.com&quot;,
                                                                         _orderShipToAddress = AddressId (Auto {unAuto = Just 1}),
                                                                         _orderShippingInfo = ShippingInfoId Nothing} --
@@ -1811,7 +1827,9 @@ Order {_orderId = Auto {unAuto = Just 3}, _orderDate = 2017-12-20 18:19:36,
 <span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">,</span>
          <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span><span class="p">,</span>
          <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="c1">-- With values: [SQLInteger 1]</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span><span class="p">;</span>
+
+<span class="c1">-- With values: [SQLInteger 1]</span>
 </pre></div>
 
         </div>
@@ -1927,7 +1945,9 @@ queries because it makes them more difficult to understand.</p>
    <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span>
    <span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t2&quot;</span>
 <span class="k">WHERE</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
-  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span> <span class="c1">-- With values: []</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">));</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -2044,7 +2064,9 @@ generation of a sub <code>SELECT</code>.</p>
       <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;shipping_info__id&quot;</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">)</span>
       <span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;t2&quot;</span>
 <span class="k">WHERE</span> <span class="p">((</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span>
-  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">))</span> <span class="c1">-- With values: []</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;t2&quot;</span><span class="p">.</span><span class="ss">&quot;res0&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">));</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>

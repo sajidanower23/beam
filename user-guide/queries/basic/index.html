@@ -911,6 +911,12 @@ look at some of the important query types.</p>
 <p><code>a</code> is the type of the result of the query.</p>
 </li>
 </ul>
+<p><code>Q</code> is a monad, which means you can use your favorite <code>Monad</code>, <code>Applicative</code>,
+and <code>Functor</code> functions. The <code>Functor</code> instance can be used to create
+projections
+as <a href="../select/#returning-a-subset-of-columns">explained in the next section</a>.
+The <code>Monad</code> and <code>Applicative</code> instances can be used
+to <a href="../relationships/#full-inner-joins">create JOINs</a>.</p>
 <h3 id="the-qgenexpr-type">The <code>QGenExpr</code> type</h3>
 <p>While <code>Q</code> represents the result of whole queries (entire <code>SELECT</code>s for example),
 <code>QGenExpr</code> represents the type of SQL expressions. <code>QGenExpr</code> also takes some
@@ -1139,7 +1145,9 @@ by the Haskell type system ensure that the query is constructed correctly.</p>
 <span class="go">     AND (((&quot;t0&quot;.&quot;State&quot;)=(?))</span>
 <span class="go">          OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))</span>
 <span class="go">   LIMIT 10) AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; -- With values: [SQLText &quot;Jo%&quot;,SQLText &quot;S%&quot;,SQLText &quot;CA&quot;,SQLText &quot;WA&quot;]</span>
+<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;;</span>
+
+<span class="go">-- With values: [SQLText &quot;Jo%&quot;,SQLText &quot;S%&quot;,SQLText &quot;CA&quot;,SQLText &quot;WA&quot;]</span>
 </pre></div>
 
         </div>
@@ -1277,7 +1285,9 @@ possible, rather than shipping data to your application pre-processing.</p>
 <span class="go">     AND (((&quot;t0&quot;.&quot;State&quot;)=(?))</span>
 <span class="go">          OR ((&quot;t0&quot;.&quot;State&quot;)=(?)))</span>
 <span class="go">   LIMIT 10) AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; -- With values: [SQLText &quot;Jo%&quot;,SQLText &quot;S%&quot;,SQLText &quot;CA&quot;,SQLText &quot;WA&quot;]</span>
+<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;;</span>
+
+<span class="go">-- With values: [SQLText &quot;Jo%&quot;,SQLText &quot;S%&quot;,SQLText &quot;CA&quot;,SQLText &quot;WA&quot;]</span>
 </pre></div>
 
         </div>

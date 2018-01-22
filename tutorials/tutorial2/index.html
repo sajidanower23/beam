@@ -1073,7 +1073,9 @@ appropriate id.</p>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;state&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;zip&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res6&quot;</span>
-<span class="k">FROM</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span> <span class="c1">-- With values: []</span>
+<span class="k">FROM</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1195,7 +1197,9 @@ do. It follows that queries also expose a monadic interface.</p>
        <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;zip&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res9&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res10&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
-<span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="c1">-- With values: []</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1346,7 +1350,9 @@ bools.</p>
        <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res10&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
 <span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span>
-<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="c1">-- With values: []</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">);</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1441,7 +1447,9 @@ expression that can match primary keys together.</p>
        <span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res10&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
 <span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span>
-<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="c1">-- With values: []</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">);</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1534,7 +1542,9 @@ combinator to pull related tables directly into the query monad.</p>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;zip&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res9&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res10&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
-<span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span> <span class="c1">-- With values: []</span>
+<span class="k">INNER</span> <span class="k">JOIN</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t1&quot;</span> <span class="k">ON</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="ss">&quot;t1&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">);</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1625,7 +1635,9 @@ combinator to pull related tables directly into the query monad.</p>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;zip&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res6&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
-<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">)</span> <span class="c1">-- With values: [SQLText &quot;betty@example.com&quot;]</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">);</span>
+
+<span class="c1">-- With values: [SQLText &quot;betty@example.com&quot;]</span>
 </pre></div>
 
         </div>
@@ -1711,13 +1723,18 @@ update the corresponding record in the database.</p>
 <span class="k">SET</span> <span class="ss">&quot;first_name&quot;</span><span class="o">=?</span><span class="p">,</span>
     <span class="ss">&quot;last_name&quot;</span><span class="o">=?</span><span class="p">,</span>
     <span class="ss">&quot;password&quot;</span><span class="o">=?</span>
-<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">)</span> <span class="c1">-- With values: [SQLText &quot;James&quot;,SQLText &quot;Smith&quot;,SQLText &quot;52a516ca6df436828d9c0d26e31ef704&quot;,SQLText &quot;james@example.com&quot;]</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">);</span>
 
-  <span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
-  <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span> <span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">)</span> <span class="c1">-- With values: [SQLText &quot;james@example.com&quot;]</span>
+<span class="c1">-- With values: [SQLText &quot;James&quot;,SQLText &quot;Smith&quot;,SQLText &quot;52a516ca6df436828d9c0d26e31ef704&quot;,SQLText &quot;james@example.com&quot;]</span>
+
+<span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">);</span>
+
+<span class="c1">-- With values: [SQLText &quot;james@example.com&quot;]</span>
 </pre></div>
 
         </div>
@@ -1792,16 +1809,20 @@ to use the new name and ZIP code.</p>
 <span class="k">SET</span> <span class="ss">&quot;city&quot;</span><span class="o">=?</span><span class="p">,</span>
     <span class="ss">&quot;zip&quot;</span><span class="o">=?</span>
 <span class="k">WHERE</span> <span class="p">((</span><span class="ss">&quot;city&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">))</span>
-  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;state&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">))</span><span class="c1">-- With values: [SQLText &quot;Sugarville&quot;,SQLText &quot;12345&quot;,SQLText &quot;Sugarland&quot;,SQLText &quot;TX&quot;]</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;state&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">));</span>
 
-  <span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;address1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;address2&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;city&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;state&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;zip&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res6&quot;</span>
-  <span class="k">FROM</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span> <span class="c1">-- With values: []</span>
+<span class="c1">-- With values: [SQLText &quot;Sugarville&quot;,SQLText &quot;12345&quot;,SQLText &quot;Sugarland&quot;,SQLText &quot;TX&quot;]</span>
+
+<span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;id&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;address1&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;address2&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;city&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;state&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res4&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;zip&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res5&quot;</span><span class="p">,</span>
+       <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;for_user__email&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res6&quot;</span>
+<span class="k">FROM</span> <span class="ss">&quot;addresses&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1867,7 +1888,9 @@ to use the new name and ZIP code.</p>
             <div class="codehilite"><pre><span></span><span class="k">DELETE</span>
 <span class="k">FROM</span> <span class="ss">&quot;addresses&quot;</span>
 <span class="k">WHERE</span> <span class="p">((</span><span class="ss">&quot;city&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">))</span>
-  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">))</span> <span class="c1">-- With values: [SQLText &quot;Houston&quot;,SQLText &quot;betty@example.com&quot;]</span>
+  <span class="k">AND</span> <span class="p">((</span><span class="ss">&quot;for_user__email&quot;</span><span class="p">)</span><span class="o">=</span><span class="p">(</span><span class="o">?</span><span class="p">));</span>
+
+<span class="c1">-- With values: [SQLText &quot;Houston&quot;,SQLText &quot;betty@example.com&quot;]</span>
 </pre></div>
 
         </div>

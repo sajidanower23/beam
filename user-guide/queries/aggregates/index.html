@@ -909,7 +909,9 @@ expressions as usual.</p>
     
         <div role="tabpanel" class="tab-pane " id="tab-0-sqlite3">
             <div class="codehilite"><pre><span></span><span class="go">SELECT COUNT(*) AS &quot;res0&quot;</span>
-<span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot; -- With values: []</span>
+<span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot;;</span>
+
+<span class="go">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -965,7 +967,9 @@ group by the genre.</p>
 <span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot;</span>
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;</span>
 <span class="go">GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
-<span class="go">         &quot;t0&quot;.&quot;Name&quot; -- With values: []</span>
+<span class="go">         &quot;t0&quot;.&quot;Name&quot;;</span>
+
+<span class="go">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1045,7 +1049,9 @@ to be explicit about it, you can use the <code>allInGroupExplicitly_</code> quan
 <span class="go">FROM &quot;Genre&quot; AS &quot;t0&quot;</span>
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;</span>
 <span class="go">GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
-<span class="go">         &quot;t0&quot;.&quot;Name&quot; -- With values: [SQLInteger 1000]</span>
+<span class="go">         &quot;t0&quot;.&quot;Name&quot;;</span>
+
+<span class="go">-- With values: [SQLInteger 1000]</span>
 </pre></div>
 
         </div>
@@ -1178,7 +1184,9 @@ subselect and add a <code>WHERE</code> clause. Either way, this is transparent t
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot;</span>
 <span class="go">GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">         &quot;t0&quot;.&quot;Name&quot;</span>
-<span class="go">HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?) -- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
+<span class="go">HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?);</span>
+
+<span class="go">-- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1264,7 +1272,9 @@ over tracks.</p>
 <span class="go">   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t0&quot;</span>
 <span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;)</span>
-<span class="go">WHERE (&quot;t0&quot;.&quot;res3&quot;)&gt;=(?) -- With values: [SQLInteger 1000,SQLInteger 300000]</span>
+<span class="go">WHERE (&quot;t0&quot;.&quot;res3&quot;)&gt;=(?);</span>
+
+<span class="go">-- With values: [SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1365,7 +1375,9 @@ produced a <code>WHERE</code> clause on the outermost <code>SELECT</code>. If in
 <span class="go">   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">            &quot;t0&quot;.&quot;Name&quot;</span>
 <span class="go">   HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)) AS &quot;t0&quot;</span>
-<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;) -- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
+<span class="go">INNER JOIN &quot;Track&quot; AS &quot;t1&quot; ON (&quot;t1&quot;.&quot;GenreId&quot;)=(&quot;t0&quot;.&quot;res0&quot;);</span>
+
+<span class="go">-- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1469,7 +1481,9 @@ aggregate.</p>
 <span class="go">   GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">            &quot;t0&quot;.&quot;Name&quot;) AS &quot;t1&quot;</span>
 <span class="go">WHERE ((&quot;t1&quot;.&quot;res3&quot;)&gt;=(?))</span>
-<span class="go">  AND ((&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;)) -- With values: [SQLInteger 1000,SQLInteger 300000]</span>
+<span class="go">  AND ((&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;));</span>
+
+<span class="go">-- With values: [SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>
@@ -1578,7 +1592,9 @@ using the <code>subselect_</code> combinator.</p>
 <span class="go">      GROUP BY &quot;t0&quot;.&quot;GenreId&quot;,</span>
 <span class="go">               &quot;t0&quot;.&quot;Name&quot;</span>
 <span class="go">      HAVING ((SUM(ALL &quot;t1&quot;.&quot;Milliseconds&quot;)) / (?))&gt;=(?)) AS &quot;t0&quot;) AS &quot;t1&quot;</span>
-<span class="go">WHERE (&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;) -- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
+<span class="go">WHERE (&quot;t0&quot;.&quot;GenreId&quot;)=(&quot;t1&quot;.&quot;res0&quot;);</span>
+
+<span class="go">-- With values: [SQLInteger 1000,SQLInteger 1000,SQLInteger 300000]</span>
 </pre></div>
 
         </div>

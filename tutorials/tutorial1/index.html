@@ -1168,7 +1168,9 @@ added. Click between the tabs to see the SQL and console output generated</p>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res2&quot;</span><span class="p">,</span>
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
-<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span> <span class="c1">-- With values: []</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1240,7 +1242,9 @@ order the query results. This is similar to the <code>sortBy</code> function for
        <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;password&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res3&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
 <span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">ASC</span><span class="p">,</span>
-         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">DESC</span> <span class="c1">-- With values: []</span>
+         <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;last_name&quot;</span> <span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1309,7 +1313,9 @@ User {_userEmail = &quot;sam@example.com&quot;,
 <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
 <span class="k">ORDER</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">ASC</span>
 <span class="k">LIMIT</span> <span class="mi">1</span>
-<span class="k">OFFSET</span> <span class="mi">1</span> <span class="c1">-- With values: []</span>
+<span class="k">OFFSET</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1378,7 +1384,9 @@ record from the database.</p>
     
         <div role="tabpanel" class="tab-pane " id="tab-3-sql">
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span>
-<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span> <span class="c1">-- With values: []</span>
+<span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
@@ -1452,7 +1460,9 @@ more users to our database. We'll demonstrate using <code>withDatabase</code> to
                        <span class="o">?</span><span class="p">),</span> <span class="p">(</span><span class="o">?</span><span class="p">,</span>
                             <span class="o">?</span><span class="p">,</span>
                             <span class="o">?</span><span class="p">,</span>
-                            <span class="o">?</span><span class="p">)</span> <span class="c1">--With values: [SQLText &quot;james@pallo.com&quot;,SQLText &quot;James&quot;,SQLText &quot;Pallo&quot;,SQLText &quot;b4cc344d25a2efe540adbf2678e2304c&quot;,SQLText &quot;betty@sims.com&quot;,SQLText &quot;Betty&quot;,SQLText &quot;Sims&quot;,SQLText &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;,SQLText &quot;james@oreily.com&quot;,SQLText &quot;James&quot;,SQLText &quot;O&#39;Reily&quot;,SQLText &quot;b4cc344d25a2efe540adbf2678e2304c&quot;,SQLText &quot;sam@sophitz.com&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Sophitz&quot;,SQLText &quot;332532dcfaa1cbf61e2a266bd723612c&quot;,SQLText &quot;sam@jely.com&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Jely&quot;,SQLText &quot;332532dcfaa1cbf61e2a266bd723612c&quot;]</span>
+                            <span class="o">?</span><span class="p">);</span>
+
+<span class="c1">-- With values: [SQLText &quot;james@pallo.com&quot;,SQLText &quot;James&quot;,SQLText &quot;Pallo&quot;,SQLText &quot;b4cc344d25a2efe540adbf2678e2304c&quot;,SQLText &quot;betty@sims.com&quot;,SQLText &quot;Betty&quot;,SQLText &quot;Sims&quot;,SQLText &quot;82b054bd83ffad9b6cf8bdb98ce3cc2f&quot;,SQLText &quot;james@oreily.com&quot;,SQLText &quot;James&quot;,SQLText &quot;O&#39;Reily&quot;,SQLText &quot;b4cc344d25a2efe540adbf2678e2304c&quot;,SQLText &quot;sam@sophitz.com&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Sophitz&quot;,SQLText &quot;332532dcfaa1cbf61e2a266bd723612c&quot;,SQLText &quot;sam@jely.com&quot;,SQLText &quot;Sam&quot;,SQLText &quot;Jely&quot;,SQLText &quot;332532dcfaa1cbf61e2a266bd723612c&quot;]</span>
 </pre></div>
 
         </div>
@@ -1499,7 +1509,9 @@ the number of users.</p>
             <div class="codehilite"><pre><span></span><span class="k">SELECT</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="k">AS</span> <span class="ss">&quot;res0&quot;</span><span class="p">,</span>
        <span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">AS</span> <span class="ss">&quot;res1&quot;</span>
 <span class="k">FROM</span> <span class="ss">&quot;cart_users&quot;</span> <span class="k">AS</span> <span class="ss">&quot;t0&quot;</span>
-<span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span> <span class="c1">-- With values: []</span>
+<span class="k">GROUP</span> <span class="k">BY</span> <span class="ss">&quot;t0&quot;</span><span class="p">.</span><span class="ss">&quot;first_name&quot;</span><span class="p">;</span>
+
+<span class="c1">-- With values: []</span>
 </pre></div>
 
         </div>
