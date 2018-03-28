@@ -69,7 +69,7 @@ module Database.Beam.Postgres.Syntax
     , pgMoneyType
     , pgTsQueryTypeInfo, pgTsVectorTypeInfo
 
-    , pgByteaType, pgTextType
+    , pgByteaType, pgTextType, pgUnboundedArrayType
     , pgSerialType, pgSmallSerialType, pgBigSerialType
 
     , pgQuotedIdentifier, pgSepBy, pgDebugRenderSyntax
@@ -94,7 +94,7 @@ import           Database.Beam.Migrate.Generics
 import           Control.Monad.Free
 import           Control.Monad.Free.Church
 
-import           Data.Aeson (Value)
+import           Data.Aeson (Value, object, (.=))
 import           Data.Bits
 import           Data.ByteString (ByteString)
 import           Data.ByteString.Builder (Builder, byteString, char8, toLazyByteString)
@@ -556,6 +556,12 @@ pgSmallSerialType = PgDataTypeSyntax (pgDataTypeDescr smallIntType) (emit "SMALL
 pgSerialType = PgDataTypeSyntax (pgDataTypeDescr intType) (emit "SERIAL") (pgDataTypeJSON "serial")
 pgBigSerialType = PgDataTypeSyntax (PgDataTypeDescrOid (Pg.typoid Pg.int8) Nothing) (emit "BIGSERIAL") (pgDataTypeJSON "bigserial")
 
+pgUnboundedArrayType :: PgDataTypeSyntax -> PgDataTypeSyntax
+pgUnboundedArrayType (PgDataTypeSyntax _ syntax serialized) =
+    PgDataTypeSyntax (error "Can't do array migrations yet")
+                     (syntax <> emit "[]")
+                     (pgDataTypeJSON (object [ "unbounded-array" .= fromBeamSerializedDataType serialized ]))
+
 pgTsQueryTypeInfo :: Pg.TypeInfo
 pgTsQueryTypeInfo = Pg.Basic (Pg.Oid 3615) 'U' ',' "tsquery"
 
@@ -624,6 +630,8 @@ instance IsSql92ExpressionSyntax PgExpressionSyntax where
   overlapsE = pgBinOp "OVERLAPS"
   eqE = pgCompOp "="
   neqE = pgCompOp "<>"
+  eqMaybeE a b _ = pgBinOp "IS NOT DISTINCT FROM" a b
+  neqMaybeE a b _ = pgBinOp "IS DISTINCT FROM" a b
   ltE = pgCompOp "<"
   gtE = pgCompOp ">"
   leE = pgCompOp "<="
@@ -647,6 +655,9 @@ instance IsSql92ExpressionSyntax PgExpressionSyntax where
             emit "(" <>
             pgSepBy (emit ", ") (coerce vs) <>
             emit ")"
+  quantifierListE vs =
+    PgExpressionSyntax $
+    emit "(VALUES " <> pgSepBy (emit ", ") (fmap (pgParens . fromPgExpression) vs) <> emit ")"
   fieldE = coerce
   subqueryE s = PgExpressionSyntax (emit "(" <> fromPgSelect s <> emit ")")
   positionE needle haystack =
@@ -1120,9 +1131,10 @@ pgCompOp :: ByteString -> Maybe PgComparisonQuantifierSyntax
 pgCompOp op quantifier a b =
   PgExpressionSyntax $
   emit "(" <> fromPgExpression a <>
-  emit (") " <> op <> " (") <>
-  maybe mempty (\q -> emit " " <> fromPgComparisonQuantifier q <> emit " ") quantifier <>
-  fromPgExpression b <> emit ")"
+  emit (") " <> op) <>
+  maybe (emit " (" <> fromPgExpression b <> emit ")")
+        (\q -> emit " " <> fromPgComparisonQuantifier q <> emit " " <> fromPgExpression b)
+        quantifier
 
 pgBinOp :: ByteString -> PgExpressionSyntax -> PgExpressionSyntax -> PgExpressionSyntax
 pgBinOp op a b =
@@ -1330,4 +1342,6 @@ PG_HAS_EQUALITY_CHECK(Pg.ZonedTimestamp)
 PG_HAS_EQUALITY_CHECK(Pg.LocalTimestamp)
 PG_HAS_EQUALITY_CHECK(Pg.UTCTimestamp)
 PG_HAS_EQUALITY_CHECK(Scientific)
+PG_HAS_EQUALITY_CHECK(ByteString)
+PG_HAS_EQUALITY_CHECK(BL.ByteString)
 PG_HAS_EQUALITY_CHECK(V.Vector a)

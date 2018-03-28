@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE TypeOperators #-}
@@ -805,6 +806,10 @@ instance HasDefaultSqlDataTypeConstraints PgColumnSchemaSyntax (PgJSONB a)
 instance HasDefaultSqlDataType PgDataTypeSyntax PgMoney where
   defaultSqlDataType _ _ = pgMoneyType
 instance HasDefaultSqlDataTypeConstraints PgColumnSchemaSyntax PgMoney
+
+instance HasDefaultSqlDataType PgDataTypeSyntax a =>  HasDefaultSqlDataType PgDataTypeSyntax (V.Vector a) where
+  defaultSqlDataType _ embedded = pgUnboundedArrayType (defaultSqlDataType (Proxy :: Proxy a) embedded)
+instance HasDefaultSqlDataTypeConstraints PgColumnSchemaSyntax (V.Vector a)
 
 -- $full-text-search
 --

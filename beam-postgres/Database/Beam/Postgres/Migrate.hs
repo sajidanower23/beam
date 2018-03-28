@@ -2,6 +2,8 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE UndecidableInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans -fno-warn-type-defaults #-}
 
 -- | Migrations support for beam-postgres. See "Database.Beam.Migrate" for more
@@ -322,9 +324,8 @@ bytea = Db.DataType pgByteaType
 unboundedArray :: forall a. Typeable a
                => Db.DataType PgDataTypeSyntax a
                -> Db.DataType PgDataTypeSyntax (V.Vector a)
-unboundedArray (Db.DataType (PgDataTypeSyntax _ syntax serialized)) =
-  Db.DataType (PgDataTypeSyntax (error "Can't do array migrations yet") (syntax <> emit "[]")
-                                (pgDataTypeJSON (object [ "unbounded-array" .= Db.fromBeamSerializedDataType serialized])))
+unboundedArray (Db.DataType elTy) =
+  Db.DataType (pgUnboundedArrayType elTy)
 
 -- | 'Db.DataType' for @JSON@. See 'PgJSON' for more information
 json :: (ToJSON a, FromJSON a) => Db.DataType PgDataTypeSyntax (PgJSON a)
@@ -352,5 +353,11 @@ smallserial = Db.DataType pgSmallSerialType
 serial = Db.DataType pgSerialType
 bigserial = Db.DataType pgBigSerialType
 
+data PgHasDefault = PgHasDefault
+instance Db.FieldReturnType 'True 'False PgColumnSchemaSyntax resTy a =>
+         Db.FieldReturnType 'False 'False PgColumnSchemaSyntax resTy (PgHasDefault -> a) where
+  field' _ _ nm ty d collation constraints PgHasDefault =
+    Db.field' (Proxy @'True) (Proxy @'False) nm ty Nothing collation constraints
+
 instance IsBeamSerialColumnSchemaSyntax PgColumnSchemaSyntax where
-  genericSerial nm = Db.field nm serial
+  genericSerial nm = Db.field nm serial PgHasDefault
