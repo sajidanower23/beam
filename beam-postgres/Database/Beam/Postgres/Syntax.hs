@@ -108,16 +108,19 @@ import           Data.Functor.Classes
 import           Data.Hashable
 import           Data.Int
 import           Data.Maybe
-import           Data.Monoid
 import           Data.Scientific (Scientific)
 import           Data.String (IsString(..), fromString)
+import           Data.Tagged
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as TE
 import qualified Data.Text.Lazy as TL
 import           Data.Time (LocalTime, UTCTime, ZonedTime, TimeOfDay, NominalDiffTime, Day)
-import           Data.UUID (UUID)
+import           Data.UUID.Types (UUID)
 import qualified Data.Vector as V
 import           Data.Word
+#if !MIN_VERSION_base(4, 11, 0)
+import           Data.Semigroup
+#endif
 
 import qualified Database.PostgreSQL.Simple.ToField as Pg
 import qualified Database.PostgreSQL.Simple.TypeInfo.Static as Pg
@@ -173,6 +176,9 @@ type PgSyntaxM = F PgSyntaxF
 -- 'emit', 'emitBuilder', 'escapeString', 'escapBytea', and 'escapeIdentifier'.
 newtype PgSyntax
   = PgSyntax { buildPgSyntax :: PgSyntaxM () }
+
+instance Semigroup PgSyntax where
+  (<>) = mappend
 
 instance Monoid PgSyntax where
   mempty = PgSyntax (pure ())
@@ -620,7 +626,7 @@ mkNumericPrec (Just (whole, dec)) = Just $ (fromIntegral whole `shiftL` 16) .|. 
 instance IsCustomSqlSyntax PgExpressionSyntax where
   newtype CustomSqlSyntax PgExpressionSyntax =
     PgCustomExpressionSyntax { fromPgCustomExpression :: PgSyntax }
-    deriving Monoid
+    deriving (Monoid, Semigroup)
   customExprSyntax = PgExpressionSyntax . fromPgCustomExpression
   renderSyntax = PgCustomExpressionSyntax . pgParens . fromPgExpression
 
@@ -1372,3 +1378,8 @@ PG_HAS_EQUALITY_CHECK(BL.ByteString)
 PG_HAS_EQUALITY_CHECK(V.Vector a)
 PG_HAS_EQUALITY_CHECK(CI T.Text)
 PG_HAS_EQUALITY_CHECK(CI TL.Text)
+
+instance HasSqlEqualityCheck PgExpressionSyntax a =>
+  HasSqlEqualityCheck PgExpressionSyntax (Tagged t a)
+instance HasSqlQuantifiedEqualityCheck PgExpressionSyntax a =>
+  HasSqlQuantifiedEqualityCheck PgExpressionSyntax (Tagged t a)
