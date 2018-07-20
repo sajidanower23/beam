@@ -859,10 +859,12 @@ instance IsSql92UpdateSyntax SqliteUpdateSyntax where
 instance IsSql92DeleteSyntax SqliteDeleteSyntax where
   type Sql92DeleteExpressionSyntax SqliteDeleteSyntax = SqliteExpressionSyntax
 
-  deleteStmt tbl where_ =
+  deleteStmt tbl Nothing where_ =
     SqliteDeleteSyntax $
     emit "DELETE FROM " <> quotedIdentifier tbl <>
     maybe mempty (\where_ -> emit " WHERE " <> fromSqliteExpression where_) where_
+  deleteStmt _ (Just _) _ =
+      error "beam-sqlite: invariant failed: DELETE must not have a table alias"
 
 spaces, parens :: SqliteSyntax -> SqliteSyntax
 spaces a = emit " " <> a <> emit " "
@@ -899,12 +901,20 @@ instance HasDefaultSqlDataType SqliteDataTypeSyntax ByteString where
   defaultSqlDataType _ _ = sqliteBlobType
 instance HasDefaultSqlDataTypeConstraints SqliteColumnSchemaSyntax ByteString
 
+instance HasDefaultSqlDataType SqliteDataTypeSyntax UTCTime where
+  defaultSqlDataType _ _ = timestampType Nothing False
+instance HasDefaultSqlDataTypeConstraints SqliteColumnSchemaSyntax UTCTime
+
 instance HasDefaultSqlDataType SqliteDataTypeSyntax LocalTime where
   defaultSqlDataType _ _ = timestampType Nothing False
 instance HasDefaultSqlDataTypeConstraints SqliteColumnSchemaSyntax LocalTime
 
 instance HasSqlValueSyntax SqliteValueSyntax ByteString where
   sqlValueSyntax bs = SqliteValueSyntax (emitValue (SQLBlob bs))
+
+instance HasSqlValueSyntax SqliteValueSyntax UTCTime where
+  sqlValueSyntax tm = SqliteValueSyntax (emitValue (SQLText (fromString tmStr)))
+    where tmStr = formatTime defaultTimeLocale (iso8601DateFormat (Just "%H:%M:%S%Q")) tm
 
 instance HasSqlValueSyntax SqliteValueSyntax LocalTime where
   sqlValueSyntax tm = SqliteValueSyntax (emitValue (SQLText (fromString tmStr)))
