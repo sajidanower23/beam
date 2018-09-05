@@ -36,6 +36,7 @@ module Database.Beam.Query.Combinators
     , SqlDeconstructMaybe(..)
     , SqlOrderable
     , QIfCond, QIfElse
+    , (<|>.)
 
     , limit_, offset_
 
@@ -899,3 +900,12 @@ instance ( IsSql92ExpressionSyntax syntax
       let QExpr onJust' = onJust (changeBeamRep (\(Columnar' (QExpr e)) -> Columnar' (QExpr e)) tbl)
           QExpr cond = isJust_ tbl
       in QExpr (\tblPfx -> caseE [(cond tblPfx, onJust' tblPfx)] (onNothing tblPfx))
+
+infixl 3 <|>.
+(<|>.) :: ( SqlJustable a (QGenExpr ctxt syntax s y)
+          , SqlDeconstructMaybe syntax (QGenExpr ctxt syntax s y) a s
+          )
+       => QGenExpr ctxt syntax s y
+       -> QGenExpr ctxt syntax s y
+       -> QGenExpr ctxt syntax s y
+l <|>. r = maybe_ r just_ l
