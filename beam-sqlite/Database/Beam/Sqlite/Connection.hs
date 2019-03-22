@@ -1,5 +1,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
@@ -10,17 +12,24 @@ module Database.Beam.Sqlite.Connection
   , runBeamSqlite, runBeamSqliteDebug
 
     -- * Emulated @INSERT RETURNING@ support
-  , SqliteInsertReturning
   , insertReturning, runInsertReturningList
   ) where
 
 import           Database.Beam.Backend
-import           Database.Beam.Backend.SQL
 import qualified Database.Beam.Backend.SQL.BeamExtensions as Beam
 import           Database.Beam.Backend.URI
-import           Database.Beam.Query (QExpr, SqlInsert(..), SqlInsertValues(..), insert)
-import           Database.Beam.Schema.Tables ( DatabaseEntity(..)
-                                             , DatabaseEntityDescriptor(..)
+import           Database.Beam.Migrate.Generics
+import           Database.Beam.Migrate.SQL ( BeamMigrateOnlySqlBackend, FieldReturnType(..) )
+import qualified Database.Beam.Migrate.SQL as Beam
+import           Database.Beam.Migrate.SQL.BeamExtensions
+import           Database.Beam.Query ( QExpr, SqlInsert(..), SqlInsertValues(..)
+                                     , HasQBuilder(..), HasSqlEqualityCheck
+                                     , HasSqlQuantifiedEqualityCheck
+                                     , DataType(..)
+                                     , insert )
+import           Database.Beam.Query.SQL92
+import           Database.Beam.Schema.Tables ( Beamable
+                                             , DatabaseEntity(..)
                                              , TableEntity)
 import           Database.Beam.Sqlite.Syntax
 
@@ -35,25 +44,31 @@ import           Database.SQLite.Simple.Internal (RowParser(RP), unRP)
 import           Database.SQLite.Simple.Ok (Ok(..))
 import           Database.SQLite.Simple.Types (Null)
 
-import           Control.Exception (bracket_, onException, mask)
-import           Control.Monad (forM_, replicateM_)
+import           Control.Exception (SomeException(..), bracket_, onException, mask)
+import           Control.Monad (forM_)
+import           Control.Monad.Fail (MonadFail)
 import           Control.Monad.Free.Church
 import           Control.Monad.IO.Class (MonadIO(..))
 import           Control.Monad.Identity (Identity)
-import           Control.Monad.Reader (ReaderT, MonadReader(..), runReaderT)
-import           Control.Monad.State.Strict (MonadState(..), runStateT)
+import           Control.Monad.Reader (ReaderT(..), MonadReader(..), runReaderT)
+import           Control.Monad.State.Strict (MonadState(..), StateT(..), runStateT)
+import           Control.Monad.Trans (lift)
 
-import qualified Data.ByteString.Char8 as BS
 import           Data.ByteString.Builder (toLazyByteString)
+import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString.Lazy.Char8 as BL
 import qualified Data.DList as D
 import           Data.Int
+import           Data.Maybe (mapMaybe)
+import           Data.Proxy (Proxy(..))
 import           Data.Scientific (Scientific)
 import           Data.String (fromString)
 import qualified Data.Text as T
+import qualified Data.Text.Encoding as T (decodeUtf8)
 import qualified Data.Text.Lazy as TL
 import           Data.Time ( LocalTime, UTCTime, Day
-                           , utc, utcToLocalTime )
+                           , ZonedTime, utc, utcToLocalTime )
+import           Data.Typeable (cast)
 import           Data.Word
 #if !MIN_VERSION_base(4,11,0)
 import           Data.Semigroup
@@ -79,6 +94,12 @@ data Sqlite = Sqlite
 
 instance BeamBackend Sqlite where
   type BackendFromField Sqlite = FromField
+
+instance HasQBuilder Sqlite where
+  buildSqlQuery = buildSql92Query' False -- SQLite does not support arbitrarily nesting UNION, INTERSECT, and EXCEPT
+
+instance BeamSqlBackendIsString Sqlite T.Text
+instance BeamSqlBackendIsString Sqlite String
 
 instance FromBackendRow Sqlite Bool
 instance FromBackendRow Sqlite Double
@@ -134,7 +155,17 @@ instance FromField SqliteScientific where
           Just s'  -> pure s'
 
 instance BeamSqlBackend Sqlite
-instance BeamSql92Backend Sqlite
+instance BeamMigrateOnlySqlBackend Sqlite
+type instance BeamSqlBackendSyntax Sqlite = SqliteCommandSyntax
+
+data SqliteHasDefault = SqliteHasDefault
+instance FieldReturnType 'True 'False Sqlite resTy a =>
+         FieldReturnType 'False 'False Sqlite resTy (SqliteHasDefault -> a) where
+  field' _ _ nm ty _ collation constraints SqliteHasDefault =
+    field' (Proxy @'True) (Proxy @'False) nm ty Nothing collation constraints
+
+instance BeamSqlBackendHasSerial Sqlite where
+  genericSerial nm = Beam.field nm (DataType sqliteSerialType) SqliteHasDefault
 
 -- | 'MonadBeam' instance inside whiche SQLite queries are run. See the
 -- <https://tathougies.github.io/beam/ user guide> for more information
@@ -143,7 +174,7 @@ newtype SqliteM a
   { runSqliteM :: ReaderT (String -> IO (), Connection) IO a
     -- ^ Run an IO action with access to a SQLite connection and a debug logging
     -- function, called or each query submitted on the connection.
-  } deriving (Monad, Functor, Applicative, MonadIO)
+  } deriving (Monad, Functor, Applicative, MonadIO, MonadFail)
 
 newtype BeamSqliteParams = BeamSqliteParams [SQLData]
 instance ToRow BeamSqliteParams where
@@ -151,36 +182,100 @@ instance ToRow BeamSqliteParams where
 
 newtype BeamSqliteRow a = BeamSqliteRow a
 instance FromBackendRow Sqlite a => FromRow (BeamSqliteRow a) where
-  fromRow = BeamSqliteRow <$> runF (fromBackendRow :: FromBackendRowM Sqlite a) finish step
+  fromRow = BeamSqliteRow <$> runF fromBackendRow' finish step
       where
+        FromBackendRowM fromBackendRow' = fromBackendRow :: FromBackendRowM Sqlite a
+
+        translateErrors :: Maybe Int -> SomeException -> Maybe SomeException
+        translateErrors col (SomeException e) =
+          case cast e of
+            Just (ConversionFailed { errSQLType     = typeString
+                                   , errHaskellType = hsString
+                                   , errMessage     = msg }) ->
+              Just (SomeException (BeamRowReadError col (ColumnTypeMismatch hsString typeString ("conversion failed: " ++ msg))))
+            Just (UnexpectedNull {}) ->
+              Just (SomeException (BeamRowReadError col ColumnUnexpectedNull))
+            Just (Incompatible { errSQLType     = typeString
+                               , errHaskellType = hsString
+                               , errMessage     = msg }) ->
+              Just (SomeException (BeamRowReadError col (ColumnTypeMismatch hsString typeString ("incompatible: " ++ msg))))
+            Nothing -> Nothing
+
         finish = pure
 
-        step :: FromBackendRowF Sqlite (RowParser a) -> RowParser a
+        step :: forall a'. FromBackendRowF Sqlite (RowParser a') -> RowParser a'
         step (ParseOneField next) =
-            field >>= next
-        step (PeekField next) =
-            RP $ do
-              ro <- ask
-              st <- get
-              case runStateT (runReaderT (unRP field) ro) st of
-                Ok (a, _) -> unRP (next (Just a))
-                _ -> unRP (next Nothing)
-        step (CheckNextNNull n next) =
-            RP $ do
-              ro <- ask
-              st <- get
-              case runStateT (runReaderT (unRP (replicateM_ n (field :: RowParser Null))) ro) st of
-                Ok ((), st') ->
-                  do put st'
-                     unRP (next True)
-                _ -> unRP (next False)
+            RP $ ReaderT $ \ro -> StateT $ \st@(col, _) ->
+            case runStateT (runReaderT (unRP field) ro) st of
+              Ok (x, st') -> runStateT (runReaderT (unRP (next x)) ro) st'
+              Errors errs -> Errors (mapMaybe (translateErrors (Just col)) errs)
+        step (Alt (FromBackendRowM a) (FromBackendRowM b) next) = do
+          RP $ do
+            let RP a' = runF a finish step
+                RP b' = runF b finish step
+
+            st <- get
+            ro <- ask
+            case runStateT (runReaderT a' ro) st of
+              Ok (ra, st') -> do
+                put st'
+                unRP (next ra)
+              Errors aErrs ->
+                case runStateT (runReaderT b' ro) st of
+                  Ok (rb, st') -> do
+                    put st'
+                    unRP (next rb)
+                  Errors bErrs ->
+                    lift (lift (Errors (aErrs ++ bErrs)))
+        step (FailParseWith err) = RP (lift (lift (Errors [SomeException err])))
+
+-- * Equality checks
+#define HAS_SQLITE_EQUALITY_CHECK(ty)                       \
+  instance HasSqlEqualityCheck Sqlite (ty); \
+  instance HasSqlQuantifiedEqualityCheck Sqlite (ty);
+
+HAS_SQLITE_EQUALITY_CHECK(Int)
+HAS_SQLITE_EQUALITY_CHECK(Int8)
+HAS_SQLITE_EQUALITY_CHECK(Int16)
+HAS_SQLITE_EQUALITY_CHECK(Int32)
+HAS_SQLITE_EQUALITY_CHECK(Int64)
+HAS_SQLITE_EQUALITY_CHECK(Word)
+HAS_SQLITE_EQUALITY_CHECK(Word8)
+HAS_SQLITE_EQUALITY_CHECK(Word16)
+HAS_SQLITE_EQUALITY_CHECK(Word32)
+HAS_SQLITE_EQUALITY_CHECK(Word64)
+HAS_SQLITE_EQUALITY_CHECK(Double)
+HAS_SQLITE_EQUALITY_CHECK(Float)
+HAS_SQLITE_EQUALITY_CHECK(Bool)
+HAS_SQLITE_EQUALITY_CHECK(String)
+HAS_SQLITE_EQUALITY_CHECK(T.Text)
+HAS_SQLITE_EQUALITY_CHECK(TL.Text)
+HAS_SQLITE_EQUALITY_CHECK(BS.ByteString)
+HAS_SQLITE_EQUALITY_CHECK(BL.ByteString)
+HAS_SQLITE_EQUALITY_CHECK(UTCTime)
+HAS_SQLITE_EQUALITY_CHECK(LocalTime)
+HAS_SQLITE_EQUALITY_CHECK(ZonedTime)
+HAS_SQLITE_EQUALITY_CHECK(Char)
+HAS_SQLITE_EQUALITY_CHECK(Integer)
+HAS_SQLITE_EQUALITY_CHECK(Scientific)
+
+instance HasDefaultSqlDataType Sqlite (SqlSerial Int) where
+  defaultSqlDataType _ _ False = sqliteSerialType
+  defaultSqlDataType _ _ True = intType
+
+instance HasDefaultSqlDataType Sqlite BS.ByteString where
+  -- TODO we should somehow allow contsraints based on backend
+  defaultSqlDataType _ _ _ = sqliteBlobType
+
+instance HasDefaultSqlDataType Sqlite LocalTime where
+  defaultSqlDataType _ _ _ = timestampType Nothing False
 
 -- | URI syntax for use with 'withDbConnection'. See documentation for
 -- 'BeamURIOpeners' for more information.
-sqliteUriSyntax :: c SqliteCommandSyntax Sqlite Connection SqliteM
+sqliteUriSyntax :: c Sqlite Connection SqliteM
                 -> BeamURIOpeners c
 sqliteUriSyntax =
-  mkUriOpener "sqlite:"
+  mkUriOpener runBeamSqlite "sqlite:"
     (\uri -> do
         let sqliteName = if null (uriPath uri) then ":memory:" else uriPath uri
         hdl <- open sqliteName
@@ -192,10 +287,7 @@ runBeamSqliteDebug debugStmt conn x = runReaderT (runSqliteM x) (debugStmt, conn
 runBeamSqlite :: Connection -> SqliteM a -> IO a
 runBeamSqlite = runBeamSqliteDebug (\_ -> pure ())
 
-instance MonadBeam SqliteCommandSyntax Sqlite Connection SqliteM where
-  withDatabase = runBeamSqlite
-  withDatabaseDebug = runBeamSqliteDebug
-
+instance MonadBeam Sqlite SqliteM where
   runNoReturn (SqliteCommandSyntax (SqliteSyntax cmd vals)) =
     SqliteM $ do
       (logger, conn) <- ask
@@ -226,14 +318,13 @@ instance MonadBeam SqliteCommandSyntax Sqlite Connection SqliteM where
       , "rows from an insert, use Database.Beam.Sqlite.insertReturning "
       , "for emulation" ]
 
-instance Beam.MonadBeamInsertReturning SqliteCommandSyntax Sqlite Connection SqliteM where
-  runInsertReturningList tbl values =
-    runInsertReturningList (insertReturning tbl values)
+instance Beam.MonadBeamInsertReturning Sqlite SqliteM where
+  runInsertReturningList = runInsertReturningList
 
 runSqliteInsert :: (String -> IO ()) -> Connection -> SqliteInsertSyntax -> IO ()
 runSqliteInsert logger conn (SqliteInsertSyntax tbl fields vs)
     -- If all expressions are simple expressions (no default), then just
-    -- run the INSERT normally
+
   | SqliteInsertExpressions es <- vs, any (any (== SqliteExpressionDefault)) es =
       forM_ es $ \row -> do
         let (fields', row') = unzip $ filter ((/= SqliteExpressionDefault) . snd) $ zip fields row
@@ -249,33 +340,21 @@ runSqliteInsert logger conn (SqliteInsertSyntax tbl fields vs)
 
 -- * emulated INSERT returning support
 
--- | Represents an @INSERT@ statement, from which we can retrieve inserted rows.
--- Beam also offers a backend-agnostic way of using this functionality in the
--- 'MonadBeamInsertReturning' extension. This functionality is emulated in
--- SQLite using a temporary table and a trigger.
-data SqliteInsertReturning (table :: (* -> *) -> *)
-  = SqliteInsertReturning T.Text SqliteInsertSyntax
-  | SqliteInsertReturningNoRows
-
 -- | Build a 'SqliteInsertReturning' representing inserting the given values
 -- into the given table. Use 'runInsertReturningList'
-insertReturning :: DatabaseEntity be db (TableEntity table)
-                -> SqlInsertValues SqliteInsertValuesSyntax (table (QExpr SqliteExpressionSyntax s))
-                -> SqliteInsertReturning table
-insertReturning tbl@(DatabaseEntity (DatabaseTable tblNm _)) vs =
-  case insert tbl vs of
-    SqlInsert s ->
-      SqliteInsertReturning tblNm s
-    SqlInsertNoRows ->
-      SqliteInsertReturningNoRows
+insertReturning :: Beamable table
+                => DatabaseEntity Sqlite db (TableEntity table)
+                -> SqlInsertValues Sqlite (table (QExpr Sqlite s))
+                -> SqlInsert Sqlite table
+insertReturning = insert
 
 -- | Runs a 'SqliteInsertReturning' statement and returns a result for each
 -- inserted row.
 runInsertReturningList :: FromBackendRow Sqlite (table Identity)
-                       => SqliteInsertReturning table
+                       => SqlInsert Sqlite table
                        -> SqliteM [ table Identity ]
-runInsertReturningList SqliteInsertReturningNoRows = pure []
-runInsertReturningList (SqliteInsertReturning nm insertStmt_) =
+runInsertReturningList SqlInsertNoRows = pure []
+runInsertReturningList (SqlInsert _ insertStmt_@(SqliteInsertSyntax nm _ _)) =
   do (logger, conn) <- SqliteM ask
      SqliteM . liftIO $ do
 
@@ -287,7 +366,9 @@ runInsertReturningList (SqliteInsertReturning nm insertStmt_) =
 #error Need either POSIX or Win32 API for MonadBeamInsertReturning
 #endif
 
-       let startSavepoint =
+       let tableNameTxt = T.decodeUtf8 (BL.toStrict (sqliteRenderSyntaxScript (fromSqliteTableName nm)))
+
+           startSavepoint =
              execute_ conn (Query ("SAVEPOINT insert_savepoint_" <> processId))
            rollbackToSavepoint =
              execute_ conn (Query ("ROLLBACK TRANSACTION TO SAVEPOINT insert_savepoint_" <> processId))
@@ -295,13 +376,13 @@ runInsertReturningList (SqliteInsertReturning nm insertStmt_) =
              execute_ conn (Query ("RELEASE SAVEPOINT insert_savepoint_" <> processId))
 
            createInsertedValuesTable =
-             execute_ conn (Query ("CREATE TEMPORARY TABLE inserted_values_" <> processId <> " AS SELECT * FROM \"" <> sqliteEscape nm <> "\" LIMIT 0"))
+             execute_ conn (Query ("CREATE TEMPORARY TABLE inserted_values_" <> processId <> " AS SELECT * FROM " <> tableNameTxt <> " LIMIT 0"))
            dropInsertedValuesTable =
              execute_ conn (Query ("DROP TABLE inserted_values_" <> processId))
 
            createInsertTrigger =
-             execute_ conn (Query ("CREATE TEMPORARY TRIGGER insert_trigger_" <> processId <> " AFTER INSERT ON \"" <> sqliteEscape nm <> "\" BEGIN " <>
-                                   "INSERT INTO inserted_values_" <> processId <> " SELECT * FROM \"" <> sqliteEscape nm <> "\" WHERE ROWID=last_insert_rowid(); END" ))
+             execute_ conn (Query ("CREATE TEMPORARY TRIGGER insert_trigger_" <> processId <> " AFTER INSERT ON " <> tableNameTxt <> " BEGIN " <>
+                                   "INSERT INTO inserted_values_" <> processId <> " SELECT * FROM " <> tableNameTxt <> " WHERE ROWID=last_insert_rowid(); END" ))
            dropInsertTrigger =
              execute_ conn (Query ("DROP TRIGGER insert_trigger_" <> processId))
 

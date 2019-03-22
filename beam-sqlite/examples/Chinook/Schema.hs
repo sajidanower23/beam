@@ -63,7 +63,8 @@ instance Beamable (PrimaryKey AlbumT)
 type AlbumId = PrimaryKey AlbumT Identity; deriving instance Show AlbumId
 deriving instance Show (PrimaryKey AlbumT (Nullable Identity))
 
-artistAlbums :: OneToMany ChinookDb s ArtistT AlbumT
+artistAlbums :: HasSqlEqualityCheck be Int32
+             => OneToMany be ChinookDb s ArtistT AlbumT
 artistAlbums = oneToMany_ (album chinookDb) albumArtist
 
 -- * Employee
@@ -154,7 +155,8 @@ instance Table InvoiceT where
 instance Beamable (PrimaryKey InvoiceT)
 type InvoiceId = PrimaryKey InvoiceT Identity; deriving instance Show InvoiceId
 
-invoiceLines :: OneToMany ChinookDb s InvoiceT InvoiceLineT
+invoiceLines :: HasSqlEqualityCheck be Int32
+             => OneToMany be ChinookDb s InvoiceT InvoiceLineT
 invoiceLines = oneToMany_ (invoiceLine chinookDb) invoiceLineInvoice
 
 -- * InvoiceLine
@@ -225,7 +227,8 @@ instance Table PlaylistTrackT where
 instance Beamable (PrimaryKey PlaylistTrackT)
 type PlaylistTrackId = PrimaryKey PlaylistTrackT Identity; deriving instance Show PlaylistTrackId
 
-playlistTrackRelationship :: ManyToMany ChinookDb PlaylistT TrackT
+playlistTrackRelationship :: HasSqlEqualityCheck be Int32
+                          => ManyToMany be ChinookDb PlaylistT TrackT
 playlistTrackRelationship =
  manyToMany_ (playlistTrack chinookDb)
              playlistTrackPlaylistId
@@ -254,13 +257,16 @@ instance Table TrackT where
 instance Beamable (PrimaryKey TrackT)
 type TrackId = PrimaryKey TrackT Identity; deriving instance Show TrackId
 
-genreTracks :: OneToManyOptional ChinookDb s GenreT TrackT
+genreTracks :: HasSqlEqualityCheck be Int32
+            => OneToManyOptional be ChinookDb s GenreT TrackT
 genreTracks = oneToManyOptional_ (track chinookDb) trackGenreId
 
-mediaTypeTracks :: OneToMany ChinookDb s MediaTypeT TrackT
+mediaTypeTracks :: HasSqlEqualityCheck be Int32
+                => OneToMany be ChinookDb s MediaTypeT TrackT
 mediaTypeTracks = oneToMany_ (track chinookDb) trackMediaTypeId
 
-albumTracks :: OneToManyOptional ChinookDb s AlbumT TrackT
+albumTracks :: HasSqlEqualityCheck be Int32
+            => OneToManyOptional be ChinookDb s AlbumT TrackT
 albumTracks = oneToManyOptional_ (track chinookDb) trackAlbumId
 
 -- * database
@@ -291,29 +297,40 @@ chinookDb :: DatabaseSettings be ChinookDb
 chinookDb =
   defaultDbSettings `withDbModification`
   (dbModification
-   { album = modifyTable (\_ -> "Album")
-                         (Album "AlbumId" "Title" (ArtistId "ArtistId"))
-   , artist = modifyTable (\_ -> "Artist") (Artist "ArtistId" "Name")
-   , customer = modifyTable (\_ -> "Customer")
-                     (Customer "CustomerId" "FirstName" "LastName" "Company"
-                               (addressFields "") "Phone" "Fax" "Email"
-                               (EmployeeId "SupportRepId"))
-   , employee = modifyTable (\_ -> "Employee")
+   { album = setEntityName "Album" <>
+             modifyTableFields (Album "AlbumId" "Title" (ArtistId "ArtistId"))
+   , artist = setEntityName "Artist" <>
+              modifyTableFields (Artist "ArtistId" "Name")
+   , customer = setEntityName "Customer" <>
+                modifyTableFields
+                    (Customer "CustomerId" "FirstName" "LastName" "Company"
+                              (addressFields "") "Phone" "Fax" "Email"
+                              (EmployeeId "SupportRepId"))
+   , employee = setEntityName "Employee" <>
+                modifyTableFields
                     (Employee "EmployeeId" "LastName" "FirstName" "Title"
                               (EmployeeId "ReportsTo") "BirthDate" "HireDate"
                               (addressFields "") "Phone" "Fax" "Email")
-   , genre = modifyTable (\_ -> "Genre")
-                  (Genre "GenreId" "Name")
-   , invoice = modifyTable (\_ -> "Invoice")
+   , genre = setEntityName "Genre" <>
+             modifyTableFields
+                 (Genre "GenreId" "Name")
+   , invoice = setEntityName "Invoice" <>
+               modifyTableFields
                    (Invoice "InvoiceId" (CustomerId "CustomerId") "InvoiceDate"
                             (addressFields "Billing") "Total")
-   , invoiceLine = modifyTable (\_ -> "InvoiceLine")
+   , invoiceLine = setEntityName "InvoiceLine" <>
+                   modifyTableFields
                         (InvoiceLine "InvoiceLineId" (InvoiceId "InvoiceId") (TrackId "TrackId")
                                      "UnitPrice" "Quantity")
-   , mediaType = modifyTable (\_ -> "MediaType") (MediaType "MediaTypeId" "Name")
-   , playlist = modifyTable (\_ -> "Playlist") (Playlist "PlaylistId" "Name")
-   , playlistTrack = modifyTable (\_ -> "PlaylistTrack") (PlaylistTrack (PlaylistId "PlaylistId")
-                                                                        (TrackId "TrackId"))
-   , track = modifyTable (\_ -> "Track") (Track "TrackId" "Name" (AlbumId "AlbumId") (MediaTypeId "MediaTypeId")
-                                                (GenreId "GenreId") "Composer" "Milliseconds" "Bytes" "UnitPrice")
+   , mediaType = setEntityName "MediaType" <>
+                 modifyTableFields (MediaType "MediaTypeId" "Name")
+   , playlist = setEntityName "Playlist" <>
+                modifyTableFields (Playlist "PlaylistId" "Name")
+   , playlistTrack = setEntityName "PlaylistTrack" <>
+                     modifyTableFields (PlaylistTrack (PlaylistId "PlaylistId")
+                                                      (TrackId "TrackId"))
+   , track = setEntityName "Track" <>
+             modifyTableFields
+                 (Track "TrackId" "Name" (AlbumId "AlbumId") (MediaTypeId "MediaTypeId")
+                        (GenreId "GenreId") "Composer" "Milliseconds" "Bytes" "UnitPrice")
    })

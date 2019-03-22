@@ -25,6 +25,7 @@ pages:
 #        - 'Common data types': 'user-guide/queries/data-types.md'
         - 'Window functions': 'user-guide/queries/window-functions.md'
         - 'Advanced features': 'user-guide/queries/advanced-features.md'
+        - 'Common table expressions': 'user-guide/queries/common-table-expressions.md'
       - 'Custom queries': 'user-guide/extensibility.md'
       - 'Data Manipulation':
         - 'INSERT': 'user-guide/manipulation/insert.md'
@@ -33,7 +34,8 @@ pages:
   - Schema management:
       - 'The Migrations Framework': 'schema-guide/migrations.md'
       - 'The beam-migrate tool': 'schema-guide/tool.md'
-      - 'Supported migrations': 'schema-guide/supported.md'
+      - 'The beam-migrate library': 'schema-guide/library.md'
+#      - 'Supported migrations': 'schema-guide/supported.md'
   - Backends:
       - 'beam-postgres': 'user-guide/backends/beam-postgres.md'
       - 'beam-sqlite': 'user-guide/backends/beam-sqlite.md'
@@ -49,7 +51,7 @@ markdown_extensions:
       cache_dir: 'docs/.beam-query-cache'
       conf: 'docs/beam.yaml'
       base_dir: '.'
-      enabled_backends: [ beam-postgres, beam-sqlite, beam-mysql ]
+      enabled_backends: [ beam-postgres, beam-sqlite, beam-mysql, beam-mssql ]
   - docs.markdown.markdown_fenced_code_tabs
   - def_list
   - codehilite

@@ -1,7 +1,10 @@
 module Database.Beam.Migrate.Tool.Diff where
 
-import           Database.Beam
-import           Database.Beam.Migrate hiding (timestamp)
+import           Prelude hiding (pred)
+
+import           Database.Beam hiding (timestamp)
+import           Database.Beam.Migrate hiding (p)
+
 import           Database.Beam.Migrate.Backend
 import           Database.Beam.Migrate.Log
 import           Database.Beam.Migrate.Tool.Backend
@@ -75,6 +78,15 @@ genDiffFromSources cmdLine reg actualSource expSource =
 
      pure (PredicateDiff (HS.fromList expected) (HS.fromList actual))
 
+filterBeamMigratePreds :: SomeBeamMigrationBackend -> [SomeDatabasePredicate] -> [SomeDatabasePredicate]
+filterBeamMigratePreds (SomeBeamMigrationBackend (BeamMigrationBackend {} :: BeamMigrationBackend be m)) preds =
+  let beamMigrateDbSchema = collectChecks (beamMigratableDb @be @m)
+  in foldr (\pred@(SomeDatabasePredicate pred') preds' ->
+              if pred `elem` preds'
+              then filter (\p@(SomeDatabasePredicate p') -> p /= pred && not (predicateCascadesDropOn p' pred')) preds'
+              else preds')
+           preds beamMigrateDbSchema
+
 getPredicatesFromSpec :: MigrateCmdLine -> MigrationRegistry
                       -> PredicateFetchSource
                       -> IO (Maybe UUID, [ SomeDatabasePredicate ])
@@ -84,14 +96,13 @@ getPredicatesFromSpec cmdLine reg (PredicateFetchSourceCommit (Just modName) com
 
   SchemaMetaData _ _ _ (Schema preds) <- readSchemaMetaData reg be commitId
 
-  let ourSources = HS.fromList [ PredicateSpecificityAllBackends, PredicateSpecificityOnlyBackend (backendName be) ]
-      applicablePreds = map snd (filter (not . HS.null . HS.intersection ourSources . fst) preds)
+  let applicablePreds = predsForBackend be preds
   pure (Just commitId, applicablePreds)
 getPredicatesFromSpec cmdLine reg (PredicateFetchSourceDbHead (MigrationDatabase modName connStr) ref) = do
-  SomeBeamMigrationBackend
-    (BeamMigrationBackend { backendGetDbConstraints = getCs
-                          , backendTransact = transact } ::
-        BeamMigrationBackend cmd be hdl m) <-
+  be@(SomeBeamMigrationBackend
+      (BeamMigrationBackend { backendGetDbConstraints = getCs
+                            , backendTransact = transact } ::
+          BeamMigrationBackend be m)) <-
     loadBackend' cmdLine modName
 
   case ref of
@@ -99,13 +110,13 @@ getPredicatesFromSpec cmdLine reg (PredicateFetchSourceDbHead (MigrationDatabase
       cs <- transact connStr getCs
       case cs of
         Left err -> throwIO (CouldNotFetchConstraints err)
-        Right cs' -> pure (Nothing, cs')
+        Right cs' -> pure (Nothing, filterBeamMigratePreds be cs')
     Just fromHead -> do
       logEntry <- transact connStr $
                   runSelectReturningOne $ select $
                   limit_ 1 $ offset_ (fromIntegral fromHead) $
                   orderBy_ (desc_ . _logEntryId) $
-                  all_ (_beamMigrateLogEntries (beamMigrateDb @be @cmd @hdl @m))
+                  all_ (_beamMigrateLogEntries (beamMigrateDb @be @m))
 
       case logEntry of
         Left err -> throwIO (CouldNotFetchLog err)

@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -fno-warn-unused-binds -fno-warn-name-shadowing#-}
+{-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -21,6 +22,10 @@ module Database.Beam.Sqlite.Syntax
   , SqliteInsertValuesSyntax(..)
   , SqliteColumnSchemaSyntax(..)
   , SqliteExpressionSyntax(..), SqliteValueSyntax(..)
+  , SqliteTableNameSyntax(..)
+  , SqliteAggregationSetQuantifierSyntax(..)
+
+  , fromSqliteExpression
 
     -- * SQLite data type syntax
   , SqliteDataTypeSyntax(..)
@@ -30,22 +35,20 @@ module Database.Beam.Sqlite.Syntax
     -- * Building and consuming 'SqliteSyntax'
   , fromSqliteCommand, formatSqliteInsert
 
-  , emit, emitValue
+  , emit, emitValue, parens
 
   , sqliteEscape, withPlaceholders
   , sqliteRenderSyntaxScript
   ) where
 
 import           Database.Beam.Backend.SQL
+import           Database.Beam.Backend.SQL.AST (ExtractField(..))
 import           Database.Beam.Haskell.Syntax
-import           Database.Beam.Migrate.Generics
+import           Database.Beam.Migrate.Checks (HasDataTypeCreatedCheck(..))
 import           Database.Beam.Migrate.SQL.Builder hiding (fromSqlConstraintAttributes)
 import           Database.Beam.Migrate.SQL.SQL92
-import           Database.Beam.Migrate.SQL (DataType(..), FieldReturnType(..), field)
-import           Database.Beam.Migrate.SQL.BeamExtensions
 import           Database.Beam.Migrate.Serialization
-import           Database.Beam.Query
-import           Database.Beam.Query.SQL92
+import           Database.Beam.Query hiding (ExtractField(..))
 
 import           Data.ByteString (ByteString)
 import qualified Data.ByteString as B
@@ -56,7 +59,6 @@ import qualified Data.DList as DL
 import           Data.Hashable
 import           Data.Int
 import           Data.Maybe
-import           Data.Proxy (Proxy(..))
 import           Data.Scientific
 import           Data.String
 import qualified Data.Text as T
@@ -179,9 +181,6 @@ fromSqliteCommand (SqliteCommandInsert (SqliteInsertSyntax tbl fields values)) =
 
 -- | SQLite @SELECT@ syntax
 newtype SqliteSelectSyntax = SqliteSelectSyntax { fromSqliteSelect :: SqliteSyntax }
-instance HasQBuilder SqliteSelectSyntax where
-  buildSqlQuery = buildSql92Query' False -- SQLite does not support arbitrarily nesting UNION, INTERSECT, and EXCEPT
-
 
 -- | SQLite @INSERT@ syntax. This doesn't directly wrap 'SqliteSyntax' because
 -- we need to do some processing on @INSERT@ statements to deal with @AUTO
@@ -189,9 +188,9 @@ instance HasQBuilder SqliteSelectSyntax where
 -- into 'SqliteSyntax'.
 data SqliteInsertSyntax
   = SqliteInsertSyntax
-  { sqliteInsertTable :: T.Text
+  { sqliteInsertTable  :: !SqliteTableNameSyntax
   , sqliteInsertFields :: [ T.Text ]
-  , sqliteInsertValues :: SqliteInsertValuesSyntax
+  , sqliteInsertValues :: !SqliteInsertValuesSyntax
   }
 
 -- | SQLite @UPDATE@ syntax
@@ -209,7 +208,6 @@ data SqliteExpressionSyntax
 instance Hashable SqliteExpressionSyntax
 newtype SqliteFromSyntax = SqliteFromSyntax { fromSqliteFromSyntax :: SqliteSyntax }
 newtype SqliteComparisonQuantifierSyntax = SqliteComparisonQuantifierSyntax { fromSqliteComparisonQuantifier :: SqliteSyntax }
-newtype SqliteExtractFieldSyntax = SqliteExtractFieldSyntax { fromSqliteExtractField :: SqliteSyntax }
 newtype SqliteAggregationSetQuantifierSyntax = SqliteAggregationSetQuantifierSyntax { fromSqliteAggregationSetQuantifier :: SqliteSyntax }
 newtype SqliteProjectionSyntax = SqliteProjectionSyntax { fromSqliteProjection :: SqliteSyntax }
 newtype SqliteGroupingSyntax = SqliteGroupingSyntax { fromSqliteGrouping :: SqliteSyntax }
@@ -284,6 +282,7 @@ newtype SqliteAlterTableSyntax = SqliteAlterTableSyntax { fromSqliteAlterTable :
 newtype SqliteAlterTableActionSyntax = SqliteAlterTableActionSyntax { fromSqliteAlterTableAction :: Maybe SqliteSyntax }
 newtype SqliteAlterColumnActionSyntax = SqliteAlterColumnActionSyntax { fromSqliteAlterColumnAction :: Maybe SqliteSyntax }
 newtype SqliteDropTableSyntax = SqliteDropTableSyntax { fromSqliteDropTable :: SqliteSyntax }
+newtype SqliteTableNameSyntax = SqliteTableNameSyntax { fromSqliteTableName :: SqliteSyntax }
 
 fromSqliteExpression :: SqliteExpressionSyntax -> SqliteSyntax
 fromSqliteExpression (SqliteExpressionSyntax s) = s
@@ -294,9 +293,9 @@ sqliteExpressionSerialized = BeamSerializedExpression . TE.decodeUtf8 . BL.toStr
                              sqliteRenderSyntaxScript . fromSqliteExpression
 
 -- | Format a SQLite @INSERT@ expression for the given table name, fields, and values.
-formatSqliteInsert :: T.Text -> [ T.Text ] -> SqliteInsertValuesSyntax -> SqliteSyntax
+formatSqliteInsert :: SqliteTableNameSyntax -> [ T.Text ] -> SqliteInsertValuesSyntax -> SqliteSyntax
 formatSqliteInsert tblNm fields values =
-  emit "INSERT INTO " <> quotedIdentifier tblNm <> parens (commas (map quotedIdentifier fields)) <> emit " " <>
+  emit "INSERT INTO " <> fromSqliteTableName tblNm <> parens (commas (map quotedIdentifier fields)) <> emit " " <>
   case values of
     SqliteInsertFromSql (SqliteSelectSyntax select) -> select
     SqliteInsertExpressions es ->
@@ -322,17 +321,25 @@ instance IsSql92DdlCommandSyntax SqliteCommandSyntax where
   alterTableCmd = SqliteCommandSyntax . fromSqliteAlterTable
   dropTableCmd = SqliteCommandSyntax . fromSqliteDropTable
 
+instance IsSql92TableNameSyntax SqliteTableNameSyntax where
+  -- SQLite doesn't have schemas proper, but it does have attached databases, which is what we use here
+  tableName Nothing tbl = SqliteTableNameSyntax (quotedIdentifier tbl)
+  tableName (Just sch) tbl = SqliteTableNameSyntax (quotedIdentifier sch <> emit "." <> quotedIdentifier tbl)
+
 instance IsSql92DropTableSyntax SqliteDropTableSyntax where
-  dropTableSyntax nm = SqliteDropTableSyntax (emit "DROP TABLE " <> quotedIdentifier nm)
+  type Sql92DropTableTableNameSyntax SqliteDropTableSyntax = SqliteTableNameSyntax
+
+  dropTableSyntax nm = SqliteDropTableSyntax (emit "DROP TABLE " <> fromSqliteTableName nm)
 
 instance IsSql92AlterTableSyntax SqliteAlterTableSyntax where
   type Sql92AlterTableAlterTableActionSyntax SqliteAlterTableSyntax = SqliteAlterTableActionSyntax
+  type Sql92AlterTableTableNameSyntax SqliteAlterTableSyntax = SqliteTableNameSyntax
 
   alterTableSyntax nm action =
     SqliteAlterTableSyntax $
     case fromSqliteAlterTableAction action of
       Just alterTable ->
-        emit "ALTER TABLE " <> quotedIdentifier nm <> emit " " <> alterTable
+        emit "ALTER TABLE " <> fromSqliteTableName nm <> emit " " <> alterTable
       Nothing ->
         emit "SELECT 1"
 
@@ -444,6 +451,7 @@ instance IsSql92CreateTableSyntax SqliteCreateTableSyntax where
   type Sql92CreateTableColumnSchemaSyntax SqliteCreateTableSyntax = SqliteColumnSchemaSyntax
   type Sql92CreateTableTableConstraintSyntax SqliteCreateTableSyntax = SqliteTableConstraintSyntax
   type Sql92CreateTableOptionsSyntax SqliteCreateTableSyntax = SqliteTableOptionsSyntax
+  type Sql92CreateTableTableNameSyntax SqliteCreateTableSyntax = SqliteTableNameSyntax
 
   createTableSyntax _ nm fields constraints =
     let fieldDefs = map mkFieldDef fields
@@ -459,7 +467,7 @@ instance IsSql92CreateTableSyntax SqliteCreateTableSyntax where
 
         createWithConstraints constraintDefs' =
           SqliteCreateTableSyntax $
-          emit "CREATE TABLE " <> quotedIdentifier nm <> parens (commas (fieldDefs <> constraintDefs'))
+          emit "CREATE TABLE " <> fromSqliteTableName nm <> parens (commas (fieldDefs <> constraintDefs'))
         normalCreateTable = createWithConstraints constraintDefs
         createTableNoPkConstraint = createWithConstraints noPkConstraintDefs
 
@@ -608,8 +616,9 @@ instance IsSql92FromSyntax SqliteFromSyntax where
   type Sql92FromTableSourceSyntax SqliteFromSyntax = SqliteTableSourceSyntax
 
   fromTable tableSrc Nothing = SqliteFromSyntax (fromSqliteTableSource tableSrc)
-  fromTable tableSrc (Just nm) =
-    SqliteFromSyntax (fromSqliteTableSource tableSrc <> emit " AS " <> quotedIdentifier nm)
+  fromTable tableSrc (Just (nm, colNms)) =
+    SqliteFromSyntax (fromSqliteTableSource tableSrc <> emit " AS " <> quotedIdentifier nm <>
+                      maybe mempty (\colNms' -> parens (commas (map quotedIdentifier colNms'))) colNms)
 
   innerJoin = _join "INNER JOIN"
   leftJoin = _join "LEFT JOIN"
@@ -638,11 +647,16 @@ instance IsSql92FieldNameSyntax SqliteFieldNameSyntax where
     quotedIdentifier a
 
 instance IsSql92TableSourceSyntax SqliteTableSourceSyntax where
+  type Sql92TableSourceTableNameSyntax SqliteTableSourceSyntax = SqliteTableNameSyntax
   type Sql92TableSourceSelectSyntax SqliteTableSourceSyntax = SqliteSelectSyntax
+  type Sql92TableSourceExpressionSyntax SqliteTableSourceSyntax = SqliteExpressionSyntax
 
-  tableNamed = SqliteTableSourceSyntax . quotedIdentifier
+  tableNamed = SqliteTableSourceSyntax . fromSqliteTableName
   tableFromSubSelect s =
     SqliteTableSourceSyntax (parens (fromSqliteSelect s))
+  tableFromValues vss = SqliteTableSourceSyntax . parens $
+                        emit "VALUES " <>
+                        commas (map (\vs -> parens (commas (map fromSqliteExpression vs))) vss)
 
 instance IsSql92GroupingSyntax SqliteGroupingSyntax where
   type Sql92GroupingExpressionSyntax SqliteGroupingSyntax = SqliteExpressionSyntax
@@ -657,8 +671,6 @@ instance IsSql92OrderingSyntax SqliteOrderingSyntax where
   ascOrdering e = SqliteOrderingSyntax (fromSqliteExpression e <> emit " ASC")
   descOrdering e = SqliteOrderingSyntax (fromSqliteExpression e <> emit " DESC")
 
-instance IsSqlExpressionSyntaxStringType SqliteExpressionSyntax T.Text
-instance IsSqlExpressionSyntaxStringType SqliteExpressionSyntax String
 instance HasSqlValueSyntax SqliteValueSyntax Int where
   sqlValueSyntax i = SqliteValueSyntax (emitValue (SQLInteger (fromIntegral i)))
 instance HasSqlValueSyntax SqliteValueSyntax Int8 where
@@ -720,7 +732,7 @@ instance IsSql92ExpressionSyntax SqliteExpressionSyntax where
   type Sql92ExpressionFieldNameSyntax SqliteExpressionSyntax = SqliteFieldNameSyntax
   type Sql92ExpressionQuantifierSyntax SqliteExpressionSyntax = SqliteComparisonQuantifierSyntax
   type Sql92ExpressionCastTargetSyntax SqliteExpressionSyntax = SqliteDataTypeSyntax
-  type Sql92ExpressionExtractFieldSyntax SqliteExpressionSyntax = SqliteExtractFieldSyntax
+  type Sql92ExpressionExtractFieldSyntax SqliteExpressionSyntax = ExtractField
 
   addE = binOp "+"; subE = binOp "-"; mulE = binOp "*"; divE = binOp "/"
   modE = binOp "%"; orE = binOp "OR"; andE = binOp "AND"; likeE = binOp "LIKE"
@@ -768,9 +780,7 @@ instance IsSql92ExpressionSyntax SqliteExpressionSyntax where
   upperE x = SqliteExpressionSyntax (emit "UPPER" <> parens (fromSqliteExpression x))
   trimE x = SqliteExpressionSyntax (emit "TRIM" <> parens (fromSqliteExpression x))
   coalesceE es = SqliteExpressionSyntax (emit "COALESCE" <> parens (commas (map fromSqliteExpression es)))
-  extractE field from =
-    SqliteExpressionSyntax $
-    emit "EXTRACT" <> parens (fromSqliteExtractField field <> emit " FROM " <> parens (fromSqliteExpression from))
+  extractE = sqliteExtract
   castE e t = SqliteExpressionSyntax (emit "CAST" <> parens (parens (fromSqliteExpression e) <> emit " AS " <> fromSqliteDataType t))
   caseE cases else_ =
     SqliteExpressionSyntax $
@@ -788,6 +798,12 @@ instance IsSql99ConcatExpressionSyntax SqliteExpressionSyntax where
   concatE (x:xs) =
     SqliteExpressionSyntax $ parens $
     foldl (\a b -> a <> emit " || " <> parens (fromSqliteExpression b)) (fromSqliteExpression x) xs
+
+instance IsSql99FunctionExpressionSyntax SqliteExpressionSyntax where
+  functionCallE fn args =
+    SqliteExpressionSyntax $
+    fromSqliteExpression fn <> parens (commas (fmap fromSqliteExpression args))
+  functionNameE nm = SqliteExpressionSyntax (emit (TE.encodeUtf8 nm))
 
 binOp :: ByteString -> SqliteExpressionSyntax -> SqliteExpressionSyntax -> SqliteExpressionSyntax
 binOp op a b =
@@ -832,6 +848,7 @@ instance IsSql92AggregationSetQuantifierSyntax SqliteAggregationSetQuantifierSyn
   setQuantifierAll = SqliteAggregationSetQuantifierSyntax (emit "ALL")
 
 instance IsSql92InsertSyntax SqliteInsertSyntax where
+  type Sql92InsertTableNameSyntax SqliteInsertSyntax = SqliteTableNameSyntax
   type Sql92InsertValuesSyntax SqliteInsertSyntax = SqliteInsertValuesSyntax
 
   insertStmt = SqliteInsertSyntax
@@ -844,12 +861,13 @@ instance IsSql92InsertValuesSyntax SqliteInsertValuesSyntax where
   insertFromSql = SqliteInsertFromSql
 
 instance IsSql92UpdateSyntax SqliteUpdateSyntax where
+  type Sql92UpdateTableNameSyntax SqliteUpdateSyntax = SqliteTableNameSyntax
   type Sql92UpdateFieldNameSyntax SqliteUpdateSyntax = SqliteFieldNameSyntax
   type Sql92UpdateExpressionSyntax SqliteUpdateSyntax = SqliteExpressionSyntax
 
   updateStmt tbl fields where_ =
     SqliteUpdateSyntax $
-    emit "UPDATE " <> quotedIdentifier tbl <>
+    emit "UPDATE " <> fromSqliteTableName tbl <>
     (case fields of
        [] -> mempty
        _ -> emit " SET " <>
@@ -857,11 +875,12 @@ instance IsSql92UpdateSyntax SqliteUpdateSyntax where
     maybe mempty (\where_ -> emit " WHERE " <> fromSqliteExpression where_) where_
 
 instance IsSql92DeleteSyntax SqliteDeleteSyntax where
+  type Sql92DeleteTableNameSyntax SqliteDeleteSyntax = SqliteTableNameSyntax
   type Sql92DeleteExpressionSyntax SqliteDeleteSyntax = SqliteExpressionSyntax
 
   deleteStmt tbl Nothing where_ =
     SqliteDeleteSyntax $
-    emit "DELETE FROM " <> quotedIdentifier tbl <>
+    emit "DELETE FROM " <> fromSqliteTableName tbl <>
     maybe mempty (\where_ -> emit " WHERE " <> fromSqliteExpression where_) where_
   deleteStmt _ (Just _) _ =
       error "beam-sqlite: invariant failed: DELETE must not have a table alias"
@@ -875,39 +894,35 @@ commas [] = mempty
 commas [x] = x
 commas (x:xs) = x <> foldMap (emit ", " <>) xs
 
+strftimeSyntax :: SqliteExpressionSyntax -> SqliteExpressionSyntax -> [ SqliteExpressionSyntax ] -> SqliteExpressionSyntax
+strftimeSyntax fmt ts mods =
+    functionCallE (SqliteExpressionSyntax (emit "strftime"))
+                  (fmt:ts:mods)
+
+-- | SQLite does not support @EXTRACT@ directly, but we can emulate
+-- the behavior if we know which field we want.
+sqliteExtract :: ExtractField -> SqliteExpressionSyntax -> SqliteExpressionSyntax
+sqliteExtract field from =
+    case field of
+      ExtractFieldTimeZoneHour   -> error "sqliteExtract: TODO ExtractFieldTimeZoneHour"
+      ExtractFieldTimeZoneMinute -> error "sqliteExtract: TODO ExtractFieldTimeZoneMinute"
+
+      ExtractFieldDateTimeYear   -> extractStrftime "%Y"
+      ExtractFieldDateTimeMonth  -> extractStrftime "%m"
+      ExtractFieldDateTimeDay    -> extractStrftime "%d"
+      ExtractFieldDateTimeHour   -> extractStrftime "%H"
+      ExtractFieldDateTimeMinute -> extractStrftime "%M"
+      ExtractFieldDateTimeSecond -> extractStrftime "%S"
+
+    where
+      extractStrftime :: String -> SqliteExpressionSyntax
+      extractStrftime fmt = strftimeSyntax (valueE (sqlValueSyntax fmt)) from []
+
 sqliteSerialType :: SqliteDataTypeSyntax
 sqliteSerialType = SqliteDataTypeSyntax (emit "INTEGER PRIMARY KEY AUTOINCREMENT")
                                         intType
                                         (BeamSerializedDataType (beamSerializeJSON "sqlite" "serial"))
                                         True
-
-data SqliteHasDefault = SqliteHasDefault
-instance FieldReturnType 'True 'False SqliteColumnSchemaSyntax resTy a =>
-         FieldReturnType 'False 'False SqliteColumnSchemaSyntax resTy (SqliteHasDefault -> a) where
-  field' _ _ nm ty _ collation constraints SqliteHasDefault =
-    field' (Proxy @'True) (Proxy @'False) nm ty Nothing collation constraints
-
-instance IsBeamSerialColumnSchemaSyntax SqliteColumnSchemaSyntax where
-  genericSerial nm = field nm (DataType sqliteSerialType) SqliteHasDefault
-
-instance HasDefaultSqlDataType SqliteDataTypeSyntax (SqlSerial Int) where
-  defaultSqlDataType _ False = sqliteSerialType
-  defaultSqlDataType _ True = intType
-instance HasDefaultSqlDataTypeConstraints SqliteColumnSchemaSyntax (SqlSerial Int) where
-  defaultSqlDataTypeConstraints _ _ _ = []
-
-instance HasDefaultSqlDataType SqliteDataTypeSyntax ByteString where
-  -- TODO we should somehow allow contsraints based on backend
-  defaultSqlDataType _ _ = sqliteBlobType
-instance HasDefaultSqlDataTypeConstraints SqliteColumnSchemaSyntax ByteString
-
-instance HasDefaultSqlDataType SqliteDataTypeSyntax UTCTime where
-  defaultSqlDataType _ _ = timestampType Nothing False
-instance HasDefaultSqlDataTypeConstraints SqliteColumnSchemaSyntax UTCTime
-
-instance HasDefaultSqlDataType SqliteDataTypeSyntax LocalTime where
-  defaultSqlDataType _ _ = timestampType Nothing False
-instance HasDefaultSqlDataTypeConstraints SqliteColumnSchemaSyntax LocalTime
 
 instance HasSqlValueSyntax SqliteValueSyntax ByteString where
   sqlValueSyntax bs = SqliteValueSyntax (emitValue (SQLBlob bs))
@@ -924,32 +939,5 @@ instance HasSqlValueSyntax SqliteValueSyntax Day where
   sqlValueSyntax tm = SqliteValueSyntax (emitValue (SQLText (fromString tmStr)))
     where tmStr = formatTime defaultTimeLocale (iso8601DateFormat Nothing) tm
 
--- * Equality checks
-#define HAS_SQLITE_EQUALITY_CHECK(ty)                       \
-  instance HasSqlEqualityCheck SqliteExpressionSyntax (ty); \
-  instance HasSqlQuantifiedEqualityCheck SqliteExpressionSyntax (ty);
-
-HAS_SQLITE_EQUALITY_CHECK(Int)
-HAS_SQLITE_EQUALITY_CHECK(Int8)
-HAS_SQLITE_EQUALITY_CHECK(Int16)
-HAS_SQLITE_EQUALITY_CHECK(Int32)
-HAS_SQLITE_EQUALITY_CHECK(Int64)
-HAS_SQLITE_EQUALITY_CHECK(Word)
-HAS_SQLITE_EQUALITY_CHECK(Word8)
-HAS_SQLITE_EQUALITY_CHECK(Word16)
-HAS_SQLITE_EQUALITY_CHECK(Word32)
-HAS_SQLITE_EQUALITY_CHECK(Word64)
-HAS_SQLITE_EQUALITY_CHECK(Double)
-HAS_SQLITE_EQUALITY_CHECK(Float)
-HAS_SQLITE_EQUALITY_CHECK(Bool)
-HAS_SQLITE_EQUALITY_CHECK(String)
-HAS_SQLITE_EQUALITY_CHECK(T.Text)
-HAS_SQLITE_EQUALITY_CHECK(TL.Text)
-HAS_SQLITE_EQUALITY_CHECK(B.ByteString)
-HAS_SQLITE_EQUALITY_CHECK(BL.ByteString)
-HAS_SQLITE_EQUALITY_CHECK(UTCTime)
-HAS_SQLITE_EQUALITY_CHECK(LocalTime)
-HAS_SQLITE_EQUALITY_CHECK(ZonedTime)
-HAS_SQLITE_EQUALITY_CHECK(Char)
-HAS_SQLITE_EQUALITY_CHECK(Integer)
-HAS_SQLITE_EQUALITY_CHECK(Scientific)
+instance HasDataTypeCreatedCheck SqliteDataTypeSyntax where
+  dataTypeHasBeenCreated _ _ = True

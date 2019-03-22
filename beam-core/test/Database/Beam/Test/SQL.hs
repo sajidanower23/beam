@@ -10,6 +10,8 @@ module Database.Beam.Test.SQL
 import Database.Beam.Test.Schema hiding (tests)
 
 import Database.Beam
+import Database.Beam.Query.Internal
+import Database.Beam.Backend.SQL (MockSqlBackend)
 import Database.Beam.Backend.SQL.AST
 
 import Data.Time.Clock
@@ -51,13 +53,24 @@ tests = testGroup "SQL generation tests"
                     ]
                   ]
 
+selectMock :: Projectible (MockSqlBackend Command) res
+           => Q (MockSqlBackend Command) db QBaseScope res -> SqlSelect (MockSqlBackend Command) (QExprToIdentity res)
+selectMock = select
+
+updateMock :: Beamable table
+           => DatabaseEntity (MockSqlBackend Command) db (TableEntity table)
+           -> (forall s. table (QField s) -> QAssignment (MockSqlBackend Command) s)
+           -> (forall s. table (QExpr (MockSqlBackend Command) s) -> QExpr (MockSqlBackend Command) s Bool)
+           -> SqlUpdate (MockSqlBackend Command) table
+updateMock = update
+
 -- | Ensure simple select selects the right fields
 
 simpleSelect :: TestTree
 simpleSelect =
   testCase "All fields are present in a simple all_ query" $
   do SqlSelect Select { selectTable = SelectTable { .. }
-                      , .. } <- pure (select (all_ (_employees employeeDbSettings)))
+                      , .. } <- pure (selectMock (all_ (_employees employeeDbSettings)))
 
      selectGrouping @?= Nothing
      selectOrdering @?= []
@@ -67,7 +80,7 @@ simpleSelect =
      selectHaving @?= Nothing
      selectQuantifier @?= Nothing
 
-     Just (FromTable (TableNamed "employees") (Just tblName)) <- pure selectFrom
+     Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (tblName, Nothing))) <- pure selectFrom
 
      selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField tblName "first_name"), Just "res0")
                                     , (ExpressionFieldName (QualifiedField tblName "last_name"), Just "res1")
@@ -84,7 +97,7 @@ simpleWhere :: TestTree
 simpleWhere =
   testCase "guard_ clauses are successfully translated into WHERE statements" $
   do SqlSelect Select { selectTable = SelectTable { .. }
-                      , .. } <- pure $ select $
+                      , .. } <- pure $ selectMock $
                                 do e <- all_ (_employees employeeDbSettings)
                                    guard_ (_employeeSalary e >. 120202 &&.
                                            _employeeAge e <. 30 &&.
@@ -97,7 +110,7 @@ simpleWhere =
      selectHaving @?= Nothing
      selectQuantifier @?= Nothing
 
-     Just (FromTable (TableNamed "employees") (Just employees)) <- pure selectFrom
+     Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (employees, Nothing))) <- pure selectFrom
 
      let salaryCond = ExpressionCompOp ">" Nothing (ExpressionFieldName (QualifiedField employees "salary")) (ExpressionValue (Value (120202 :: Double)))
          ageCond = ExpressionCompOp "<" Nothing (ExpressionFieldName (QualifiedField employees "age")) (ExpressionValue (Value (30 :: Int)))
@@ -111,7 +124,7 @@ simpleJoin :: TestTree
 simpleJoin =
   testCase "Introducing multiple tables results in an inner join" $
   do SqlSelect Select { selectTable = SelectTable { .. }
-                      , .. } <- pure $ select $
+                      , .. } <- pure $ selectMock $
                                 do e <- all_ (_employees employeeDbSettings)
                                    r <- all_ (_roles employeeDbSettings)
                                    pure (_employeePhoneNumber e, _roleName r)
@@ -124,8 +137,8 @@ simpleJoin =
      selectHaving @?= Nothing
      selectQuantifier @?= Nothing
 
-     Just (InnerJoin (FromTable (TableNamed "employees") (Just employees))
-                     (FromTable (TableNamed "roles") (Just roles))
+     Just (InnerJoin (FromTable (TableNamed (TableName Nothing "employees")) (Just (employees, Nothing)))
+                     (FromTable (TableNamed (TableName Nothing "roles")) (Just (roles, Nothing)))
                      Nothing) <- pure selectFrom
 
      selectProjection @?= ProjExprs [ ( ExpressionFieldName (QualifiedField employees "phone_number"), Just "res0" )
@@ -137,7 +150,7 @@ selfJoin :: TestTree
 selfJoin =
   testCase "Table names are unique and properly used in self joins" $
   do SqlSelect Select { selectTable = SelectTable { .. }
-                      , .. } <- pure $ select $
+                      , .. } <- pure $ selectMock $
                                 do e1 <- all_ (_employees employeeDbSettings)
                                    e2 <- relatedBy_ (_employees employeeDbSettings)
                                                     (\e2 -> _employeeFirstName e1 ==. _employeeLastName e2)
@@ -153,10 +166,10 @@ selfJoin =
      selectHaving @?= Nothing
      selectQuantifier @?= Nothing
 
-     Just (InnerJoin (InnerJoin (FromTable (TableNamed "employees") (Just e1))
-                                (FromTable (TableNamed "employees") (Just e2))
+     Just (InnerJoin (InnerJoin (FromTable (TableNamed (TableName Nothing "employees")) (Just (e1, Nothing)))
+                                (FromTable (TableNamed (TableName Nothing "employees")) (Just (e2, Nothing)))
                                 (Just joinCondition12))
-                     (FromTable (TableNamed "employees") (Just e3))
+                     (FromTable (TableNamed (TableName Nothing "employees")) (Just (e3, Nothing)))
                      (Just joinCondition123)) <- pure selectFrom
 
      assertBool "Table names are not unique" (e1 /= e2 && e1 /= e3 && e2 /= e3)
@@ -172,13 +185,13 @@ leftJoin :: TestTree
 leftJoin =
   testCase "leftJoin_ generates the right join" $
   do SqlSelect Select { selectTable = SelectTable { selectWhere = Nothing, selectFrom } } <-
-       pure $ select $
+       pure $ selectMock $
        do r <- all_ (_roles employeeDbSettings)
           e <- leftJoin_ (all_ (_employees employeeDbSettings)) (\e -> primaryKey e ==. _roleForEmployee r)
           pure (e, r)
 
-     Just (LeftJoin (FromTable (TableNamed "roles") (Just roles))
-                    (FromTable (TableNamed "employees") (Just employees))
+     Just (LeftJoin (FromTable (TableNamed (TableName Nothing "roles")) (Just (roles, Nothing)))
+                    (FromTable (TableNamed (TableName Nothing "employees")) (Just (employees, Nothing)))
                     (Just cond)) <- pure selectFrom
 
      let andE = ExpressionBinOp "AND"
@@ -201,15 +214,15 @@ leftJoinSingle :: TestTree
 leftJoinSingle =
   testCase "leftJoin_ generates the right join (single return value)" $
   do SqlSelect Select { selectTable = SelectTable { selectWhere = Nothing, selectFrom } } <-
-       pure $ select $
+       pure $ selectMock $
        do r <- all_ (_roles employeeDbSettings)
           e <- leftJoin_ (do e <- all_ (_employees employeeDbSettings)
                              pure (primaryKey e, _employeeAge e))
                          (\(key, _) -> key ==. _roleForEmployee r)
           pure (e, r)
 
-     Just (LeftJoin (FromTable (TableNamed "roles") (Just roles))
-                    (FromTable (TableNamed "employees") (Just employees))
+     Just (LeftJoin (FromTable (TableNamed (TableName Nothing "roles")) (Just (roles, Nothing)))
+                    (FromTable (TableNamed (TableName Nothing "employees")) (Just (employees, Nothing)))
                     (Just cond)) <- pure selectFrom
 
      let andE = ExpressionBinOp "AND"
@@ -243,12 +256,12 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            aggregate_ (\e -> (group_ (_employeeAge e), max_ (charLength_ (_employeeFirstName e)))) $
            do e <- all_ (_employees employeeDbSettings)
               pure e
 
-         Just (FromTable (TableNamed "employees") (Just t0)) <- pure selectFrom
+         Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0, Nothing))) <- pure selectFrom
          selectProjection @?= ProjExprs [ ( ExpressionFieldName (QualifiedField t0 "age"), Just "res0" )
                                         , ( ExpressionAgg "MAX" Nothing [ ExpressionCharLength (ExpressionFieldName (QualifiedField t0 "first_name")) ], Just "res1") ]
          selectWhere @?= Nothing
@@ -260,14 +273,14 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            do (age, maxNameLength) <- aggregate_ (\e -> ( group_ (_employeeAge e)
                                                         , fromMaybe_ 0 (max_ (charLength_ (_employeeFirstName e)))) ) $
                                       all_ (_employees employeeDbSettings)
               guard_ (maxNameLength >. 42)
               pure (age, maxNameLength)
 
-         Just (FromTable (TableNamed "employees") (Just t0)) <- pure selectFrom
+         Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0, Nothing))) <- pure selectFrom
          selectProjection @?= ProjExprs [ ( ExpressionFieldName (QualifiedField t0 "age"), Just "res0" )
                                         , ( ExpressionCoalesce [ ExpressionAgg "MAX" Nothing [ ExpressionCharLength (ExpressionFieldName (QualifiedField t0 "first_name")) ]
                                                                , ExpressionValue (Value (0 :: Int)) ], Just "res1" ) ]
@@ -283,14 +296,14 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            do (age, maxFirstNameLength) <- aggregate_ (\e -> (group_ (_employeeAge e), max_ (charLength_ (_employeeFirstName e)))) $
                                            all_ (_employees employeeDbSettings)
               role <- all_ (_roles employeeDbSettings)
               pure (age, maxFirstNameLength, _roleName role)
 
-         Just (InnerJoin (FromTable (TableFromSubSelect subselect) (Just t0))
-                         (FromTable (TableNamed "roles") (Just t1))
+         Just (InnerJoin (FromTable (TableFromSubSelect subselect) (Just (t0, Nothing)))
+                         (FromTable (TableNamed (TableName Nothing "roles")) (Just (t1, Nothing)))
                          Nothing) <- pure selectFrom
          selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField t0 "res0"), Just "res0")
                                         , (ExpressionFieldName (QualifiedField t0 "res1"), Just "res1")
@@ -302,7 +315,7 @@ aggregates =
          Select { selectTable = SelectTable { .. }
                 , selectLimit = Nothing, selectOffset = Nothing
                 , selectOrdering = [] } <- pure subselect
-         Just (FromTable (TableNamed "employees") (Just t0)) <- pure selectFrom
+         Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0, Nothing))) <- pure selectFrom
          selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField t0 "age"), Just "res0")
                                         , (ExpressionAgg "MAX" Nothing [ExpressionCharLength (ExpressionFieldName (QualifiedField t0 "first_name"))], Just "res1") ]
          selectWhere @?= Nothing
@@ -314,14 +327,14 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            do role <- all_ (_roles employeeDbSettings)
               (age, maxFirstNameLength) <- aggregate_ (\e -> (group_ (_employeeAge e), max_ (charLength_ (_employeeFirstName e)))) $
                                            all_ (_employees employeeDbSettings)
               pure (age, maxFirstNameLength, _roleName role)
 
-         Just (InnerJoin (FromTable (TableNamed "roles") (Just t0))
-                         (FromTable (TableFromSubSelect subselect) (Just t1))
+         Just (InnerJoin (FromTable (TableNamed (TableName Nothing "roles")) (Just (t0, Nothing)))
+                         (FromTable (TableFromSubSelect subselect) (Just (t1, Nothing)))
                          Nothing) <- pure selectFrom
          selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField t1 "res0"), Just "res0")
                                         , (ExpressionFieldName (QualifiedField t1 "res1"), Just "res1")
@@ -333,7 +346,7 @@ aggregates =
          Select { selectTable = SelectTable { .. }
                 , selectLimit = Nothing, selectOffset = Nothing
                 , selectOrdering = [] } <- pure subselect
-         Just (FromTable (TableNamed "employees") (Just t0)) <- pure selectFrom
+         Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0, Nothing))) <- pure selectFrom
          selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField t0 "age"), Just "res0")
                                         , (ExpressionAgg "MAX" Nothing [ExpressionCharLength (ExpressionFieldName (QualifiedField t0 "first_name"))], Just "res1") ]
          selectWhere @?= Nothing
@@ -345,11 +358,11 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            aggregate_ (\e -> (group_ (_employeeAge e), max_ (charLength_ (_employeeFirstName e)))) $
            limit_ 10 (all_ (_employees employeeDbSettings))
 
-         Just (FromTable (TableFromSubSelect subselect) (Just t0)) <- pure selectFrom
+         Just (FromTable (TableFromSubSelect subselect) (Just (t0, Nothing))) <- pure selectFrom
 
          selectProjection @?= ProjExprs [(ExpressionFieldName (QualifiedField t0 "res3"),Just "res0"),(ExpressionAgg "MAX" Nothing [ExpressionCharLength (ExpressionFieldName (QualifiedField t0 "res0"))], Just "res1")]
          selectWhere @?= Nothing
@@ -360,7 +373,7 @@ aggregates =
          selectOffset subselect @?= Nothing
          selectOrdering subselect @?= []
 
-         SelectTable {selectFrom = Just (FromTable (TableNamed "employees") (Just t0')), .. } <-
+         SelectTable {selectFrom = Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0', Nothing))), .. } <-
              pure $ selectTable subselect
 
          selectWhere @?= Nothing
@@ -383,12 +396,12 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            filter_ (\(_, l) -> l <. 10 ||. l >. 20) $
            aggregate_ (\e -> ( group_ (_employeeAge e)
                              , fromMaybe_ 0 (max_ (charLength_ (_employeeFirstName e)))) ) $
            limit_ 10 (all_ (_employees employeeDbSettings))
-         Just (FromTable (TableFromSubSelect subselect) (Just t0)) <- pure selectFrom
+         Just (FromTable (TableFromSubSelect subselect) (Just (t0, Nothing))) <- pure selectFrom
 
          selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField t0 "res3"),Just "res0")
                                         , (ExpressionCoalesce [ ExpressionAgg "MAX" Nothing [ExpressionCharLength (ExpressionFieldName (QualifiedField t0 "res0"))]
@@ -409,7 +422,7 @@ aggregates =
          selectOffset subselect @?= Nothing
          selectOrdering subselect @?= []
 
-         SelectTable {selectFrom = Just (FromTable (TableNamed "employees") (Just t0')), .. } <-
+         SelectTable {selectFrom = Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0', Nothing))), .. } <-
              pure $ selectTable subselect
 
          selectWhere @?= Nothing
@@ -430,7 +443,7 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            do (lastName, firstNameLength) <-
                   filter_ (\(_, charLength) -> fromMaybe_ 0 charLength >. 10) $
                   aggregate_ (\e -> (group_ (_employeeLastName e), max_ (charLength_ (_employeeFirstName e)))) $
@@ -438,8 +451,8 @@ aggregates =
               role <- relatedBy_ (_roles employeeDbSettings) (\r -> _roleName r ==. lastName)
               pure (firstNameLength, role, lastName)
 
-         Just (InnerJoin (FromTable (TableFromSubSelect subselect) (Just t0))
-                         (FromTable (TableNamed "roles") (Just t1))
+         Just (InnerJoin (FromTable (TableFromSubSelect subselect) (Just (t0, Nothing)))
+                         (FromTable (TableNamed (TableName Nothing "roles")) (Just (t1, Nothing)))
                          (Just joinCond) ) <-
            pure selectFrom
 
@@ -458,7 +471,7 @@ aggregates =
          Select { selectTable = SelectTable { .. }, selectLimit = Nothing
                 , selectOffset = Nothing, selectOrdering = [] } <-
            pure subselect
-         Just (FromTable (TableFromSubSelect employeesSelect) (Just t0')) <- pure selectFrom
+         Just (FromTable (TableFromSubSelect employeesSelect) (Just (t0', Nothing))) <- pure selectFrom
          selectWhere @?= Nothing
          selectHaving @?= Just (ExpressionCompOp ">" Nothing (ExpressionCoalesce [ ExpressionAgg "MAX" Nothing [ExpressionCharLength (ExpressionFieldName (QualifiedField t0' "res0"))]
                                                                                  , ExpressionValue (Value (0 :: Int)) ])
@@ -470,7 +483,7 @@ aggregates =
          Select { selectTable = SelectTable { .. }, selectLimit = Just 10
                 , selectOffset = Nothing, selectOrdering = [] } <-
            pure employeesSelect
-         Just (FromTable (TableNamed "employees") (Just t0'')) <- pure selectFrom
+         Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0'', Nothing))) <- pure selectFrom
 
          selectWhere @?= Nothing
          selectHaving @?= Nothing
@@ -489,7 +502,7 @@ aggregates =
       do SqlSelect Select { selectTable = SelectTable { .. }
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            do role <- all_ (_roles employeeDbSettings)
               (lastName, firstNameLength) <-
                   filter_ (\(_, charLength) -> charLength >. 10) $
@@ -499,8 +512,8 @@ aggregates =
               guard_ (_roleName role ==. lastName)
               pure (firstNameLength, role, lastName)
 
-         Just (InnerJoin (FromTable (TableNamed "roles") (Just t0))
-                         (FromTable (TableFromSubSelect subselect) (Just t1))
+         Just (InnerJoin (FromTable (TableNamed (TableName Nothing "roles")) (Just (t0, Nothing)))
+                         (FromTable (TableFromSubSelect subselect) (Just (t1, Nothing)))
                          Nothing) <-
            pure selectFrom
          selectWhere @?= Just (ExpressionBinOp "AND"
@@ -519,7 +532,7 @@ aggregates =
          Select { selectTable = SelectTable { .. }, selectLimit = Nothing
                 , selectOffset = Nothing, selectOrdering = [] } <-
            pure subselect
-         Just (FromTable (TableFromSubSelect employeesSelect) (Just t0')) <- pure selectFrom
+         Just (FromTable (TableFromSubSelect employeesSelect) (Just (t0', Nothing))) <- pure selectFrom
          selectWhere @?= Nothing
          selectHaving @?= Nothing
          selectGrouping @?= Just (Grouping [ (ExpressionFieldName (QualifiedField t0' "res1")) ])
@@ -531,7 +544,7 @@ aggregates =
          Select { selectTable = SelectTable { .. }, selectLimit = Just 10
                 , selectOffset = Nothing, selectOrdering = [] } <-
            pure employeesSelect
-         Just (FromTable (TableNamed "employees") (Just t0'')) <- pure selectFrom
+         Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0'', Nothing))) <- pure selectFrom
 
          selectWhere @?= Nothing
          selectHaving @?= Nothing
@@ -561,7 +574,7 @@ orderBy =
       do SqlSelect Select { selectTable = select
                           , selectLimit = Just 100, selectOffset = Just 5
                           , selectOrdering = ordering } <-
-           pure $ select $
+           pure $ selectMock $
            limit_ 100 $ offset_ 5 $
            orderBy_ (asc_ . _roleStarted) $
            all_ (_roles employeeDbSettings)
@@ -571,7 +584,7 @@ orderBy =
                                               , ( ExpressionFieldName (QualifiedField "t0" "for_employee__created"), Just "res2" )
                                               , ( ExpressionFieldName (QualifiedField "t0" "name"), Just "res3" )
                                               , ( ExpressionFieldName (QualifiedField "t0" "started"), Just "res4" ) ]
-                                , selectFrom = Just (FromTable (TableNamed "roles") (Just "t0"))
+                                , selectFrom = Just (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t0", Nothing)))
                                 , selectWhere = Nothing
                                 , selectGrouping = Nothing
                                 , selectHaving = Nothing
@@ -582,7 +595,7 @@ orderBy =
       do SqlSelect Select { selectTable = select
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = ordering } <-
-           pure $ select $
+           pure $ selectMock $
            orderBy_ (asc_ . _roleStarted) $
            (all_ (_roles employeeDbSettings) `unionAll_`
             all_ (_roles employeeDbSettings))
@@ -594,7 +607,7 @@ orderBy =
                                               , ( ExpressionFieldName (QualifiedField "t0" "for_employee__created"), Just "res2" )
                                               , ( ExpressionFieldName (QualifiedField "t0" "name"), Just "res3" )
                                               , ( ExpressionFieldName (QualifiedField "t0" "started"), Just "res4" ) ]
-                           , selectFrom = Just (FromTable (TableNamed "roles") (Just "t0"))
+                           , selectFrom = Just (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t0", Nothing)))
                            , selectWhere = Nothing
                            , selectGrouping = Nothing
                            , selectHaving = Nothing
@@ -607,7 +620,7 @@ orderBy =
       do SqlSelect Select { selectTable = s
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = ordering } <-
-           pure $ select $
+           pure $ selectMock $
            orderBy_ (asc_ . _roleStarted) $
            limit_ 100 $ offset_ 5 $
            all_ (_roles employeeDbSettings)
@@ -619,7 +632,7 @@ orderBy =
                                               , ( ExpressionFieldName (QualifiedField "t0" "for_employee__created"), Just "res2" )
                                               , ( ExpressionFieldName (QualifiedField "t0" "name"), Just "res3" )
                                               , ( ExpressionFieldName (QualifiedField "t0" "started"), Just "res4" ) ]
-                           , selectFrom = Just (FromTable (TableNamed "roles") (Just "t0"))
+                           , selectFrom = Just (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t0", Nothing)))
                            , selectWhere = Nothing
                            , selectGrouping = Nothing
                            , selectHaving = Nothing
@@ -631,7 +644,7 @@ orderBy =
                                               , ( ExpressionFieldName (QualifiedField "t0" "res3"), Just "res3" )
                                               , ( ExpressionFieldName (QualifiedField "t0" "res4"), Just "res4" ) ]
                                 , selectFrom = Just (FromTable (TableFromSubSelect (Select { selectTable = rolesSelect, selectLimit = Just 100
-                                                                                           , selectOffset = Just 5, selectOrdering = [] })) (Just "t0"))
+                                                                                           , selectOffset = Just 5, selectOrdering = [] })) (Just ("t0", Nothing)))
                                 , selectWhere = Nothing
                                 , selectGrouping = Nothing
                                 , selectHaving = Nothing
@@ -643,7 +656,7 @@ orderBy =
       do SqlSelect Select { selectTable = select
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            do oldestEmployees <- limit_ 10 $ orderBy_ ((,) <$> (asc_ <$> _employeeAge) <*> (desc_ <$> (charLength_ <$> _employeeFirstName))) $
                                  all_ (_employees employeeDbSettings)
               role <- relatedBy_ (_roles employeeDbSettings) (\r -> _roleForEmployee r ==. primaryKey oldestEmployees)
@@ -665,7 +678,7 @@ orderBy =
                                                            , ( ExpressionFieldName (QualifiedField "t0" "hire_date"), Just "res5" )
                                                            , ( ExpressionFieldName (QualifiedField "t0" "leave_date"), Just "res6" )
                                                            , ( ExpressionFieldName (QualifiedField "t0" "created"), Just "res7" ) ]
-                                             , selectFrom = Just (FromTable (TableNamed "employees") (Just "t0"))
+                                             , selectFrom = Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing)))
                                              , selectWhere = Nothing
                                              , selectGrouping = Nothing
                                              , selectHaving = Nothing
@@ -676,7 +689,7 @@ orderBy =
                                                                                                        (ExpressionFieldName (QualifiedField "t0" "res1"))))
                                                  (ExpressionCompOp "==" Nothing (ExpressionFieldName (QualifiedField "t1" "for_employee__created"))
                                                                                 (ExpressionFieldName (QualifiedField "t0" "res7")))
-         selectFrom select @?= Just (InnerJoin (FromTable (TableFromSubSelect subselectExp) (Just "t0")) (FromTable (TableNamed "roles") (Just "t1"))
+         selectFrom select @?= Just (InnerJoin (FromTable (TableFromSubSelect subselectExp) (Just ("t0", Nothing))) (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t1", Nothing)))
                                                (Just joinCondExp))
          selectWhere select @?= Nothing
          selectGrouping select @?= Nothing
@@ -687,7 +700,7 @@ orderBy =
       do SqlSelect Select { selectTable = s
                           , selectLimit = Nothing, selectOffset = Nothing
                           , selectOrdering = [] } <-
-           pure $ select $
+           pure $ selectMock $
            do role <- all_ (_roles employeeDbSettings)
               oldestEmployees <- limit_ 10 $ orderBy_ ((,) <$> (asc_ <$> _employeeAge) <*> (desc_ <$> (charLength_ <$> _employeeFirstName))) $
                                  all_ (_employees employeeDbSettings)
@@ -721,13 +734,13 @@ orderBy =
                                                            , ( ExpressionFieldName (QualifiedField "t0" "hire_date"), Just "res5" )
                                                            , ( ExpressionFieldName (QualifiedField "t0" "leave_date"), Just "res6" )
                                                            , ( ExpressionFieldName (QualifiedField "t0" "created"), Just "res7" ) ]
-                                             , selectFrom = Just (FromTable (TableNamed "employees") (Just "t0"))
+                                             , selectFrom = Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing)))
                                              , selectWhere = Nothing
                                              , selectGrouping = Nothing
                                              , selectHaving = Nothing
                                              , selectQuantifier = Nothing }
-         selectFrom s @?= Just (InnerJoin (FromTable (TableNamed "roles") (Just "t0"))
-                                          (FromTable (TableFromSubSelect subselect) (Just "t1"))
+         selectFrom s @?= Just (InnerJoin (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t0", Nothing)))
+                                          (FromTable (TableFromSubSelect subselect) (Just ("t1", Nothing)))
                                           Nothing)
 
 -- | HAVING clause should not be floated out of a join
@@ -738,7 +751,7 @@ joinHaving =
   do SqlSelect Select { selectTable = SelectTable { .. }
                       , selectLimit = Nothing, selectOffset = Nothing
                       , selectOrdering = [] } <-
-       pure $ select $
+       pure $ selectMock $
        do (age, maxFirstNameLength) <- filter_ (\(_, nameLength) -> fromMaybe_ 0 nameLength >=. 20) $
                                        aggregate_ (\e -> (group_ (_employeeAge e), max_ (charLength_ (_employeeFirstName e)))) $
                                        all_ (_employees employeeDbSettings)
@@ -746,8 +759,8 @@ joinHaving =
           pure (age, maxFirstNameLength, _roleName role)
 
      Just (InnerJoin
-            (FromTable (TableFromSubSelect subselect) (Just t0))
-            (FromTable (TableNamed "roles") (Just t1))
+            (FromTable (TableFromSubSelect subselect) (Just (t0, Nothing)))
+            (FromTable (TableNamed (TableName Nothing "roles")) (Just (t1, Nothing)))
             Nothing) <- pure selectFrom
      selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField t0 "res0"), Just "res0")
                                     , (ExpressionFieldName (QualifiedField t0 "res1"), Just "res1")
@@ -759,7 +772,7 @@ joinHaving =
      Select { selectTable = SelectTable { .. }
             , selectLimit = Nothing, selectOffset = Nothing
             , selectOrdering = [] } <- pure subselect
-     Just (FromTable (TableNamed "employees") (Just t0)) <- pure selectFrom
+     Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (t0, Nothing))) <- pure selectFrom
      selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField t0 "age"), Just "res0")
                                     , (ExpressionAgg "MAX" Nothing [ExpressionCharLength (ExpressionFieldName (QualifiedField t0 "first_name"))], Just "res1") ]
      selectWhere @?= Nothing
@@ -774,12 +787,12 @@ joinHaving =
 maybeFieldTypes :: TestTree
 maybeFieldTypes =
   testCase "Simple maybe field types" $
-  do SqlSelect Select { selectTable = SelectTable { selectWhere = Just selectWhere, selectFrom } } <- pure $ select $ do
+  do SqlSelect Select { selectTable = SelectTable { selectWhere = Just selectWhere, selectFrom } } <- pure $ selectMock $ do
        e <- all_ (_employees employeeDbSettings)
        guard_ (isNothing_ (_employeeLeaveDate e))
        pure e
 
-     Just (FromTable (TableNamed "employees") (Just employees)) <- pure selectFrom
+     Just (FromTable (TableNamed (TableName Nothing "employees")) (Just (employees, Nothing))) <- pure selectFrom
      selectWhere @?= ExpressionIsNull (ExpressionFieldName (QualifiedField employees "leave_date"))
 
 -- | Ensure isJustE and isNothingE work correctly for table and composite types
@@ -795,12 +808,12 @@ tableEquality =
  where
    tableExprToTableExpr =
      testCase "Equality comparison between two table expressions" $
-     do SqlSelect Select { selectTable = SelectTable { selectWhere = Just selectWhere, selectFrom } } <- pure $ select $ do
+     do SqlSelect Select { selectTable = SelectTable { selectWhere = Just selectWhere, selectFrom } } <- pure $ selectMock $ do
           d <- all_ (_departments employeeDbSettings)
           guard_ (d ==. d)
           pure d
 
-        Just (FromTable (TableNamed "departments") (Just depts)) <- pure selectFrom
+        Just (FromTable (TableNamed (TableName Nothing "departments")) (Just (depts, Nothing))) <- pure selectFrom
 
         let andE = ExpressionBinOp "AND"; orE = ExpressionBinOp "OR"
             eqE = ExpressionCompOp "==" Nothing
@@ -825,12 +838,12 @@ tableEquality =
      do now <- getCurrentTime
 
         let exp = DepartmentT "Sales" (EmployeeId (Just "Jane") (Just "Smith") (Just now))
-        SqlSelect Select { selectTable = SelectTable { selectWhere = Just selectWhere, selectFrom } } <- pure $ select $ do
+        SqlSelect Select { selectTable = SelectTable { selectWhere = Just selectWhere, selectFrom } } <- pure $ selectMock $ do
           d <- all_ (_departments employeeDbSettings)
           guard_ (d ==. val_ exp)
           pure d
 
-        Just (FromTable (TableNamed "departments") (Just depts)) <- pure selectFrom
+        Just (FromTable (TableNamed (TableName Nothing "departments")) (Just (depts, Nothing))) <- pure selectFrom
 
         let andE = ExpressionBinOp "AND"; orE = ExpressionBinOp "OR"
             eqE = ExpressionCompOp "==" Nothing
@@ -856,7 +869,7 @@ related :: TestTree
 related =
   testCase "related_ generate the correct ON conditions" $
   do SqlSelect Select { .. } <-
-       pure $ select $
+       pure $ selectMock $
        do r <- all_ (_roles employeeDbSettings)
           e <- related_ (_employees employeeDbSettings) (_roleForEmployee r)
           pure (e, r)
@@ -878,41 +891,41 @@ selectCombinators =
   where
     basicUnion =
       testCase "Basic UNION support" $
-      do let leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s (Maybe _) )
+      do let -- leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s (Maybe _) )
              hireDates = do e <- all_ (_employees employeeDbSettings)
                             pure (as_ @Text $ val_ "hire", just_ (_employeeHireDate e))
              leaveDates = do e <- all_ (_employees employeeDbSettings)
                              guard_ (isJust_ (_employeeLeaveDate e))
                              pure (as_ @Text $ val_ "leave", _employeeLeaveDate e)
-         SqlSelect Select { selectTable = UnionTables False a b } <- pure (select (union_ hireDates leaveDates))
+         SqlSelect Select { selectTable = UnionTables False a b } <- pure (selectMock (union_ hireDates leaveDates))
          a @?= SelectTable Nothing
                            (ProjExprs [ (ExpressionValue (Value ("hire" :: Text)), Just "res0")
                                       , (ExpressionFieldName (QualifiedField "t0" "hire_date"), Just "res1") ])
-                           (Just (FromTable (TableNamed "employees") (Just "t0")))
+                           (Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing))))
                            Nothing Nothing Nothing
          b @?= SelectTable Nothing
                            (ProjExprs [ (ExpressionValue (Value ("leave" :: Text)), Just "res0")
                                       , (ExpressionFieldName (QualifiedField "t0" "leave_date"), Just "res1") ])
-                           (Just (FromTable (TableNamed "employees") (Just "t0")))
+                           (Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing))))
                            (Just (ExpressionIsNotNull (ExpressionFieldName (QualifiedField "t0" "leave_date"))))
                            Nothing Nothing
          pure ()
 
     fieldNamesCapturedCorrectly =
       testCase "UNION field names are propagated correctly" $
-      do let leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s Int, QExpr Expression s (Maybe _) )
+      do let -- leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s Int, QExpr Expression s (Maybe _) )
              hireDates = do e <- all_ (_employees employeeDbSettings)
                             pure (as_ @Text $ val_ "hire", _employeeAge e, just_ (_employeeHireDate e))
              leaveDates = do e <- all_ (_employees employeeDbSettings)
                              guard_ (isJust_ (_employeeLeaveDate e))
                              pure (as_ @Text $ val_ "leave", _employeeAge e, _employeeLeaveDate e)
          SqlSelect Select { selectTable = SelectTable { .. }, selectLimit = Nothing, selectOffset = Nothing, selectOrdering = [] } <-
-           pure (select $ do
+           pure (selectMock $ do
                     (type_, age, date) <- limit_ 10 (union_ hireDates leaveDates)
                     guard_ (age <. 22)
                     pure (type_, age + 23, date))
 
-         Just (FromTable (TableFromSubSelect subselect) (Just subselectTbl)) <- pure selectFrom
+         Just (FromTable (TableFromSubSelect subselect) (Just (subselectTbl, Nothing))) <- pure selectFrom
          selectProjection @?= ProjExprs [ (ExpressionFieldName (QualifiedField subselectTbl "res0"), Just "res0")
                                         , (ExpressionBinOp "+" (ExpressionFieldName (QualifiedField subselectTbl "res1"))
                                                                (ExpressionValue (Value (23 :: Int))), Just "res1")
@@ -930,12 +943,12 @@ selectCombinators =
                                         (ProjExprs [ ( ExpressionValue (Value ("hire" :: Text)), Just "res0" )
                                                    , ( ExpressionFieldName (QualifiedField "t0" "age"), Just "res1" )
                                                    , ( ExpressionFieldName (QualifiedField "t0" "hire_date"), Just "res2" ) ])
-                                        (Just (FromTable (TableNamed "employees") (Just "t0"))) Nothing Nothing Nothing
+                                        (Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing)))) Nothing Nothing Nothing
          leaveDatesQuery @?= SelectTable Nothing
                                          (ProjExprs [ ( ExpressionValue (Value ("leave" :: Text)), Just "res0" )
                                                     , ( ExpressionFieldName (QualifiedField "t0" "age"), Just "res1")
                                                     , ( ExpressionFieldName (QualifiedField "t0" "leave_date"), Just "res2") ])
-                                         (Just (FromTable (TableNamed "employees") (Just "t0")))
+                                         (Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing))))
                                          (Just (ExpressionIsNotNull (ExpressionFieldName (QualifiedField "t0" "leave_date"))))
                                          Nothing Nothing
 
@@ -948,7 +961,7 @@ selectCombinators =
              leaveDates = do e <- all_ (_employees employeeDbSettings)
                              guard_ (isJust_ (_employeeLeaveDate e))
                              pure (_employeeFirstName e, _employeeLastName e)
-         SqlSelect Select { selectTable = IntersectTables False _ _ } <- pure $ select $ intersect_ hireDates leaveDates
+         SqlSelect Select { selectTable = IntersectTables False _ _ } <- pure $ selectMock $ intersect_ hireDates leaveDates
          pure ()
 
     basicExcept =
@@ -958,26 +971,26 @@ selectCombinators =
              leaveDates = do e <- all_ (_employees employeeDbSettings)
                              guard_ (isJust_ (_employeeLeaveDate e))
                              pure (_employeeFirstName e, _employeeLastName e)
-         SqlSelect Select { selectTable = ExceptTable False _ _ } <- pure $ select $ except_ hireDates leaveDates
+         SqlSelect Select { selectTable = ExceptTable False _ _ } <- pure $ selectMock $ except_ hireDates leaveDates
          pure ()
 
     equalProjectionsDontHaveSubSelects =
       testCase "Equal projections dont have sub-selects" $
-      do let leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s Text, QExpr Expression s Int )
+      do let -- leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s Text, QExpr Expression s Int )
              hireDates = do e <- all_ (_employees employeeDbSettings)
                             pure (_employeeFirstName e, _employeeLastName e, _employeeAge e)
              leaveDates = do e <- all_ (_employees employeeDbSettings)
                              guard_ (isJust_ (_employeeLeaveDate e))
                              pure (_employeeFirstName e, _employeeLastName e, _employeeAge e)
          SqlSelect Select { selectTable = ExceptTable False _ _ } <-
-             pure $ select $ do
+             pure $ selectMock $ do
                (firstName, lastName, age) <- except_ hireDates leaveDates
                pure (firstName, (lastName, age))
          pure ()
 
     unionWithGuards =
       testCase "UNION with guards" $
-      do let leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s Int, QExpr Expression s (Maybe _) )
+      do let -- leaveDates, hireDates :: Q _ _ s ( QExpr Expression s Text, QExpr Expression s Int, QExpr Expression s (Maybe _) )
              hireDates = do e <- all_ (_employees employeeDbSettings)
                             pure (as_ @Text $ val_ "hire", _employeeAge e, just_ (_employeeHireDate e))
              leaveDates = do e <- all_ (_employees employeeDbSettings)
@@ -985,25 +998,25 @@ selectCombinators =
                              pure (as_ @Text $ val_ "leave", _employeeAge e, _employeeLeaveDate e)
          SqlSelect Select { selectTable =
                                 SelectTable
-                                { selectFrom = Just (FromTable (TableFromSubSelect (Select (UnionTables False a b) [] Nothing Nothing)) (Just t0))
+                                { selectFrom = Just (FromTable (TableFromSubSelect (Select (UnionTables False a b) [] Nothing Nothing)) (Just (t0, Nothing)))
                                 , selectProjection = proj
                                 , selectWhere = Just where_
                                 , selectGrouping = Nothing
                                 , selectHaving = Nothing
                                 , selectQuantifier = Nothing }
                           , selectLimit = Nothing, selectOffset = Nothing
-                          , selectOrdering = [] } <- pure (select (filter_ (\(_, age, _) -> age <. 40) (union_ hireDates leaveDates)))
+                          , selectOrdering = [] } <- pure (selectMock (filter_ (\(_, age, _) -> age <. 40) (union_ hireDates leaveDates)))
          a @?= SelectTable Nothing
                            (ProjExprs [ (ExpressionValue (Value ("hire" :: Text)), Just "res0")
                                       , (ExpressionFieldName (QualifiedField "t0" "age"), Just "res1")
                                       , (ExpressionFieldName (QualifiedField "t0" "hire_date"), Just "res2") ])
-                           (Just (FromTable (TableNamed "employees") (Just "t0")))
+                           (Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing))))
                            Nothing Nothing Nothing
          b @?= SelectTable Nothing
                            (ProjExprs [ (ExpressionValue (Value ("leave" :: Text)), Just "res0")
                                       , (ExpressionFieldName (QualifiedField "t0" "age"), Just "res1")
                                       , (ExpressionFieldName (QualifiedField "t0" "leave_date"), Just "res2") ])
-                           (Just (FromTable (TableNamed "employees") (Just "t0")))
+                           (Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing))))
                            (Just (ExpressionIsNotNull (ExpressionFieldName (QualifiedField "t0" "leave_date"))))
                            Nothing Nothing
 
@@ -1026,7 +1039,7 @@ limitOffset =
     limitSupport =
       testCase "Basic LIMIT support" $
       do SqlSelect Select { selectLimit, selectOffset } <-
-           pure $ select $ limit_ 100 $ limit_ 20 (all_ (_employees employeeDbSettings))
+           pure $ selectMock $ limit_ 100 $ limit_ 20 (all_ (_employees employeeDbSettings))
 
          selectLimit @?= Just 20
          selectOffset @?= Nothing
@@ -1034,7 +1047,7 @@ limitOffset =
     offsetSupport =
       testCase "Basic OFFSET support" $
       do SqlSelect Select { selectLimit, selectOffset } <-
-           pure $ select $ offset_ 2 $ offset_ 100 (all_ (_employees employeeDbSettings))
+           pure $ selectMock $ offset_ 2 $ offset_ 100 (all_ (_employees employeeDbSettings))
 
          selectLimit @?= Nothing
          selectOffset @?= Just 102
@@ -1042,7 +1055,7 @@ limitOffset =
     limitOffsetSupport =
       testCase "Basic LIMIT .. OFFSET .. support" $
       do SqlSelect Select { selectLimit, selectOffset } <-
-           pure $ select $ offset_ 2 $ limit_ 100 (all_ (_roles employeeDbSettings))
+           pure $ selectMock $ offset_ 2 $ limit_ 100 (all_ (_roles employeeDbSettings))
 
          selectLimit @?= Just 98
          selectOffset @?= Just 2
@@ -1052,7 +1065,7 @@ limitOffset =
       do SqlSelect Select { selectOffset = Nothing, selectLimit = Just 10
                           , selectOrdering = []
                           , selectTable = UnionTables False a b } <-
-             pure $ select $ limit_ 10 $ union_ (filter_ (\e -> _employeeAge e <. 40) (all_ (_employees employeeDbSettings)))
+             pure $ selectMock $ limit_ 10 $ union_ (filter_ (\e -> _employeeAge e <. 40) (all_ (_employees employeeDbSettings)))
                                                 (filter_ (\e -> _employeeAge e >. 50) (do { e <- all_ (_employees employeeDbSettings); pure e { _employeeFirstName = _employeeLastName e, _employeeLastName = _employeeFirstName e} }))
 
          selectProjection a @?= ProjExprs [ (ExpressionFieldName (QualifiedField "t0" "first_name"), Just "res0")
@@ -1063,7 +1076,7 @@ limitOffset =
                                           , (ExpressionFieldName (QualifiedField "t0" "hire_date"), Just "res5")
                                           , (ExpressionFieldName (QualifiedField "t0" "leave_date"), Just "res6")
                                           , (ExpressionFieldName (QualifiedField "t0" "created"), Just "res7") ]
-         selectFrom a @?= Just (FromTable (TableNamed "employees") (Just "t0"))
+         selectFrom a @?= Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing)))
          selectWhere a @?= Just (ExpressionCompOp "<" Nothing (ExpressionFieldName (QualifiedField "t0" "age")) (ExpressionValue (Value (40 :: Int))))
          selectGrouping a @?= Nothing
          selectHaving a @?= Nothing
@@ -1076,7 +1089,7 @@ limitOffset =
                                           , (ExpressionFieldName (QualifiedField "t0" "hire_date"), Just "res5")
                                           , (ExpressionFieldName (QualifiedField "t0" "leave_date"), Just "res6")
                                           , (ExpressionFieldName (QualifiedField "t0" "created"), Just "res7") ]
-         selectFrom b @?= Just (FromTable (TableNamed "employees") (Just "t0"))
+         selectFrom b @?= Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing)))
          selectWhere b @?= Just (ExpressionCompOp ">" Nothing (ExpressionFieldName (QualifiedField "t0" "age")) (ExpressionValue (Value (50 :: Int))))
          selectGrouping b @?= Nothing
          selectHaving b @?= Nothing
@@ -1093,7 +1106,7 @@ existsTest =
       do SqlSelect Select { selectOffset = Nothing, selectLimit = Nothing
                           , selectOrdering = []
                           , selectTable = SelectTable { .. } } <-
-           pure  $ select $ do
+           pure  $ selectMock $ do
              role <- all_ (_roles employeeDbSettings)
              guard_ (not_ (exists_ (do dept <- all_ (_departments employeeDbSettings)
                                        guard_ (_departmentName dept ==. _roleName role)
@@ -1109,7 +1122,7 @@ existsTest =
                                        , selectGrouping = Nothing
                                        , selectHaving = Nothing
                                        , selectWhere = Just joinExpr
-                                       , selectFrom = Just (FromTable (TableNamed "departments") (Just "sub_t0")) } }
+                                       , selectFrom = Just (FromTable (TableNamed (TableName Nothing "departments")) (Just ("sub_t0", Nothing))) } }
              joinExpr = ExpressionCompOp "==" Nothing (ExpressionFieldName (QualifiedField "sub_t0" "name"))
                                                       (ExpressionFieldName (QualifiedField "t0" "name"))
 
@@ -1117,19 +1130,19 @@ existsTest =
          selectWhere @?= Just (ExpressionUnOp "NOT" (ExpressionExists existsQuery))
          selectHaving @?= Nothing
          selectQuantifier @?= Nothing
-         selectFrom @?= Just (FromTable (TableNamed "roles") (Just "t0"))
+         selectFrom @?= Just (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t0", Nothing)))
 
 -- | UPDATE can correctly get the current value
 
 updateCurrent :: TestTree
 updateCurrent =
   testCase "UPDATE can use current value" $
-  do SqlUpdate Update { .. } <-
-       pure $ update (_employees employeeDbSettings)
-                     (\employee -> [ _employeeAge employee <-. current_ (_employeeAge employee) + 1])
-                     (\employee -> _employeeFirstName employee ==. "Joe")
+  do SqlUpdate _ (Update { .. }) <-
+       pure $ updateMock (_employees employeeDbSettings)
+                         (\employee -> _employeeAge employee <-. current_ (_employeeAge employee) + 1)
+                         (\employee -> _employeeFirstName employee ==. "Joe")
 
-     updateTable @?= "employees"
+     updateTable @?= (TableName Nothing "employees")
      updateFields @?= [ (UnqualifiedField "age", ExpressionBinOp "+" (ExpressionFieldName (UnqualifiedField "age")) (ExpressionValue (Value (1 :: Int)))) ]
      updateWhere @?= Just (ExpressionCompOp "==" Nothing (ExpressionFieldName (UnqualifiedField "first_name")) (ExpressionValue (Value ("Joe" :: String))))
 
@@ -1141,12 +1154,12 @@ updateNullable =
      let employeeKey :: PrimaryKey EmployeeT (Nullable Identity)
          employeeKey = EmployeeId (Just "John") (Just "Smith") (Just curTime)
 
-     SqlUpdate Update { .. } <-
-       pure $ update (_departments employeeDbSettings)
-                     (\department -> [ _departmentHead department <-. val_ employeeKey ])
-                     (\department -> _departmentName department ==. "Sales")
+     SqlUpdate _ (Update { .. }) <-
+       pure $ updateMock (_departments employeeDbSettings)
+                         (\department -> _departmentHead department <-. val_ employeeKey)
+                         (\department -> _departmentName department ==. "Sales")
 
-     updateTable @?= "departments"
+     updateTable @?= (TableName Nothing "departments")
      updateFields @?= [ (UnqualifiedField "head__first_name", ExpressionValue (Value ("John" :: Text)))
                       , (UnqualifiedField "head__last_name", ExpressionValue (Value ("Smith" :: Text)))
                       , (UnqualifiedField "head__created", ExpressionValue (Value curTime)) ]
@@ -1160,7 +1173,7 @@ noEmptyIns :: TestTree
 noEmptyIns =
   testCase "Empty INs are transformed to FALSE" $
   do  SqlSelect Select { selectTable = SelectTable {..} } <-
-        pure $ select $ do
+        pure $ selectMock $ do
           e <- all_ (_employees employeeDbSettings)
           guard_ (_employeeFirstName e `in_` [])
           pure e
@@ -1203,7 +1216,7 @@ gh70OrderByInFirstJoinCausesIncorrectProjection =
 
          SqlSelect Select { selectTable = SelectTable { .. }
                           , .. } <-
-           pure $ select richEmployeesAndRoles
+           pure $ selectMock richEmployeesAndRoles
 
          selectProjection @?= ProjExprs
              [ (ExpressionFieldName (QualifiedField roles "name")    , Just "res0")
@@ -1224,8 +1237,8 @@ gh70OrderByInFirstJoinCausesIncorrectProjection =
 
          selectWhere @?= Just (andE (andE firstNameCond lastNameCond) createdCond)
 
-         Just (InnerJoin (FromTable (TableFromSubSelect subselect) (Just "t0"))
-                         (FromTable (TableNamed "roles") (Just "t1"))
+         Just (InnerJoin (FromTable (TableFromSubSelect subselect) (Just ("t0", Nothing)))
+                         (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t1", Nothing)))
                          Nothing) <- pure selectFrom
 
          Select { selectTable = SelectTable { .. }
@@ -1281,12 +1294,12 @@ gh70OrderByInFirstJoinCausesIncorrectProjection =
                                                                                                , selectWhere = Nothing
                                                                                                , .. }
                                                                                  , selectLimit = Nothing, selectOffset = Nothing
-                                                                                 , selectOrdering = selectOrdering }) (Just "t0"))
-                                                                    (FromTable (TableNamed "roles") (Just "t1"))
+                                                                                 , selectOrdering = selectOrdering }) (Just ("t0", Nothing)))
+                                                                    (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t1", Nothing)))
                                                                     Nothing) }
                        , selectOrdering = []
                        , selectLimit = Nothing , selectOffset = Nothing } <-
-        pure $ select $ richEmployeeNamesAndRoles
+        pure $ selectMock $ richEmployeeNamesAndRoles
 
       selectWhere @?= firstNameCond
       selectOrdering @?= [ OrderingDesc (ExpressionFieldName (QualifiedField "t0" "first_name")) ]
@@ -1308,7 +1321,7 @@ gh70OrderByInFirstJoinCausesIncorrectProjection =
 
     topLevelOffs0 = do
       SqlSelect actual <-
-         pure $ select $ do
+         pure $ selectMock $ do
            e <-  orderBy_ (\e -> desc_ (_employeeAge e)) $ offset_ 0 $
                  filter_ (\e -> _employeeSalary e >=. val_ 100000) $
                  all_ (_employees employeeDbSettings)
@@ -1343,11 +1356,11 @@ gh70OrderByInFirstJoinCausesIncorrectProjection =
                                                          , selectWhere = Just (ExpressionCompOp ">=" Nothing
                                                                                (ExpressionFieldName (QualifiedField "t0" "salary"))
                                                                                (ExpressionValue (Value (100000 :: Double))))
-                                                         , selectFrom  = Just (FromTable (TableNamed "employees") (Just "t0"))
+                                                         , selectFrom  = Just (FromTable (TableNamed (TableName Nothing "employees")) (Just ("t0", Nothing)))
                                                          , selectGrouping = Nothing, selectHaving = Nothing }
                                                        , selectLimit = Nothing, selectOffset = Just 0
-                                                       , selectOrdering = [ OrderingDesc (ExpressionFieldName (QualifiedField "t0" "age"))] }) (Just "t0"))
-                                           (FromTable (TableNamed "roles") (Just "t1"))
+                                                       , selectOrdering = [ OrderingDesc (ExpressionFieldName (QualifiedField "t0" "age"))] }) (Just ("t0", Nothing)))
+                                           (FromTable (TableNamed (TableName Nothing "roles")) (Just ("t1", Nothing)))
                                            Nothing) }
                    , selectOrdering = []
                    , selectLimit = Nothing , selectOffset = Nothing }

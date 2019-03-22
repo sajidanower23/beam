@@ -20,15 +20,18 @@ module Database.Beam.Backend.SQL.SQL2003
     , IsSql2003LeadAndLagExpressionSyntax(..)
     , IsSql2008BigIntDataTypeSyntax(..)
 
-    , Sql2003ExpressionSanityCheck
+    , Sql2003SanityCheck
     ) where
 
 import Database.Beam.Backend.SQL.SQL99
 
 import Data.Text (Text)
 
-type Sql2003ExpressionSanityCheck syntax =
-    ( syntax ~ Sql2003WindowFrameExpressionSyntax (Sql2003ExpressionWindowFrameSyntax syntax) )
+type Sql2003SanityCheck syntax =
+    ( Sql92ExpressionSyntax syntax ~ Sql2003WindowFrameExpressionSyntax (Sql2003ExpressionWindowFrameSyntax (Sql92ExpressionSyntax syntax))
+    , Sql92SelectOrderingSyntax (Sql92SelectSyntax syntax) ~
+      Sql2003WindowFrameOrderingSyntax (Sql2003ExpressionWindowFrameSyntax (Sql92ExpressionSyntax syntax))
+    )
 
 class IsSql92FromSyntax from =>
     IsSql2003FromSyntax from where
@@ -56,6 +59,7 @@ class ( IsSql99ExpressionSyntax expr
     overE :: expr
           -> Sql2003ExpressionWindowFrameSyntax expr
           -> expr
+    rowNumberE :: expr
 
 -- | Optional SQL2003 "Advanced OLAP operations" T612 support
 class IsSql2003ExpressionSyntax expr =>

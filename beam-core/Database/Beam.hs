@@ -6,12 +6,10 @@
 --
 --   This is mainly reference documentation. Most users will want to consult the
 --   [manual](https://tathougies.github.io/beam).
---
---   The API has mostly stayed the same, but not all the examples given there compile.
 module Database.Beam
      ( module Database.Beam.Query
      , module Database.Beam.Schema
-     , MonadBeam(withDatabase, withDatabaseDebug)
+     , MonadBeam(..)
      , FromBackendRow(..)
 
        -- * Re-exports

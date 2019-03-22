@@ -77,13 +77,14 @@ instance IsSql92SelectTableSyntax SelectTable where
 
 data Insert
   = Insert
-  { insertTable :: Text
+  { insertTable :: TableName
   , insertFields :: [ Text ]
   , insertValues :: InsertValues }
   deriving (Show, Eq)
 
 instance IsSql92InsertSyntax Insert where
   type Sql92InsertValuesSyntax Insert = InsertValues
+  type Sql92InsertTableNameSyntax Insert = TableName
 
   insertStmt = Insert
 
@@ -103,12 +104,13 @@ instance IsSql92InsertValuesSyntax InsertValues where
 
 data Update
   = Update
-  { updateTable :: Text
+  { updateTable :: TableName
   , updateFields :: [ (FieldName, Expression) ]
   , updateWhere :: Maybe Expression }
   deriving (Show, Eq)
 
 instance IsSql92UpdateSyntax Update where
+  type Sql92UpdateTableNameSyntax Update = TableName
   type Sql92UpdateFieldNameSyntax Update = FieldName
   type Sql92UpdateExpressionSyntax Update = Expression
 
@@ -116,12 +118,13 @@ instance IsSql92UpdateSyntax Update where
 
 data Delete
   = Delete
-  { deleteTable :: Text
+  { deleteTable :: TableName
   , deleteAlias :: Maybe Text
   , deleteWhere :: Maybe Expression }
   deriving (Show, Eq)
 
 instance IsSql92DeleteSyntax Delete where
+  type Sql92DeleteTableNameSyntax Delete = TableName
   type Sql92DeleteExpressionSyntax Delete = Expression
 
   deleteStmt = Delete
@@ -155,11 +158,6 @@ data ExtractField
   | ExtractFieldDateTimeHour
   | ExtractFieldDateTimeMinute
   | ExtractFieldDateTimeSecond
-  deriving (Show, Eq)
-
-data CastTarget
-  = CastTargetDataType DataType
-  | CastTargetDomainName Text
   deriving (Show, Eq)
 
 data DataType
@@ -256,7 +254,7 @@ data Expression
   | ExpressionUnOp Text Expression
 
   | ExpressionPosition Expression Expression
-  | ExpressionCast Expression CastTarget
+  | ExpressionCast Expression DataType
   | ExpressionExtract ExtractField Expression
   | ExpressionCharLength Expression
   | ExpressionOctetLength Expression
@@ -266,6 +264,7 @@ data Expression
   | ExpressionUpper Expression
   | ExpressionTrim Expression
 
+  | ExpressionNamedFunction Text
   | ExpressionFunctionCall Expression [ Expression ]
   | ExpressionInstanceField Expression Text
   | ExpressionRefField Expression Text
@@ -284,14 +283,20 @@ data Expression
   | ExpressionCurrentTimestamp
   deriving (Show, Eq)
 
-instance IsSqlExpressionSyntaxStringType Expression Text
+instance IsSql92ExtractFieldSyntax ExtractField where
+  secondsField = ExtractFieldDateTimeSecond
+  minutesField = ExtractFieldDateTimeMinute
+  hourField = ExtractFieldDateTimeHour
+  dayField = ExtractFieldDateTimeDay
+  monthField = ExtractFieldDateTimeMonth
+  yearField = ExtractFieldDateTimeYear
 
 instance IsSql92ExpressionSyntax Expression where
   type Sql92ExpressionQuantifierSyntax Expression = ComparatorQuantifier
   type Sql92ExpressionValueSyntax Expression = Value
   type Sql92ExpressionSelectSyntax Expression = Select
   type Sql92ExpressionFieldNameSyntax Expression = FieldName
-  type Sql92ExpressionCastTargetSyntax Expression = CastTarget
+  type Sql92ExpressionCastTargetSyntax Expression = DataType
   type Sql92ExpressionExtractFieldSyntax Expression = ExtractField
 
   valueE = ExpressionValue
@@ -353,10 +358,13 @@ instance IsSql92ExpressionSyntax Expression where
   defaultE = ExpressionDefault
   inE = ExpressionIn
 
+instance IsSql99FunctionExpressionSyntax Expression where
+  functionNameE = ExpressionNamedFunction
+  functionCallE = ExpressionFunctionCall
+
 instance IsSql99ExpressionSyntax Expression where
   distinctE = ExpressionDistinct
   similarToE = ExpressionBinOp "SIMILAR TO"
-  functionCallE = ExpressionFunctionCall
   instanceFieldE = ExpressionInstanceField
   refFieldE = ExpressionRefField
 
@@ -423,6 +431,7 @@ instance IsSql2003ExpressionSyntax Expression where
   type Sql2003ExpressionWindowFrameSyntax Expression = WindowFrame
 
   overE = ExpressionOver
+  rowNumberE = ExpressionAgg "ROW_NUMBER" Nothing []
 
 newtype Projection
   = ProjExprs [ (Expression, Maybe Text ) ]
@@ -451,19 +460,29 @@ instance IsSql92GroupingSyntax Grouping where
 
   groupByExpressions = Grouping
 
+data TableName = TableName (Maybe Text) Text
+  deriving (Show, Eq, Ord)
+
+instance IsSql92TableNameSyntax TableName where
+  tableName = TableName
+
 data TableSource
-  = TableNamed Text
+  = TableNamed TableName
   | TableFromSubSelect Select
+  | TableFromValues [ [ Expression ] ]
   deriving (Show, Eq)
 
 instance IsSql92TableSourceSyntax TableSource where
   type Sql92TableSourceSelectSyntax TableSource = Select
+  type Sql92TableSourceExpressionSyntax TableSource = Expression
+  type Sql92TableSourceTableNameSyntax TableSource = TableName
 
   tableNamed = TableNamed
   tableFromSubSelect = TableFromSubSelect
+  tableFromValues = TableFromValues
 
 data From
-  = FromTable TableSource (Maybe Text)
+  = FromTable TableSource (Maybe (Text, Maybe [Text]))
   | InnerJoin From From (Maybe Expression)
   | LeftJoin From From (Maybe Expression)
   | RightJoin From From (Maybe Expression)

@@ -1,5 +1,5 @@
-{ nixpkgs ? import <nixpkgs> {}, ghc ? nixpkgs.haskell.packages.ghc822.ghc }:
-with (import <nixpkgs> {});
+{ nixpkgs ? import <nixpkgs> {}, ghc ? nixpkgs.haskell.packages.ghc863.ghc }:
+with nixpkgs;
 
 let
   livereload = python27Packages.buildPythonPackage {
@@ -14,7 +14,7 @@ let
     meta = {
       homepage = https://github.com/lepture/python-livereload;
       description = "Python LiveReload is an awesome tool for web developers";
-      license = nixpkgs.stdenv.lib.bsd;
+      license = stdenv.lib.licenses.bsd3;
     };
   };
 
@@ -25,12 +25,13 @@ let
       sha256 = "18d3m9iws5shlbg0yj5xwiy68bliiz70v32y5pa8wi274c36nssa";
     };
 
-    propagatedBuildInputs = with python27Packages; [ tornado livereload click pyyaml markdown jinja2 ];
+    propagatedBuildInputs = with python27Packages;
+    [ tornado livereload click pyyaml markdown jinja2 ];
 
     meta = {
       homepage = http://www.mkdocs.org/;
       description = "MkDocs is a fast, simple and downright gorgeous static site generator that’s geared towards building project documentation. Documentation source files are written in Markdown, and configured with a single YAML configuration file.";
-      license = stdenv.lib.licenses.bsd;
+      license = stdenv.lib.licenses.bsd3;
     };
   };
 
@@ -82,12 +83,14 @@ let
       license = stdenv.lib.licenses.mit;
     };
   };
+
+  beamPython = python27.withPackages (ps: [ mkdocs mkdocs-material ps.sqlparse ]);
 in
   haskell.lib.buildStackProject {
     inherit ghc;
     name = "beam-env";
-    buildInputs = [ postgresql python27Packages.ghp-import bash
-                    (python27.withPackages (ps: [ mkdocs mkdocs-material ps.sqlparse ]))
+    buildInputs = [ postgresql bash beamPython mkdocs pv sqlite
                     ncurses libcxx icu gcc mysql zlib openssl stack gnupg dos2unix vim pcre ];
     LANG = "en_us.UTF-8";
+    python = beamPython;
   }

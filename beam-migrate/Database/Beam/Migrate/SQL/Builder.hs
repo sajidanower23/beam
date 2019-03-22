@@ -4,6 +4,7 @@
 -- | DDL syntax instances for 'SqlSyntaxBuilder'
 module Database.Beam.Migrate.SQL.Builder where
 
+import           Database.Beam.Backend.SQL
 import           Database.Beam.Backend.SQL.Builder
 import           Database.Beam.Migrate.SQL
 import           Database.Beam.Migrate.Serialization
@@ -36,16 +37,19 @@ instance IsSql92DdlCommandSyntax SqlSyntaxBuilder where
   dropTableCmd = id
 
 instance IsSql92DropTableSyntax SqlSyntaxBuilder where
+  type Sql92DropTableTableNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
+
   dropTableSyntax tblNm =
     SqlSyntaxBuilder $
-    byteString "DROP TABLE " <> quoteSql tblNm
+    byteString "DROP TABLE " <> buildSql tblNm
 
 instance IsSql92AlterTableSyntax SqlSyntaxBuilder where
+  type Sql92AlterTableTableNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
   type Sql92AlterTableAlterTableActionSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
 
   alterTableSyntax tblNm action =
     SqlSyntaxBuilder $
-    byteString "ALTER TABLE " <> quoteSql tblNm <> byteString " " <> buildSql action
+    byteString "ALTER TABLE " <> buildSql tblNm <> byteString " " <> buildSql action
 
 instance IsSql92AlterTableActionSyntax SqlSyntaxBuilder where
   type Sql92AlterTableAlterColumnActionSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
@@ -74,17 +78,18 @@ instance IsSql92AlterColumnActionSyntax SqlSyntaxBuilder where
   setNullSyntax = SqlSyntaxBuilder (byteString "DROP NOT NULL")
 
 instance IsSql92CreateTableSyntax SqlSyntaxBuilder where
+  type Sql92CreateTableTableNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
   type Sql92CreateTableColumnSchemaSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
   type Sql92CreateTableTableConstraintSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
   type Sql92CreateTableOptionsSyntax SqlSyntaxBuilder = SqlSyntaxBuilderCreateTableOptions
 
-  createTableSyntax tableOptions tableName fieldSchemas constraints =
+  createTableSyntax tableOptions tblName fieldSchemas constraints =
       SqlSyntaxBuilder $
       byteString "CREATE " <>
       maybe mempty (\b -> buildSql b <> byteString " ") beforeOptions <>
       byteString " TABLE " <>
 
-      quoteSql tableName <>
+      buildSql tblName <>
 
       byteString "(" <>
       buildSepBy (byteString ", ")

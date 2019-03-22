@@ -1,3 +1,4 @@
+{-# LANGUAGE UndecidableInstances #-}
 -- | Some functionality is useful enough to be provided across backends, but is
 -- not standardized. For example, many RDBMS systems provide ways of fetching
 -- auto-incrementing or defaulting fields on INSERT or UPDATE.
@@ -14,50 +15,121 @@ module Database.Beam.Backend.SQL.BeamExtensions
   ) where
 
 import Database.Beam.Backend
-import Database.Beam.Backend.SQL
 import Database.Beam.Query
-import Database.Beam.Query.Internal
 import Database.Beam.Schema
 
 import Control.Monad.Identity
+import Control.Monad.Cont
+import Control.Monad.Except
+import qualified Control.Monad.RWS.Lazy as Lazy
+import qualified Control.Monad.RWS.Strict as Strict
+import Control.Monad.Reader
+import qualified Control.Monad.State.Lazy as Lazy
+import qualified Control.Monad.Writer.Lazy as Lazy
+import qualified Control.Monad.State.Strict as Strict
+import qualified Control.Monad.Writer.Strict as Strict
 
 --import GHC.Generics
 
 -- | 'MonadBeam's that support returning the newly created rows of an @INSERT@ statement.
 --   Useful for discovering the real value of a defaulted value.
-class MonadBeam syntax be handle m =>
-  MonadBeamInsertReturning syntax be handle m | m -> syntax be handle, be -> m, handle -> m where
+class MonadBeam be m =>
+  MonadBeamInsertReturning be m | m -> be where
   runInsertReturningList
     :: ( Beamable table
-       , Projectible (Sql92ExpressionSyntax syntax) (table (QExpr (Sql92ExpressionSyntax syntax) ()))
+       , Projectible be (table (QExpr be ()))
        , FromBackendRow be (table Identity) )
-    => DatabaseEntity be db (TableEntity table)
-    -> SqlInsertValues (Sql92InsertValuesSyntax (Sql92InsertSyntax syntax))
-                       (table (QExpr (Sql92InsertExpressionSyntax (Sql92InsertSyntax syntax)) s))
+    => SqlInsert be table
     -> m [table Identity]
+
+instance MonadBeamInsertReturning be m => MonadBeamInsertReturning be (ExceptT e m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance MonadBeamInsertReturning be m => MonadBeamInsertReturning be (ContT r m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance MonadBeamInsertReturning be m => MonadBeamInsertReturning be (ReaderT r m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance MonadBeamInsertReturning be m => MonadBeamInsertReturning be (Lazy.StateT r m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance MonadBeamInsertReturning be m => MonadBeamInsertReturning be (Strict.StateT r m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance (MonadBeamInsertReturning be m, Monoid r)
+    => MonadBeamInsertReturning be (Lazy.WriterT r m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance (MonadBeamInsertReturning be m, Monoid r)
+    => MonadBeamInsertReturning be (Strict.WriterT r m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance (MonadBeamInsertReturning be m, Monoid w)
+    => MonadBeamInsertReturning be (Lazy.RWST r w s m) where
+    runInsertReturningList = lift . runInsertReturningList
+instance (MonadBeamInsertReturning be m, Monoid w)
+    => MonadBeamInsertReturning be (Strict.RWST r w s m) where
+    runInsertReturningList = lift . runInsertReturningList
 
 -- | 'MonadBeam's that support returning the updated rows of an @UPDATE@ statement.
 --   Useful for discovering the new values of the updated rows.
-class MonadBeam syntax be handle m =>
-  MonadBeamUpdateReturning syntax be handle m | m -> syntax be handle, be -> m, handle -> m where
+class MonadBeam be m =>
+  MonadBeamUpdateReturning be m | m -> be where
   runUpdateReturningList
     :: ( Beamable table
-       , Projectible (Sql92ExpressionSyntax syntax) (table (QExpr (Sql92ExpressionSyntax syntax) ()))
+       , Projectible be (table (QExpr be ()))
        , FromBackendRow be (table Identity) )
-    => DatabaseEntity be db (TableEntity table)
-    -> (forall s. table (QField s) -> [ QAssignment (Sql92UpdateFieldNameSyntax (Sql92UpdateSyntax syntax)) (Sql92UpdateExpressionSyntax (Sql92UpdateSyntax syntax)) s ])
-    -> (forall s. table (QExpr (Sql92UpdateExpressionSyntax (Sql92UpdateSyntax syntax)) s) -> QExpr (Sql92UpdateExpressionSyntax (Sql92UpdateSyntax syntax)) s Bool)
+    => SqlUpdate be table
     -> m [table Identity]
+
+instance MonadBeamUpdateReturning be m => MonadBeamUpdateReturning be (ExceptT e m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance MonadBeamUpdateReturning be m => MonadBeamUpdateReturning be (ContT r m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance MonadBeamUpdateReturning be m => MonadBeamUpdateReturning be (ReaderT r m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance MonadBeamUpdateReturning be m => MonadBeamUpdateReturning be (Lazy.StateT r m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance MonadBeamUpdateReturning be m => MonadBeamUpdateReturning be (Strict.StateT r m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance (MonadBeamUpdateReturning be m, Monoid r)
+    => MonadBeamUpdateReturning be (Lazy.WriterT r m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance (MonadBeamUpdateReturning be m, Monoid r)
+    => MonadBeamUpdateReturning be (Strict.WriterT r m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance (MonadBeamUpdateReturning be m, Monoid w)
+    => MonadBeamUpdateReturning be (Lazy.RWST r w s m) where
+    runUpdateReturningList = lift . runUpdateReturningList
+instance (MonadBeamUpdateReturning be m, Monoid w)
+    => MonadBeamUpdateReturning be (Strict.RWST r w s m) where
+    runUpdateReturningList = lift . runUpdateReturningList
 
 -- | 'MonadBeam's that suppert returning rows that will be deleted by the given
 -- @DELETE@ statement. Useful for deallocating resources based on the value of
 -- deleted rows.
-class MonadBeam syntax be handle m =>
-  MonadBeamDeleteReturning syntax be handle m | m -> syntax be handle, be -> m, handle -> m where
+class MonadBeam be m =>
+  MonadBeamDeleteReturning be m | m -> be where
   runDeleteReturningList
     :: ( Beamable table
-       , Projectible (Sql92ExpressionSyntax syntax) (table (QExpr (Sql92ExpressionSyntax syntax) ()))
+       , Projectible be (table (QExpr be ()))
        , FromBackendRow be (table Identity) )
-    => DatabaseEntity be db (TableEntity table)
-    -> (forall s. table (QExpr (Sql92UpdateExpressionSyntax (Sql92UpdateSyntax syntax)) s) -> QExpr (Sql92UpdateExpressionSyntax (Sql92UpdateSyntax syntax)) s Bool)
+    => SqlDelete be table
     -> m [table Identity]
+
+instance MonadBeamDeleteReturning be m => MonadBeamDeleteReturning be (ExceptT e m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance MonadBeamDeleteReturning be m => MonadBeamDeleteReturning be (ContT r m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance MonadBeamDeleteReturning be m => MonadBeamDeleteReturning be (ReaderT r m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance MonadBeamDeleteReturning be m => MonadBeamDeleteReturning be (Lazy.StateT r m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance MonadBeamDeleteReturning be m => MonadBeamDeleteReturning be (Strict.StateT r m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance (MonadBeamDeleteReturning be m, Monoid r)
+    => MonadBeamDeleteReturning be (Lazy.WriterT r m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance (MonadBeamDeleteReturning be m, Monoid r)
+    => MonadBeamDeleteReturning be (Strict.WriterT r m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance (MonadBeamDeleteReturning be m, Monoid w)
+    => MonadBeamDeleteReturning be (Lazy.RWST r w s m) where
+    runDeleteReturningList = lift . runDeleteReturningList
+instance (MonadBeamDeleteReturning be m, Monoid w)
+    => MonadBeamDeleteReturning be (Strict.RWST r w s m) where
+    runDeleteReturningList = lift . runDeleteReturningList

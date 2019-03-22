@@ -10,8 +10,8 @@ module Database.Beam.Migrate.Generics
    defaultMigratableDbSettings
 
  -- * Extending the defaulting sytem
- , HasDefaultSqlDataType(..), HasDefaultSqlDataTypeConstraints(..)
- , Sql92HasDefaultDataType
+ , HasDefaultSqlDataType(..)
+ , HasNullableConstraint, NullableStatus
  ) where
 
 import Database.Beam.Migrate.Types
@@ -27,10 +27,10 @@ import GHC.Generics
 -- See <http://tathougies.github.io/beam/schema-guide/migrations/ the manual>
 -- for more information on the defaults.
 defaultMigratableDbSettings
-  :: forall syntax be db.
+  :: forall be db.
    ( Generic (CheckedDatabaseSettings be db)
-   , GAutoMigratableDb syntax (Rep (CheckedDatabaseSettings be db)) )
+   , GAutoMigratableDb be (Rep (CheckedDatabaseSettings be db)) )
   => CheckedDatabaseSettings be db
 defaultMigratableDbSettings =
-  to (defaultMigratableDbSettings' (Proxy @syntax) :: Rep (CheckedDatabaseSettings be db) ())
+  to (defaultMigratableDbSettings' (Proxy @be) :: Rep (CheckedDatabaseSettings be db) ())
 

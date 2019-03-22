@@ -11,7 +11,11 @@ module Database.Beam.Postgres.Types
   ( Postgres(..) ) where
 
 import           Database.Beam
-import           Database.Beam.Backend.SQL
+import           Database.Beam.Backend
+import           Database.Beam.Migrate.Generics
+import           Database.Beam.Migrate.SQL (BeamMigrateOnlySqlBackend)
+import           Database.Beam.Postgres.Syntax
+import           Database.Beam.Query.SQL92
 
 import qualified Database.PostgreSQL.Simple.FromField as Pg
 import qualified Database.PostgreSQL.Simple.HStore as Pg (HStoreMap, HStoreList)
@@ -26,9 +30,10 @@ import           Data.CaseInsensitive (CI)
 import           Data.Int
 import           Data.Ratio (Ratio)
 import           Data.Scientific (Scientific, toBoundedInteger)
+import           Data.Tagged
 import           Data.Text (Text)
 import qualified Data.Text.Lazy as TL
-import           Data.Time (UTCTime, Day, TimeOfDay, LocalTime, ZonedTime(..))
+import           Data.Time (UTCTime, Day, TimeOfDay, LocalTime, NominalDiffTime, ZonedTime(..))
 import           Data.UUID.Types (UUID)
 import           Data.Vector (Vector)
 import           Data.Word
@@ -52,21 +57,18 @@ fromScientificOrIntegral = do
   sciVal <- fmap (toBoundedInteger =<<) peekField
   case sciVal of
     Just sciVal' -> do
-      -- If the parse succeeded, consume the field
-      _ <- parseOneField @Postgres @Scientific
       pure sciVal'
     Nothing -> fromIntegral <$> fromBackendRow @Postgres @Integer
 
 -- | Deserialize integral fields, possibly downcasting from a larger integral
 -- type, but only if we won't lose data
 fromPgIntegral :: forall a
-                . (Pg.FromField a, Integral a)
+                . (Pg.FromField a, Integral a, Typeable a)
                => FromBackendRowM Postgres a
 fromPgIntegral = do
   val <- peekField
   case val of
     Just val' -> do
-      _ <- parseOneField @Postgres @a
       pure val'
     Nothing -> do
       val' <- parseOneField @Postgres @Integer
@@ -112,7 +114,7 @@ instance FromBackendRow Postgres LocalTime where
   fromBackendRow =
     peekField >>=
     \case
-      Just (_ :: LocalTime) -> parseOneField
+      Just (x :: LocalTime) -> pure x
 
       -- Also accept 'TIMESTAMP WITH TIME ZONE'. Considered as
       -- 'LocalTime', because postgres always returns times in the
@@ -120,7 +122,7 @@ instance FromBackendRow Postgres LocalTime where
       Nothing ->
         peekField >>=
         \case
-          Just (_ :: ZonedTime) -> zonedTimeToLocalTime <$> parseOneField
+          Just (x :: ZonedTime) -> pure (zonedTimeToLocalTime x)
           Nothing -> fail "'TIMESTAMP WITH TIME ZONE' or 'TIMESTAMP WITHOUT TIME ZONE' required for LocalTime"
 instance FromBackendRow Postgres TimeOfDay
 instance FromBackendRow Postgres Day
@@ -137,7 +139,7 @@ instance FromBackendRow Postgres (Ratio Integer)
 instance FromBackendRow Postgres (CI Text)
 instance FromBackendRow Postgres (CI TL.Text)
 instance (Pg.FromField a, Typeable a) => FromBackendRow Postgres (Vector a) where
-    fromBackendRow = do
+  fromBackendRow = do
       isNull <- peekField
       case isNull of
         Just SqlNull -> pure mempty
@@ -146,7 +148,79 @@ instance (Pg.FromField a, Typeable a) => FromBackendRow Postgres (Pg.PGArray a)
 instance FromBackendRow Postgres (Pg.Binary ByteString)
 instance FromBackendRow Postgres (Pg.Binary BL.ByteString)
 instance (Pg.FromField a, Typeable a) => FromBackendRow Postgres (Pg.PGRange a)
-instance (Pg.FromField a, Pg.FromField b) => FromBackendRow Postgres (Either a b)
+instance (Pg.FromField a, Pg.FromField b, Typeable a, Typeable b) => FromBackendRow Postgres (Either a b)
 
 instance BeamSqlBackend Postgres
-instance BeamSql92Backend Postgres
+instance BeamMigrateOnlySqlBackend Postgres
+type instance BeamSqlBackendSyntax Postgres = PgCommandSyntax
+
+instance BeamSqlBackendIsString Postgres String
+instance BeamSqlBackendIsString Postgres Text
+
+instance HasQBuilder Postgres where
+  buildSqlQuery = buildSql92Query' True
+
+-- * Instances for 'HasDefaultSqlDataType'
+
+instance HasDefaultSqlDataType Postgres ByteString where
+  defaultSqlDataType _ _ _ = pgByteaType
+
+instance HasDefaultSqlDataType Postgres LocalTime where
+  defaultSqlDataType _ _ _ = timestampType Nothing False
+
+instance HasDefaultSqlDataType Postgres (SqlSerial Int) where
+  defaultSqlDataType _ _ False = pgSerialType
+  defaultSqlDataType _ _ _ = intType
+
+instance HasDefaultSqlDataType Postgres UUID where
+  defaultSqlDataType _ _ _ = pgUuidType
+
+-- * Instances for 'HasSqlEqualityCheck'
+
+#define PG_HAS_EQUALITY_CHECK(ty)                                 \
+  instance HasSqlEqualityCheck Postgres (ty);           \
+  instance HasSqlQuantifiedEqualityCheck Postgres (ty);
+
+PG_HAS_EQUALITY_CHECK(Bool)
+PG_HAS_EQUALITY_CHECK(Double)
+PG_HAS_EQUALITY_CHECK(Float)
+PG_HAS_EQUALITY_CHECK(Int)
+PG_HAS_EQUALITY_CHECK(Int8)
+PG_HAS_EQUALITY_CHECK(Int16)
+PG_HAS_EQUALITY_CHECK(Int32)
+PG_HAS_EQUALITY_CHECK(Int64)
+PG_HAS_EQUALITY_CHECK(Integer)
+PG_HAS_EQUALITY_CHECK(Word)
+PG_HAS_EQUALITY_CHECK(Word8)
+PG_HAS_EQUALITY_CHECK(Word16)
+PG_HAS_EQUALITY_CHECK(Word32)
+PG_HAS_EQUALITY_CHECK(Word64)
+PG_HAS_EQUALITY_CHECK(Text)
+PG_HAS_EQUALITY_CHECK(TL.Text)
+PG_HAS_EQUALITY_CHECK(UTCTime)
+PG_HAS_EQUALITY_CHECK(Value)
+PG_HAS_EQUALITY_CHECK(Pg.Oid)
+PG_HAS_EQUALITY_CHECK(LocalTime)
+PG_HAS_EQUALITY_CHECK(ZonedTime)
+PG_HAS_EQUALITY_CHECK(TimeOfDay)
+PG_HAS_EQUALITY_CHECK(NominalDiffTime)
+PG_HAS_EQUALITY_CHECK(Day)
+PG_HAS_EQUALITY_CHECK(UUID)
+PG_HAS_EQUALITY_CHECK([Char])
+PG_HAS_EQUALITY_CHECK(Pg.HStoreMap)
+PG_HAS_EQUALITY_CHECK(Pg.HStoreList)
+PG_HAS_EQUALITY_CHECK(Pg.Date)
+PG_HAS_EQUALITY_CHECK(Pg.ZonedTimestamp)
+PG_HAS_EQUALITY_CHECK(Pg.LocalTimestamp)
+PG_HAS_EQUALITY_CHECK(Pg.UTCTimestamp)
+PG_HAS_EQUALITY_CHECK(Scientific)
+PG_HAS_EQUALITY_CHECK(ByteString)
+PG_HAS_EQUALITY_CHECK(BL.ByteString)
+PG_HAS_EQUALITY_CHECK(Vector a)
+PG_HAS_EQUALITY_CHECK(CI Text)
+PG_HAS_EQUALITY_CHECK(CI TL.Text)
+
+instance HasSqlEqualityCheck Postgres a =>
+  HasSqlEqualityCheck Postgres (Tagged t a)
+instance HasSqlQuantifiedEqualityCheck Postgres a =>
+  HasSqlQuantifiedEqualityCheck Postgres (Tagged t a)

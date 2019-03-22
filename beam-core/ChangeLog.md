@@ -1,3 +1,86 @@
+# 0.8.0.0
+
+## Common table expressions
+
+Beam now supports common table expressions on some backends, using the
+`With` monad. Currently, only `SELECT` statements are supported.
+
+## Changes to field name modification
+
+`EntityModification` is now a `Monoid`.
+
+Instead of taking the beam-determined name, the `renamingFields`
+function instead takes a `Data.List.NonEmpty` value containing the
+names of each Haskell record selector that led to this field.
+
+For example, in the following
+
+```haskell
+data Embedded f =
+  Embedded { _field1 :: Columnar f Text
+           , _field2 :: Columnar f Int }
+
+data Table1 f =
+  Table1 { _tbl1FieldA :: Columnar f Text
+         , _tbl1Embedded :: Embedded f }
+
+db = defaultDbSettings `withDbModification`
+     dbModification { table1 = renamingFields f }
+```
+
+`f` would be called with `["_tbl1FieldA"]`, `["_tbl1Embedded", "_field1"]`
+and `["_tbl1Embedded", "_field2"]`.
+
+
+## Simplified types
+
+Every beam SQL backend is now an instance of `BeamSqlBackend` and has an
+associated syntax via an associated type family. This means types are much simpler.
+
+Another benefit is that `MonadBeam` now has a simpler type and can be used with
+monad transformers. For example, writing a computation that may call out to a
+postgres database is as simple as
+
+```haskell
+dbComputation :: MonadBeam Postgres m => m result
+```
+
+versus before
+
+```haskell
+dbComputation :: MonadBeam PgCommandSyntax Postgres Pg.Connection m => m result
+```
+
+Things become simpler if you want to write database agnostic computations. You can now do
+
+```haskell
+dbComputation :: (BeamSqlBackend be, MonadBeam be m) => m result
+```
+
+versus before
+
+```haskell
+dbComputation :: ( Sql92SanityCheck syntax, MonadBeam syntax be hdl m ) => m result
+```
+
+## Removal of `HasDefaultSqlDataTypeConstraints`
+
+The changes above make a separate `HasDefaultSqlDataTypeConstraints`
+class unnecessary. The `defaultSqlDataTypeConstraints` method is now
+included within the `HasDefaultSqlDataType` class.
+
+## Changes to parseOneField and peekField
+
+Formerly, the `peekField` function would attemt to parse a field
+without advancing the column pointer, regardless of whether a field
+was successfully parsed. In order to support more efficient parsing,
+this has been changed. When `peekField` returns a `Just` value, then
+the column pointer is advanced to the next pointer. This means you do
+not need to call `parseOneField` again to advance the pointer.
+
+You can still chain `peekField` calls together by using the new
+`Alternative` instance for `FromBackendRowM`.
+
 # 0.7.2.0
 
 Add compatibility with GHC 8.4 and stack nightly

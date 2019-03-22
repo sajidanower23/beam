@@ -13,12 +13,13 @@
 --   Always use the provided backends to submit queries and data manipulation
 --   commands to the database.
 module Database.Beam.Backend.SQL.Builder
-  ( SqlSyntaxBuilder(..), SqlSyntaxBackend
+  ( SqlSyntaxBuilder(..) --, SqlSyntaxBackend
   , buildSepBy
   , quoteSql
   , renderSql ) where
 
 import           Database.Beam.Backend.SQL
+--import           Database.Beam.Backend.Types
 
 import           Control.Monad.IO.Class
 
@@ -33,6 +34,7 @@ import           Data.Coerce
 import           Data.Hashable
 import           Data.Int
 import           Data.String
+import qualified Control.Monad.Fail as Fail
 #if !MIN_VERSION_base(4, 11, 0)
 import           Data.Semigroup
 #endif
@@ -125,10 +127,11 @@ tableOp op all a b =
 
 instance IsSql92InsertSyntax SqlSyntaxBuilder where
   type Sql92InsertValuesSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
+  type Sql92InsertTableNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
 
-  insertStmt table fields values =
+  insertStmt tblNm fields values =
     SqlSyntaxBuilder $
-    byteString "INSERT INTO " <> quoteSql table <>
+    byteString "INSERT INTO " <> buildSql tblNm <>
     byteString "(" <> buildSepBy (byteString ", ") (map quoteSql fields) <> byteString ") " <>
     buildSql values
 
@@ -150,10 +153,11 @@ instance IsSql92InsertValuesSyntax SqlSyntaxBuilder where
 instance IsSql92UpdateSyntax SqlSyntaxBuilder where
   type Sql92UpdateFieldNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
   type Sql92UpdateExpressionSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
+  type Sql92UpdateTableNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
 
-  updateStmt table set where_ =
+  updateStmt tblNm set where_ =
     SqlSyntaxBuilder $
-    byteString "UPDATE " <> quoteSql table <>
+    byteString "UPDATE " <> buildSql tblNm <>
     (case set of
        [] -> mempty
        es -> byteString " SET " <> buildSepBy (byteString ", ") (map (\(field, expr) -> buildSql field <> byteString "=" <> buildSql expr) es)) <>
@@ -161,10 +165,11 @@ instance IsSql92UpdateSyntax SqlSyntaxBuilder where
 
 instance IsSql92DeleteSyntax SqlSyntaxBuilder where
   type Sql92DeleteExpressionSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
+  type Sql92DeleteTableNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
 
-  deleteStmt tbl alias where_ =
+  deleteStmt tblNm alias where_ =
     SqlSyntaxBuilder $
-    byteString "DELETE FROM " <> quoteSql tbl <>
+    byteString "DELETE FROM " <> buildSql tblNm <>
     maybe mempty (\alias_ -> byteString " AS " <> quoteSql alias_) alias <>
     maybe mempty (\where_ -> byteString " WHERE " <> buildSql where_) where_
 
@@ -179,11 +184,17 @@ instance IsSql92FieldNameSyntax SqlSyntaxBuilder where
     SqlSyntaxBuilder $
     byteString "`" <> stringUtf8 (T.unpack a) <> byteString "`"
 
-instance IsSqlExpressionSyntaxStringType SqlSyntaxBuilder Text
-
 instance IsSql92QuantifierSyntax SqlSyntaxBuilder where
   quantifyOverAll = SqlSyntaxBuilder "ALL"
   quantifyOverAny = SqlSyntaxBuilder "ANY"
+
+instance IsSql92ExtractFieldSyntax SqlSyntaxBuilder where
+  secondsField = SqlSyntaxBuilder (byteString "SECOND")
+  minutesField = SqlSyntaxBuilder (byteString "MINUTE")
+  hourField    = SqlSyntaxBuilder (byteString "HOUR")
+  dayField     = SqlSyntaxBuilder (byteString "DAY")
+  monthField   = SqlSyntaxBuilder (byteString "MONTH")
+  yearField    = SqlSyntaxBuilder (byteString "YEAR")
 
 instance IsSql92ExpressionSyntax SqlSyntaxBuilder where
   type Sql92ExpressionValueSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
@@ -220,7 +231,7 @@ instance IsSql92ExpressionSyntax SqlSyntaxBuilder where
   positionE needle haystack =
     SqlSyntaxBuilder $ byteString "POSITION(" <> buildSql needle <> byteString ") IN (" <> buildSql haystack <> byteString ")"
   extractE what from =
-    SqlSyntaxBuilder $ buildSql what <> byteString " FROM (" <> buildSql from <> byteString ")"
+    SqlSyntaxBuilder $ byteString "EXTRACT(" <> buildSql what <> byteString " FROM (" <> buildSql from <> byteString "))"
   absE = sqlFuncOp "ABS"
   charLengthE = sqlFuncOp "CHAR_LENGTH"
   bitLengthE = sqlFuncOp "BIT_LENGTH"
@@ -265,16 +276,18 @@ instance IsSql92ExpressionSyntax SqlSyntaxBuilder where
   inE a es = SqlSyntaxBuilder (byteString "(" <> buildSql a <> byteString ") IN (" <>
                                buildSepBy (byteString ", ") (map buildSql es))
 
-instance IsSql99ExpressionSyntax SqlSyntaxBuilder where
-  distinctE = sqlUnOp "DISTINCT"
-  similarToE = sqlBinOp "SIMILAR TO"
-
+instance IsSql99FunctionExpressionSyntax SqlSyntaxBuilder where
+  functionNameE fn = SqlSyntaxBuilder (byteString (TE.encodeUtf8 fn))
   functionCallE function args =
     SqlSyntaxBuilder $
     buildSql function <>
     byteString "(" <>
     buildSepBy (byteString ", ") (map buildSql args) <>
     byteString ")"
+
+instance IsSql99ExpressionSyntax SqlSyntaxBuilder where
+  distinctE = sqlUnOp "DISTINCT"
+  similarToE = sqlBinOp "SIMILAR TO"
 
   instanceFieldE e fieldNm =
     SqlSyntaxBuilder $
@@ -289,6 +302,7 @@ instance IsSql2003ExpressionSyntax SqlSyntaxBuilder where
   overE expr frame =
       SqlSyntaxBuilder $
       buildSql expr <> buildSql frame
+  rowNumberE = SqlSyntaxBuilder (byteString "ROW_NUMBER()")
 
 instance IsSql2003WindowFrameSyntax SqlSyntaxBuilder where
   type Sql2003WindowFrameExpressionSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
@@ -377,16 +391,32 @@ instance IsSql92OrderingSyntax SqlSyntaxBuilder where
   descOrdering expr = SqlSyntaxBuilder (buildSql expr <> byteString " DESC")
 
 instance IsSql92TableSourceSyntax SqlSyntaxBuilder where
+  type Sql92TableSourceTableNameSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
   type Sql92TableSourceSelectSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
-  tableNamed t = SqlSyntaxBuilder (quoteSql t)
+  type Sql92TableSourceExpressionSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
+
+  tableNamed = id
   tableFromSubSelect query = SqlSyntaxBuilder (byteString "(" <> buildSql query <> byteString ")")
+  tableFromValues vss =
+      SqlSyntaxBuilder $
+      byteString "VALUES " <>
+      buildSepBy (byteString ", ")
+       (map (\vs -> byteString "(" <>
+                    buildSepBy (byteString ", ") (map buildSql vs) <>
+                    byteString ")") vss)
+
+instance IsSql92TableNameSyntax SqlSyntaxBuilder where
+  tableName Nothing t  = SqlSyntaxBuilder $ quoteSql t
+  tableName (Just s) t = SqlSyntaxBuilder $ quoteSql s <> byteString "." <> quoteSql t
 
 instance IsSql92FromSyntax SqlSyntaxBuilder where
     type Sql92FromTableSourceSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
     type Sql92FromExpressionSyntax SqlSyntaxBuilder = SqlSyntaxBuilder
 
     fromTable t Nothing = t
-    fromTable t (Just nm) = SqlSyntaxBuilder (buildSql t <> byteString " AS " <> quoteSql nm)
+    fromTable t (Just (nm, colNms)) =
+        SqlSyntaxBuilder (buildSql t <> byteString " AS " <> quoteSql nm <>
+                          maybe mempty (\colNms' -> byteString "(" <> buildSepBy (byteString ", ") (map quoteSql colNms') <> byteString ")") colNms)
 
     innerJoin = join "INNER JOIN"
     leftJoin = join "LEFT JOIN"
@@ -496,19 +526,13 @@ sqlFuncOp fun a =
   SqlSyntaxBuilder $
   byteString fun <> byteString "(" <> buildSql a <> byteString")"
 
+
 -- * Fake 'MonadBeam' instance (for using 'SqlSyntaxBuilder' with migrations mainly)
 
-data SqlSyntaxBackend
+-- data SqlSyntaxBackend
 
-class Trivial a
-instance Trivial a
-
-instance BeamBackend SqlSyntaxBackend where
-  type BackendFromField SqlSyntaxBackend = Trivial
+-- class Trivial a
+-- instance Trivial a
 
 newtype SqlSyntaxM a = SqlSyntaxM (IO a)
-  deriving (Applicative, Functor, Monad, MonadIO)
-
-instance MonadBeam SqlSyntaxBuilder SqlSyntaxBackend SqlSyntaxBackend SqlSyntaxM where
-  withDatabaseDebug _ _ _ = fail "absurd"
-  runReturningMany _ _ = fail "absurd"
+  deriving (Applicative, Functor, Monad, MonadIO, Fail.MonadFail)

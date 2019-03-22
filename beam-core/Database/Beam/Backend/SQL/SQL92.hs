@@ -4,7 +4,7 @@
 module Database.Beam.Backend.SQL.SQL92 where
 
 import Database.Beam.Backend.SQL.Types
-import Database.Beam.Backend.Types
+import Database.Beam.Backend.SQL.Row
 
 import Data.Int
 import Data.Tagged
@@ -12,14 +12,10 @@ import Data.Text (Text)
 import Data.Time (LocalTime)
 import Data.Typeable
 
-class ( BeamSqlBackend be ) =>
-      BeamSql92Backend be where
-
 -- * Finally tagless style
 
 class HasSqlValueSyntax expr ty where
   sqlValueSyntax :: ty -> expr
-class IsSqlExpressionSyntaxStringType expr ty
 
 autoSqlValueSyntax :: (HasSqlValueSyntax expr String, Show a) => a -> expr
 autoSqlValueSyntax = sqlValueSyntax . show
@@ -29,9 +25,11 @@ type Sql92SelectProjectionSyntax select = Sql92SelectTableProjectionSyntax (Sql9
 type Sql92SelectGroupingSyntax select = Sql92SelectTableGroupingSyntax (Sql92SelectSelectTableSyntax select)
 type Sql92SelectFromSyntax select = Sql92SelectTableFromSyntax (Sql92SelectSelectTableSyntax select)
 type Sql92InsertExpressionSyntax select = Sql92InsertValuesExpressionSyntax (Sql92InsertValuesSyntax select)
+type Sql92TableNameSyntax select = Sql92TableSourceTableNameSyntax (Sql92FromTableSourceSyntax (Sql92SelectFromSyntax select))
 
 type Sql92ValueSyntax cmdSyntax = Sql92ExpressionValueSyntax (Sql92ExpressionSyntax cmdSyntax)
 type Sql92ExpressionSyntax cmdSyntax = Sql92SelectExpressionSyntax (Sql92SelectSyntax cmdSyntax)
+type Sql92ExtractFieldSyntax cmdSyntax = Sql92ExpressionExtractFieldSyntax (Sql92ExpressionSyntax cmdSyntax)
 type Sql92HasValueSyntax cmdSyntax = HasSqlValueSyntax (Sql92ValueSyntax cmdSyntax)
 
 -- Putting these in the head constraint can cause infinite recursion that would
@@ -44,13 +42,33 @@ type Sql92SelectSanityCheck select =
   , Sql92ProjectionExpressionSyntax (Sql92SelectTableProjectionSyntax (Sql92SelectSelectTableSyntax select)) ~
     Sql92SelectTableExpressionSyntax (Sql92SelectSelectTableSyntax select)
   , Sql92OrderingExpressionSyntax (Sql92SelectOrderingSyntax select) ~
+    Sql92SelectTableExpressionSyntax (Sql92SelectSelectTableSyntax select)
+  , Sql92TableSourceExpressionSyntax (Sql92FromTableSourceSyntax (Sql92SelectTableFromSyntax (Sql92SelectSelectTableSyntax select))) ~
     Sql92SelectTableExpressionSyntax (Sql92SelectSelectTableSyntax select))
-type Sql92SanityCheck cmd = ( Sql92SelectSanityCheck (Sql92SelectSyntax cmd)
-                            , Sql92ExpressionValueSyntax (Sql92InsertValuesExpressionSyntax (Sql92InsertValuesSyntax (Sql92InsertSyntax cmd))) ~ Sql92ValueSyntax cmd
-                            , Sql92ExpressionValueSyntax (Sql92UpdateExpressionSyntax (Sql92UpdateSyntax cmd)) ~ Sql92ValueSyntax cmd
-                            , Sql92ExpressionValueSyntax (Sql92DeleteExpressionSyntax (Sql92DeleteSyntax cmd)) ~ Sql92ValueSyntax cmd
-                            , Sql92SelectTableExpressionSyntax (Sql92SelectSelectTableSyntax (Sql92SelectSyntax cmd)) ~
-                              Sql92InsertValuesExpressionSyntax (Sql92InsertValuesSyntax (Sql92InsertSyntax cmd)) )
+type Sql92SanityCheck cmd =
+  ( Sql92SelectSanityCheck (Sql92SelectSyntax cmd)
+  , Sql92ExpressionValueSyntax (Sql92InsertValuesExpressionSyntax (Sql92InsertValuesSyntax (Sql92InsertSyntax cmd))) ~ Sql92ValueSyntax cmd
+  , Sql92ExpressionValueSyntax (Sql92UpdateExpressionSyntax (Sql92UpdateSyntax cmd)) ~ Sql92ValueSyntax cmd
+  , Sql92ExpressionValueSyntax (Sql92DeleteExpressionSyntax (Sql92DeleteSyntax cmd)) ~ Sql92ValueSyntax cmd
+
+  , Sql92SelectTableExpressionSyntax (Sql92SelectSelectTableSyntax (Sql92SelectSyntax cmd)) ~
+    Sql92InsertValuesExpressionSyntax (Sql92InsertValuesSyntax (Sql92InsertSyntax cmd))
+
+  , Sql92SelectTableExpressionSyntax (Sql92SelectSelectTableSyntax (Sql92SelectSyntax cmd)) ~
+    Sql92UpdateExpressionSyntax (Sql92UpdateSyntax cmd)
+
+  , Sql92DeleteExpressionSyntax (Sql92DeleteSyntax cmd) ~
+    Sql92UpdateExpressionSyntax (Sql92UpdateSyntax cmd)
+
+  , Sql92ExpressionSelectSyntax (Sql92InsertExpressionSyntax (Sql92InsertSyntax cmd)) ~
+    Sql92SelectSyntax cmd
+
+  , Sql92InsertValuesSelectSyntax (Sql92InsertValuesSyntax (Sql92InsertSyntax cmd)) ~
+    Sql92SelectSyntax cmd
+
+  , Sql92UpdateFieldNameSyntax (Sql92UpdateSyntax cmd) ~
+    Sql92ExpressionFieldNameSyntax (Sql92InsertValuesExpressionSyntax (Sql92InsertValuesSyntax (Sql92InsertSyntax cmd)))
+  )
 
 type Sql92ReasonableMarshaller be =
    ( FromBackendRow be Int, FromBackendRow be SqlNull
@@ -58,6 +76,13 @@ type Sql92ReasonableMarshaller be =
    , FromBackendRow be Char
    , FromBackendRow be Int16, FromBackendRow be Int32, FromBackendRow be Int64
    , FromBackendRow be LocalTime )
+
+-- | Type classes for syntaxes which can be displayed
+class Sql92DisplaySyntax syntax where
+
+  -- | Render the syntax as a 'String', representing the SQL expression it
+  -- stands for
+  displaySyntax :: syntax -> String
 
 class ( IsSql92SelectSyntax (Sql92SelectSyntax cmd)
       , IsSql92InsertSyntax (Sql92InsertSyntax cmd)
@@ -117,12 +142,16 @@ class ( IsSql92ExpressionSyntax (Sql92SelectTableExpressionSyntax select)
   unionTables, intersectTables, exceptTable ::
     Bool -> select -> select -> select
 
-class IsSql92InsertValuesSyntax (Sql92InsertValuesSyntax insert) =>
+class ( IsSql92InsertValuesSyntax (Sql92InsertValuesSyntax insert)
+      , IsSql92TableNameSyntax (Sql92InsertTableNameSyntax insert) ) =>
   IsSql92InsertSyntax insert where
 
   type Sql92InsertValuesSyntax insert :: *
-  insertStmt :: Text
+  type Sql92InsertTableNameSyntax insert :: *
+
+  insertStmt :: Sql92InsertTableNameSyntax insert
              -> [ Text ]
+             -- ^ Fields
              -> Sql92InsertValuesSyntax insert
              -> insert
 
@@ -137,21 +166,26 @@ class IsSql92ExpressionSyntax (Sql92InsertValuesExpressionSyntax insertValues) =
                 -> insertValues
 
 class ( IsSql92ExpressionSyntax (Sql92UpdateExpressionSyntax update)
-      , IsSql92FieldNameSyntax (Sql92UpdateFieldNameSyntax update)) =>
+      , IsSql92FieldNameSyntax (Sql92UpdateFieldNameSyntax update)
+      , IsSql92TableNameSyntax (Sql92UpdateTableNameSyntax update) ) =>
       IsSql92UpdateSyntax update where
+
+  type Sql92UpdateTableNameSyntax update :: *
   type Sql92UpdateFieldNameSyntax update :: *
   type Sql92UpdateExpressionSyntax update :: *
 
-  updateStmt :: Text
+  updateStmt :: Sql92UpdateTableNameSyntax update
              -> [(Sql92UpdateFieldNameSyntax update, Sql92UpdateExpressionSyntax update)]
              -> Maybe (Sql92UpdateExpressionSyntax update) {-^ WHERE -}
              -> update
 
-class IsSql92ExpressionSyntax (Sql92DeleteExpressionSyntax delete) =>
+class ( IsSql92TableNameSyntax (Sql92DeleteTableNameSyntax delete)
+      , IsSql92ExpressionSyntax (Sql92DeleteExpressionSyntax delete) ) =>
   IsSql92DeleteSyntax delete where
+  type Sql92DeleteTableNameSyntax delete :: *
   type Sql92DeleteExpressionSyntax delete :: *
 
-  deleteStmt :: Text -> Maybe Text
+  deleteStmt :: Sql92DeleteTableNameSyntax delete -> Maybe Text
              -> Maybe (Sql92DeleteExpressionSyntax delete)
              -> delete
 
@@ -165,6 +199,14 @@ class IsSql92FieldNameSyntax fn where
 
 class IsSql92QuantifierSyntax quantifier where
   quantifyOverAll, quantifyOverAny :: quantifier
+
+class IsSql92ExtractFieldSyntax extractField where
+  secondsField :: extractField
+  minutesField :: extractField
+  hourField :: extractField
+  dayField :: extractField
+  monthField :: extractField
+  yearField :: extractField
 
 class IsSql92DataTypeSyntax dataType where
   domainType :: Text -> dataType
@@ -191,6 +233,8 @@ class ( HasSqlValueSyntax (Sql92ExpressionValueSyntax expr) Int
       , HasSqlValueSyntax (Sql92ExpressionValueSyntax expr) Bool
       , IsSql92FieldNameSyntax (Sql92ExpressionFieldNameSyntax expr)
       , IsSql92QuantifierSyntax (Sql92ExpressionQuantifierSyntax expr)
+      , IsSql92DataTypeSyntax (Sql92ExpressionCastTargetSyntax expr)
+      , IsSql92ExtractFieldSyntax (Sql92ExpressionExtractFieldSyntax expr)
       , Typeable expr ) =>
     IsSql92ExpressionSyntax expr where
   type Sql92ExpressionQuantifierSyntax expr :: *
@@ -210,6 +254,8 @@ class ( HasSqlValueSyntax (Sql92ExpressionValueSyntax expr) Int
   fieldE :: Sql92ExpressionFieldNameSyntax expr -> expr
 
   betweenE :: expr -> expr -> expr -> expr
+  betweenE a lower upper =
+    (gtE Nothing a lower) `andE` (ltE Nothing a upper)
 
   andE, orE, addE, subE, mulE, divE, likeE,
     modE, overlapsE, nullIfE, positionE
@@ -295,10 +341,22 @@ class IsSql92OrderingSyntax ord where
   ascOrdering, descOrdering
     :: Sql92OrderingExpressionSyntax ord -> ord
 
-class IsSql92TableSourceSyntax tblSource where
+class IsSql92TableNameSyntax tblName where
+  tableName :: Maybe Text {-^ Schema -}
+            -> Text {-^ Table name -}
+            -> tblName
+
+class IsSql92TableNameSyntax (Sql92TableSourceTableNameSyntax tblSource) =>
+  IsSql92TableSourceSyntax tblSource where
+
   type Sql92TableSourceSelectSyntax tblSource :: *
-  tableNamed :: Text -> tblSource
+  type Sql92TableSourceExpressionSyntax tblSource :: *
+  type Sql92TableSourceTableNameSyntax tblSource :: *
+
+  tableNamed :: Sql92TableSourceTableNameSyntax tblSource
+             -> tblSource
   tableFromSubSelect :: Sql92TableSourceSelectSyntax tblSource -> tblSource
+  tableFromValues :: [ [ Sql92TableSourceExpressionSyntax tblSource ] ] -> tblSource
 
 class IsSql92GroupingSyntax grouping where
   type Sql92GroupingExpressionSyntax grouping :: *
@@ -312,7 +370,7 @@ class ( IsSql92TableSourceSyntax (Sql92FromTableSourceSyntax from)
   type Sql92FromExpressionSyntax from :: *
 
   fromTable :: Sql92FromTableSourceSyntax from
-            -> Maybe Text
+            -> Maybe (Text, Maybe [Text])
             -> from
 
   innerJoin, leftJoin, rightJoin
@@ -330,4 +388,3 @@ class IsSql92FromSyntax from =>
 instance HasSqlValueSyntax vs t => HasSqlValueSyntax vs (Tagged tag t) where
   sqlValueSyntax = sqlValueSyntax . untag
 
-instance IsSqlExpressionSyntaxStringType e t => IsSqlExpressionSyntaxStringType e (Tagged tag t)

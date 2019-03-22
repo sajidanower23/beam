@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 module Database.Beam.Migrate.Tool.Registry where
 
 import           Database.Beam.Migrate
@@ -20,7 +21,9 @@ import qualified Data.HashSet as HS
 import           Data.LargeWord (Word256)
 import           Data.List (find, intercalate, sort)
 import           Data.Maybe
+#if !MIN_VERSION_base(4, 11, 0)
 import           Data.Monoid
+#endif
 import           Data.String
 import           Data.Text (Text, unpack)
 import qualified Data.Text as T
@@ -63,9 +66,6 @@ data PredicateFetchSource
   | PredicateFetchSourceDbHead     !MigrationDatabase !(Maybe Int)
   | PredicateFetchSourceEmpty
   deriving Show
-
-data MigrationFormat = MigrationFormatHaskell | MigrationFormatBackend String
-  deriving (Show, Eq, Ord)
 
 data RegisteredSchemaInfo
   = RegisteredSchemaInfo
@@ -306,7 +306,7 @@ registeredSchemaInfoShortMessage sch =
 --     2. Otherwise, look for a @.beam-migrate@ file in this directory and each parent directory
 lookupRegistry' :: MigrateCmdLine -> IO (FilePath, MigrationRegistry)
 lookupRegistry' MigrateCmdLine { migrateRegistryPath = Just path } =
-  Yaml.decodeFile path >>= maybe (fail "Could not read migration registry") (pure . (path,))
+  Yaml.decodeFileEither path >>= either (\e -> fail ("Could not read migration registry: " ++ show e)) (pure . (path,))
 lookupRegistry' cmdLine = getCurrentDirectory >>= lookupRegistry''
   where
     lookupRegistry'' dir =
@@ -455,6 +455,11 @@ schemaFilePath :: MigrationRegistry -> UUID -> FilePath
 schemaFilePath reg commitId =
   migrationRegistrySrcDir reg </> schemaModuleName commitId <.> "hs"
 
+schemaFilePathForBackend :: Maybe SomeBeamMigrationBackend -> MigrationRegistry -> UUID -> FilePath
+schemaFilePathForBackend Nothing reg commit = schemaFilePath reg commit
+schemaFilePathForBackend (Just (SomeBeamMigrationBackend be)) reg commit =
+  migrationRegistrySrcDir reg </> schemaScriptName commit <.> backendFileExtension be
+
 registryNewCommitId :: MigrationRegistry -> IO UUID
 registryNewCommitId reg = do
   newCommitId <- UUID.nextRandom
@@ -509,6 +514,17 @@ parseMetaData d =
                -- TODO parse dummy if we can't parse
                fmap (fmap (specificity,)) (mapM (beamDeserialize d) predicates))
 
+predsForBackend :: BeamMigrationBackend be m -> [ (HS.HashSet PredicateSpecificity, SomeDatabasePredicate) ]
+                -> [ SomeDatabasePredicate ]
+predsForBackend be = predsForBackendNamed (backendName be)
+
+predsForBackendNamed :: String -> [ (HS.HashSet PredicateSpecificity, SomeDatabasePredicate) ]
+                     -> [SomeDatabasePredicate]
+predsForBackendNamed be preds =
+  let ourSources = HS.fromList [ PredicateSpecificityAllBackends, PredicateSpecificityOnlyBackend be ]
+      applicablePreds = map snd (filter (not . HS.null . HS.intersection ourSources . fst) preds)
+  in applicablePreds
+
 withMetadata, withoutMetadata :: (Eq a, IsString a) => [a] -> [a]
 withMetadata =
     takeWhile (/="-- + END-BEAM-MIGRATE") .
@@ -517,7 +533,7 @@ withoutMetadata =
     takeWhile (/="-- + BEAM-MIGRATE")
 
 readSchemaMetaData :: MigrationRegistry
-                   -> BeamMigrationBackend cmd be hdl m
+                   -> BeamMigrationBackend be m
                    -> UUID
                    -> IO SchemaMetaData
 readSchemaMetaData reg BeamMigrationBackend { backendPredicateParsers = parsers } commitId = do
@@ -527,7 +543,7 @@ readSchemaMetaData reg BeamMigrationBackend { backendPredicateParsers = parsers 
   case d of
     [] -> fail "Invalid data in schema"
     _:d' | Just realData <- BS.unlines <$> traverse (BS.stripPrefix "-- + ") d'
-         , Just metadataV <- Yaml.decode realData
+         , Right metadataV <- Yaml.decodeEither' realData
          -> case Yaml.parseEither (parseMetaData parsers) metadataV of
              Left err -> fail ("Could not parse metadata: " ++ show err)
              Right metadata -> pure metadata
@@ -621,7 +637,10 @@ sha256 = sha256' . BS.pack
 
 abortEdits :: MigrateCmdLine -> Bool -> IO ()
 abortEdits cmdLine force =
-  updatingRegistry cmdLine $ \reg ->
+  updatingRegistry cmdLine (abortEdits' force)
+
+abortEdits' :: Bool -> MigrationRegistry -> IO ((), MigrationRegistry)
+abortEdits' force reg =
   let reg' = reg { migrationRegistryMode = BeamMigrateReady }
 
       tryAbort flNm flHash = do
